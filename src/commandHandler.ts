@@ -3,8 +3,9 @@ import {
 	Collection,
 	executeSlashCommand,
 	SlashCommandCallbackData,
+	Guild,createSlashCommand
 } from '../deps.ts';
-import { CommandInteraction } from './interfaces.ts';
+import { CommandInteraction,CommandInterface } from './interfaces.ts';
 export default class CommandHandler {
 	commands: any;
 	dir: string;
@@ -41,7 +42,7 @@ export default class CommandHandler {
 		this.commands = new Collection();
 	}
 	public async runCommand(command: string, message: Message, args: string) {
-		const Command = await this.commands.get(command).default;
+		const Command = await this.commands.get(command);
 
 		if (Command.ownerOnly)
 			if (!this.owners.includes(message.author.id))
@@ -63,8 +64,9 @@ export default class CommandHandler {
 			});
 		//Make a alias to the name //@deno-ignore //when?
 		interaction['name'] = interaction.data.name;
-		this.commands.get(interaction.name).default.execSlash(interaction, reply);
+		this.commands.get(interaction.name).execSlash(interaction, reply);
 	}
+
 	public async handleCommand(message: Message) {
 		const prefixes = this.prefix(message);
 
@@ -88,12 +90,27 @@ export default class CommandHandler {
 			}
 		}
 	}
+	public EnableSlash(guild?: Guild) {
+		this.commands.forEach((command: CommandInterface) => {
+			if (command.SlashData) {
+				if(guild) command.SlashData["guildID"] = guild.id
+				createSlashCommand({(command as any).SlashData})
+			}
+		});
+	}
 	public handleSlash() {}
 	public async loadALL() {
-		console.log(this.dir);
+		//console.log(this.dir);
 		for await (const Command of Deno.readDir(this.dir)) {
-			const command = await import(`${this.dir}/${Command.name}`);
-			this.commands.set(Command.name.replace('.ts', ''));
+			const command = (await import(`${this.dir}/${Command.name}`)).default;
+			console.log(command);
+			if (command?.slash && command.SlashData) {
+				console.log('EEE');
+				command.SlashData['name'] = command.name;
+				command.SlashData['description'] = command.description;
+			}
+
+			this.commands.set(Command.name.replace('.ts', ''), command);
 		}
 	}
 }

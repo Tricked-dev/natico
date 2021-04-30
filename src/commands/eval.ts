@@ -5,8 +5,8 @@ import {
 	executeSlashCommand,
 } from '../../deps.ts';
 export default {
-	name: 'ping',
-	description: 'What to ping next?',
+	name: 'eval',
+	description: 'Eval some super javascript deno code',
 	enabled: true,
 	slash: true,
 	category: 'general',
