@@ -4,10 +4,11 @@ import {
 	SlashCommandCallbackData,
 	CreateSlashCommandOptions,
 } from '../deps.ts';
+/**
+ * Needed to add types to message extender and interaction
+ */
 import CommandHandler from './commandHandler.ts';
-export interface CommandInteraction extends Interaction {
-	name: string;
-}
+
 /**
  * Interface for the commands that shall be made
  */
@@ -26,28 +27,41 @@ export interface CommandInterface {
 	category: string;
 	ownerOnly: boolean;
 	superUserOnly: boolean;
+	cooldown: number;
 	/**
 	 * Runs the normal version of the command not the slash one!
 	 */
 	exec: (
-		message: HandlerMessage,
-		args: string
-	) => void | Message | HandlerMessage | string | string[];
+		message: HandlerMessage
+	) => Promise<void | Message | HandlerMessage | string | string[]>;
 	SlashData?: CreateSlashCommandOptions;
 	/**
 	 * Runs the slash command
 	 */
 	execSlash: (
-		interaction: Interaction,
-		reply: Reply
-	) => void | Message | HandlerMessage | string | string[];
+		interaction: Interaction
+	) => Promise<void | Message | HandlerMessage | string | string[]>;
 }
+
+/**
+ * Extending the interaction so i can get types on the reply/handler
+ */
+export interface CommandInteraction extends Interaction {
+	name: string;
+	reply: Reply;
+	handler: CommandHandler;
+}
+
+/**
+ * Interface created so i can pass the handler through
+ */
 export interface HandlerMessage extends Message {
 	handler: CommandHandler;
+	args: string;
 }
 /**
  *
  * @param data - Slash command data to be send in the reply
- * @returns - Idk? message object
+ * @returns - Void
  */
-export type Reply = (data: SlashCommandCallbackData) => Promise<any>;
+export type Reply = (data: SlashCommandCallbackData) => Promise<void>;

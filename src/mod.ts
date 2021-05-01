@@ -1,5 +1,10 @@
-import { startBot, Message, token, Interaction } from '../deps.ts';
-import { CommandInteraction } from './interfaces.ts';
+import {
+	startBot,
+	Message,
+	token,
+	Interaction,
+	CommandInteraction,
+} from '../deps.ts';
 import { commandHandler } from './client.ts';
 await commandHandler.loadALL();
 startBot({

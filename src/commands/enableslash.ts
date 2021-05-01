@@ -7,6 +7,7 @@ export default {
 	category: 'general',
 	ownerOnly: true,
 	async exec(message: HandlerMessage /*, args: string*/) {
-		console.log(await message.handler.EnableSlash(message.guild));
+		if (!message.guild) return await message.handler.EnableSlash();
+		else await message.handler.EnableSlash(message.guild.id);
 	},
 };

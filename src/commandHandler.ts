@@ -9,29 +9,35 @@ import {
 	CommandInteraction,
 	CommandInterface,
 	HandlerMessage,
+	addReaction,
 } from '../deps.ts';
 export default class CommandHandler {
 	commands: Collection<string, CommandInterface>;
+	cooldowns: Set<string>;
 	dir: string;
 	IgnoreCD: string[];
 	owners: string[];
 	cooldown: number;
 	rateLimit: number;
 	superusers: string[];
-	prefix: (msg: Message) => string[];
+
+	prefix: (msg: Message) => Promise<string[]>;
 	constructor({
 		dir,
 		prefix,
 		IgnoreCD = [],
 		owners = [],
-		cooldown = 50,
+		cooldown = 5000,
 		rateLimit = 3,
 		superusers = [],
 	}: {
 		dir: string;
-		prefix: (msg: Message) => string[];
+		prefix: (msg: Message) => Promise<string[]>;
 		IgnoreCD?: string[];
 		owners?: string[];
+		/**
+		 * cooldown in millieseconds
+		 */
 		cooldown?: number;
 		rateLimit?: number;
 		superusers?: string[];
@@ -43,6 +49,10 @@ export default class CommandHandler {
 		this.cooldown = cooldown;
 		this.rateLimit = rateLimit;
 		this.superusers = [...owners, ...superusers];
+		this.cooldowns = new Set();
+		/**
+		 * Commands are stored here!
+		 */
 		this.commands = new Collection();
 	}
 	/**
@@ -53,7 +63,7 @@ export default class CommandHandler {
 	 * @returns - What the ran command returned
 	 */
 	public async runCommand(command: string, message: Message, args: string) {
-		const Command = await this.commands.get(command);
+		const Command = this.commands.get(command);
 		if (!Command) return;
 
 		if (Command.ownerOnly)
@@ -64,8 +74,28 @@ export default class CommandHandler {
 			if (!this.superusers.includes(message.author.id))
 				return message.reply('This command is only for superusers');
 
+		if (this.cooldowns.has(message.author.id))
+			return addReaction(
+				message.channelID,
+				message.id,
+				'no:838017092216946748'
+			);
+
 		(message as HandlerMessage)['handler'] = this;
-		return Command.exec(message as HandlerMessage, args);
+		(message as HandlerMessage)['args'] = args;
+		try {
+			await Command.exec(message as HandlerMessage);
+			/**
+			 * Adding the user to a set and deleting them later!
+			 */
+			this.cooldowns.add(message.author.id);
+			setTimeout(
+				() => this.cooldowns.delete(message.author.id),
+				Command.cooldown || this.cooldown
+			);
+		} catch (e) {
+			message.reply(e.stack);
+		}
 	}
 	/**
 	 *
@@ -79,17 +109,21 @@ export default class CommandHandler {
 		 * @param data - Slash command data to be send in the reply
 		 * @returns - Idk? message object
 		 */
-		const reply = (data: SlashCommandCallbackData) =>
-			executeSlashCommand(interaction.id, interaction.token, {
+		const reply = async (data: SlashCommandCallbackData): Promise<void> => {
+			return await executeSlashCommand(interaction.id, interaction.token, {
 				type: 4,
 				data,
 			});
+		};
+
 		//Make a alias to the name
 		interaction['name'] = interaction.data.name;
+		interaction['reply'] = reply;
 		const command = this.commands.get(interaction.name);
 		if (!command) return;
-		return command.execSlash(interaction, reply);
+		return command.execSlash(interaction);
 	}
+
 	/**
 	 *
 	 * @param message - Message needed to find the command to run
@@ -114,7 +148,7 @@ export default class CommandHandler {
 			}
 		}
 
-		const prefixes = this.prefix(message);
+		const prefixes = await this.prefix(message);
 
 		for await (const prefix of prefixes) {
 			if (message.content.startsWith(prefix)) {
@@ -140,7 +174,7 @@ export default class CommandHandler {
 	 * @returns - List of enabled commands
 	 */
 	public async EnableSlash(guildID?: string) {
-		const list: any[] = [];
+		const list: any[] /** Anyone any idea what to put instead of any? */ = [];
 		await this.commands.forEach(async (command: CommandInterface) => {
 			if (command.SlashData) {
 				if (guildID) command.SlashData['guildID'] = guildID;
@@ -151,7 +185,7 @@ export default class CommandHandler {
 		return list;
 	}
 	/**
-	 * Doesnt nothing :kek:
+	 * Does nothing :kek:
 	 */
 	public handleSlash() {}
 	/**

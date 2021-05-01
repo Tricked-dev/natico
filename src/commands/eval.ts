@@ -1,4 +1,4 @@
-import { Message } from '../../deps.ts';
+import { HandlerMessage } from '../../deps.ts';
 export default {
 	name: 'eval',
 	description: 'Eval some super javascript deno code',
@@ -6,8 +6,8 @@ export default {
 	slash: true,
 	category: 'general',
 	ownerOnly: true,
-	async exec(message: Message, args: string) {
-		const response = await eval(args);
+	async exec(message: HandlerMessage) {
+		const response = await eval(message.args);
 		message.reply('```js\n' + response + '```');
 	},
 };

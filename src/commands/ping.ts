@@ -1,4 +1,4 @@
-import { Message, Interaction, Reply } from '../../deps.ts';
+import { Message, CommandInteraction } from '../../deps.ts';
 export default {
 	name: 'ping',
 	description: 'What to ping next?',
@@ -18,7 +18,7 @@ export default {
 			},
 		],
 	},
-	execSlash(interaction: Interaction, reply: Reply) {
-		reply({ content: 'Hello world' });
+	async execSlash(interaction: CommandInteraction) {
+		console.log(await interaction.reply({ content: 'Hello world' }));
 	},
 };
