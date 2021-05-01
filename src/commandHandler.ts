@@ -25,7 +25,7 @@ export default class CommandHandler {
 	cooldown: number;
 	rateLimit: number;
 	superusers: string[];
-
+	guildonly: boolean;
 	prefix: (msg: Message) => Promise<string[]>;
 	constructor({
 		dir,
@@ -46,6 +46,10 @@ export default class CommandHandler {
 		cooldown?: number;
 		rateLimit?: number;
 		superusers?: string[];
+		/**
+		 * Commands will only work in guild channels with this on
+		 */
+		guildonly: boolean;
 	}) {
 		this.dir = dir;
 		this.prefix = prefix;
@@ -55,6 +59,7 @@ export default class CommandHandler {
 		this.rateLimit = rateLimit;
 		this.superusers = [...owners, ...superusers];
 		this.cooldowns = new Set();
+		this.guildonly = guildonly;
 		/**
 		 * Commands are stored here!
 		 */
@@ -69,7 +74,15 @@ export default class CommandHandler {
 	 */
 	public async runCommand(command: string, message: Message, args: string) {
 		const Command = this.commands.get(command);
+
 		if (!Command) return;
+
+		//I would put this in one if but the formatting uglyfies
+		if (this.cooldowns.has(message.author.id))
+			if (!this.IgnoreCD.includes(message.author.id))
+				return message.addReaction('no:838017092216946748');
+
+		if (this.guildonly) if (!message.guildID) return;
 
 		if (Command.ownerOnly)
 			if (!this.owners.includes(message.author.id))
@@ -79,10 +92,6 @@ export default class CommandHandler {
 			if (!this.superusers.includes(message.author.id))
 				return message.reply('This command is only for superusers');
 
-		//I would put this in one if but the formatting uglyfies
-		if (this.cooldowns.has(message.author.id))
-			if (!this.IgnoreCD.includes(message.author.id))
-				return message.addReaction('no:838017092216946748');
 		(message as HandlerMessage)['api'] = credentials.github;
 		(message as HandlerMessage)['handler'] = this;
 		(message as HandlerMessage)['embed'] = embed;
