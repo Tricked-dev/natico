@@ -15,5 +15,8 @@ startBot({
 		messageCreate(message: Message) {
 			commandHandler.handleCommand(message);
 		},
+		messageUpdate(message: Message) {
+			commandHandler.handleCommand(message);
+		},
 	},
 });

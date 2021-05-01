@@ -5,12 +5,11 @@ import {
 	SlashCommandCallbackData,
 	createSlashCommand,
 	CreateSlashCommandOptions,
-} from '../deps.ts';
-import {
+	settings,
 	CommandInteraction,
 	CommandInterface,
 	HandlerMessage,
-} from './interfaces.ts';
+} from '../deps.ts';
 export default class CommandHandler {
 	commands: Collection<string, CommandInterface>;
 	dir: string;
@@ -97,6 +96,24 @@ export default class CommandHandler {
 	 * @returns - What Run Command returns
 	 */
 	public async handleCommand(message: Message) {
+		/**
+		 * Allowing pings to be used as prefix!
+		 */
+		if (message.content.startsWith(`<@!${settings.clientid}>`)) {
+			const command = message.content
+				.slice(`<@!${settings.clientid}>`.length)
+				.trim()
+				.split(' ')[0];
+			if (this.commands.has(command)) {
+				const args = message.content
+					.slice(`<@!${settings.clientid}>`.length)
+					.trim()
+					.slice(command.length)
+					.trim();
+				return this.runCommand(command, message, args);
+			}
+		}
+
 		const prefixes = this.prefix(message);
 
 		for await (const prefix of prefixes) {
@@ -111,9 +128,6 @@ export default class CommandHandler {
 						.trim()
 						.slice(command.length)
 						.trim();
-					//.split(/ +/)
-					//.join(' ');
-
 					return this.runCommand(command, message, args);
 				} else continue;
 			}
