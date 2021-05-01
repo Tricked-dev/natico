@@ -1,3 +1,5 @@
+# IN SEARCH OF A GOOD DENO DATABASE HMU IF YOU GOT ONE
+
 ## limited
 
 Discord deno bot from scratch has slash commands

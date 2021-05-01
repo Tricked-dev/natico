@@ -7,16 +7,18 @@ import {
 	CreateSlashCommandOptions,
 	settings,
 	CommandInteraction,
-	CommandInterface,
+	LimitedCommand,
 	HandlerMessage,
 	addReaction,
 	getSlashCommands,
 	upsertSlashCommand,
 	SlashOptions,
 	deleteSlashCommand,
+	credentials,
+	embed,
 } from '../deps.ts';
 export default class CommandHandler {
-	commands: Collection<string, CommandInterface>;
+	commands: Collection<string, LimitedCommand>;
 	cooldowns: Set<string>;
 	dir: string;
 	IgnoreCD: string[];
@@ -86,9 +88,11 @@ export default class CommandHandler {
 					message.id,
 					'no:838017092216946748'
 				);
-
+		(message as HandlerMessage)['api'] = credentials.github;
 		(message as HandlerMessage)['handler'] = this;
+		(message as HandlerMessage)['embed'] = embed;
 		(message as HandlerMessage)['args'] = args;
+		//(message as HandlerMessage).util.embed = embed;
 		try {
 			await Command.exec(message as HandlerMessage);
 			/**
@@ -113,7 +117,7 @@ export default class CommandHandler {
 		/**
 		 *
 		 * @param data - Slash command data to be send in the reply
-		 * @returns - Idk? message object
+		 * @returns Idk? message object
 		 */
 		const reply = async (data: SlashCommandCallbackData): Promise<void> => {
 			return await executeSlashCommand(interaction.id, interaction.token, {
@@ -125,6 +129,9 @@ export default class CommandHandler {
 		//Make a alias to the name
 		interaction['name'] = interaction.data.name;
 		interaction['reply'] = reply;
+		interaction['api'] = credentials.github;
+		interaction['embed'] = embed;
+		interaction['handler'] = this;
 		const command = this.commands.get(interaction.name);
 		if (!command) return;
 		return command.execSlash(interaction);
@@ -203,7 +210,7 @@ export default class CommandHandler {
 		/**
 		 * Updates the slash command data or creates a slash command
 		 */
-		this.commands.forEach(async (command: CommandInterface) => {
+		this.commands.forEach(async (command: LimitedCommand) => {
 			if (command.SlashData) {
 				const found = Enabled.find((i: SlashOptions) => i.name == command.name);
 				/**

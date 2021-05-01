@@ -3,6 +3,7 @@ import {
 	Message,
 	SlashCommandCallbackData,
 	CreateSlashCommandOptions,
+	embed,
 } from '../deps.ts';
 /**
  * Needed to add types to message extender and interaction
@@ -12,7 +13,7 @@ import CommandHandler from './commandHandler.ts';
 /**
  * Interface for the commands that shall be made
  */
-export interface CommandInterface {
+export interface LimitedCommand {
 	/**
 	 * Name of the command
 	 */
@@ -47,17 +48,21 @@ export interface CommandInterface {
  * Extending the interaction so i can get types on the reply/handler
  */
 export interface CommandInteraction extends Interaction {
+	api: string;
 	name: string;
 	reply: Reply;
 	handler: CommandHandler;
+	embed: typeof embed;
 }
 
 /**
  * Interface created so i can pass the handler through
  */
 export interface HandlerMessage extends Message {
+	api: string;
 	handler: CommandHandler;
 	args: string;
+	embed: typeof embed;
 }
 export interface SlashOptions {
 	id: string;
