@@ -3,11 +3,17 @@ import {
 	Collection,
 	executeSlashCommand,
 	SlashCommandCallbackData,
-	Guild,createSlashCommand
+	Guild,
+	createSlashCommand,
+	CreateSlashCommandOptions,
 } from '../deps.ts';
-import { CommandInteraction,CommandInterface } from './interfaces.ts';
+import {
+	CommandInteraction,
+	CommandInterface,
+	HandlerMessage,
+} from './interfaces.ts';
 export default class CommandHandler {
-	commands: any;
+	commands: Collection<string, CommandInterface>;
 	dir: string;
 	IgnoreCD: string[];
 	owners: string[];
@@ -41,8 +47,16 @@ export default class CommandHandler {
 		this.superusers = [...owners, ...superusers];
 		this.commands = new Collection();
 	}
+	/**
+	 *
+	 * @param command - Command that gets executed
+	 * @param message - Message object to be passed through
+	 * @param args - arguments to be passed though
+	 * @returns - What the ran command returned
+	 */
 	public async runCommand(command: string, message: Message, args: string) {
 		const Command = await this.commands.get(command);
+		if (!Command) return;
 
 		if (Command.ownerOnly)
 			if (!this.owners.includes(message.author.id))
@@ -52,21 +66,37 @@ export default class CommandHandler {
 			if (!this.superusers.includes(message.author.id))
 				return message.reply('This command is only for superusers');
 
-		message['handler'] = this;
-		Command.exec(message, args);
+		(message as HandlerMessage)['handler'] = this;
+		return Command.exec(message as HandlerMessage, args);
 	}
+	/**
+	 *
+	 * @param interaction - Needed for data
+	 * @returns - What the ran command returned
+	 */
 	public runSlash(interaction: CommandInteraction) {
-		//easier way to reply
+		if (!interaction.data) return console.log('Empty interaction');
+		/**
+		 *
+		 * @param data - Slash command data to be send in the reply
+		 * @returns - Idk? message object
+		 */
 		const reply = (data: SlashCommandCallbackData) =>
 			executeSlashCommand(interaction.id, interaction.token, {
 				type: 4,
 				data,
 			});
-		//Make a alias to the name //@deno-ignore //when?
+		//Make a alias to the name
 		interaction['name'] = interaction.data.name;
-		this.commands.get(interaction.name).execSlash(interaction, reply);
+		const command = this.commands.get(interaction.name);
+		if (!command) return;
+		return command.execSlash(interaction, reply);
 	}
-
+	/**
+	 *
+	 * @param message - Message needed to find the command to run
+	 * @returns - What Run Command returns
+	 */
 	public async handleCommand(message: Message) {
 		const prefixes = this.prefix(message);
 
@@ -90,22 +120,34 @@ export default class CommandHandler {
 			}
 		}
 	}
-	public EnableSlash(guild?: Guild) {
-		this.commands.forEach((command: CommandInterface) => {
+	/**
+	 * Check if commands have slash data and if they do it will activete it
+	 * be carefull to no accidentally enable them globally
+	 * @param guildID - Specific guild to enable slash commands on
+	 * @returns - List of enabled commands
+	 */
+	public async EnableSlash(guildID?: string) {
+		const list: any[] = [];
+		await this.commands.forEach(async (command: CommandInterface) => {
 			if (command.SlashData) {
-				if(guild) command.SlashData["guildID"] = guild.id
-				createSlashCommand({(command as any).SlashData})
+				if (guildID) command.SlashData['guildID'] = guildID;
+				const SlashData = command.SlashData as CreateSlashCommandOptions;
+				list.push(await createSlashCommand(SlashData));
 			}
 		});
+		return list;
 	}
+	/**
+	 * Doesnt nothing :kek:
+	 */
 	public handleSlash() {}
+	/**
+	 * Used to load all commands
+	 */
 	public async loadALL() {
-		//console.log(this.dir);
 		for await (const Command of Deno.readDir(this.dir)) {
 			const command = (await import(`${this.dir}/${Command.name}`)).default;
-			console.log(command);
 			if (command?.slash && command.SlashData) {
-				console.log('EEE');
 				command.SlashData['name'] = command.name;
 				command.SlashData['description'] = command.description;
 			}

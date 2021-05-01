@@ -1,9 +1,4 @@
-import {
-	Message,
-	createSlashCommand,
-	Interaction,
-	executeSlashCommand,
-} from '../../deps.ts';
+import { Message, Interaction, Reply } from '../../deps.ts';
 export default {
 	name: 'ping',
 	description: 'What to ping next?',
@@ -11,18 +6,6 @@ export default {
 	slash: true,
 	category: 'general',
 	exec(message: Message) {
-		createSlashCommand({
-			guildID: '748956745409232945',
-			name: 'ping',
-			description: 'what to ping next',
-			options: [
-				{
-					type: 3,
-					name: 'yes',
-					description: 'some description',
-				},
-			],
-		});
 		message.reply('ping');
 	},
 	SlashData: {
@@ -35,23 +18,7 @@ export default {
 			},
 		],
 	},
-	execSlash(interaction: Interaction, reply) {
-		interaction;
-		reply({ content: 'Enabled the slash commands' });
+	execSlash(interaction: Interaction, reply: Reply) {
+		reply({ content: 'Hello world' });
 	},
 };
-/*
-{
-  "name": "ping",
-  "description": "what to ping next?",
-  "options": [
-    {
-      "type": 3,
-      "name": "yes?",
-      "description": "some description",
-      "default": false,
-      "required": false
-    }
-  ]
-}
-*/

@@ -1,9 +1,4 @@
-import {
-	Message,
-	createSlashCommand,
-	Interaction,
-	executeSlashCommand,
-} from '../../deps.ts';
+import { Message } from '../../deps.ts';
 export default {
 	name: 'eval',
 	description: 'Eval some super javascript deno code',
@@ -12,9 +7,7 @@ export default {
 	category: 'general',
 	ownerOnly: true,
 	async exec(message: Message, args: string) {
-		//console.log(args);
 		const response = await eval(args);
-		//console.log(response);
 		message.reply('```js\n' + response + '```');
 	},
 };

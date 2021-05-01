@@ -1,10 +1,4 @@
-import CommandHandler from '../commandHandler.ts';
-import {
-	Message,
-	createSlashCommand,
-	Interaction,
-	executeSlashCommand,
-} from '../../deps.ts';
+import { HandlerMessage } from '../../deps.ts';
 export default {
 	name: 'enableslash',
 	description: 'Slash commands i hear?',
@@ -12,13 +6,7 @@ export default {
 	slash: true,
 	category: 'general',
 	ownerOnly: true,
-	async exec(message: Message, args: string) {
-		message.handler.commands.forEach((command) => {
-			if (command.SlashData) {
-				console.log(command.SlashData);
-				createSlashCommand({command.SlashData})
-				message.reply('Enabled Slash for ' + command.name);
-			}
-		});
+	async exec(message: HandlerMessage /*, args: string*/) {
+		console.log(await message.handler.EnableSlash(message.guild));
 	},
 };
