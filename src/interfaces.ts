@@ -59,6 +59,15 @@ export interface HandlerMessage extends Message {
 	handler: CommandHandler;
 	args: string;
 }
+export interface SlashOptions {
+	id: string;
+	application_id: string;
+	name: string;
+	description: string;
+	version: string;
+	default_permission: boolean;
+	options: any;
+}
 /**
  *
  * @param data - Slash command data to be send in the reply

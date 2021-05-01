@@ -14,7 +14,8 @@ startBot({
 		interactionCreate(interaction: Interaction) {
 			commandHandler.runSlash(interaction as CommandInteraction);
 		},
-		ready() {
+		async ready() {
+			console.log(await commandHandler.EnableSlash('748956745409232945'));
 			console.log('Successfully connected to gateway');
 		},
 		messageCreate(message: Message) {

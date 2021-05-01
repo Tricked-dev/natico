@@ -10,6 +10,10 @@ import {
 	CommandInterface,
 	HandlerMessage,
 	addReaction,
+	getSlashCommands,
+	upsertSlashCommand,
+	SlashOptions,
+	deleteSlashCommand,
 } from '../deps.ts';
 export default class CommandHandler {
 	commands: Collection<string, CommandInterface>;
@@ -74,12 +78,14 @@ export default class CommandHandler {
 			if (!this.superusers.includes(message.author.id))
 				return message.reply('This command is only for superusers');
 
+		//I would put this in one if but the formatting uglyfies
 		if (this.cooldowns.has(message.author.id))
-			return addReaction(
-				message.channelID,
-				message.id,
-				'no:838017092216946748'
-			);
+			if (!this.IgnoreCD.includes(message.author.id))
+				return addReaction(
+					message.channelID,
+					message.id,
+					'no:838017092216946748'
+				);
 
 		(message as HandlerMessage)['handler'] = this;
 		(message as HandlerMessage)['args'] = args;
@@ -169,17 +175,56 @@ export default class CommandHandler {
 	}
 	/**
 	 * Check if commands have slash data and if they do it will activete it
-	 * be carefull to no accidentally enable them globally
+	 * be carefull to no accidentally enable them globally,
+	 * first searches if the command is already enabled and if it changed since and edit it accordingly otherwise creates a command
+	 * also deletes unused slash commands
 	 * @param guildID - Specific guild to enable slash commands on
 	 * @returns - List of enabled commands
 	 */
 	public async EnableSlash(guildID?: string) {
+		const Enabled = guildID
+			? await getSlashCommands(guildID)
+			: await getSlashCommands(guildID);
+
 		const list: any[] /** Anyone any idea what to put instead of any? */ = [];
-		await this.commands.forEach(async (command: CommandInterface) => {
+
+		/**
+		 * Goes over the commands and checks if it still exists
+		 */
+		for (const command of Enabled) {
+			/**
+			 * "finds" the command
+			 */
+			if (!this.commands.find((cmd) => cmd.name == command.name)) {
+				if (guildID) await deleteSlashCommand(command.id, guildID);
+				else await deleteSlashCommand(command.id);
+			}
+		}
+		/**
+		 * Updates the slash command data or creates a slash command
+		 */
+		this.commands.forEach(async (command: CommandInterface) => {
 			if (command.SlashData) {
-				if (guildID) command.SlashData['guildID'] = guildID;
-				const SlashData = command.SlashData as CreateSlashCommandOptions;
-				list.push(await createSlashCommand(SlashData));
+				const found = Enabled.find((i: SlashOptions) => i.name == command.name);
+				/**
+				 * If the commands exists edit it
+				 */
+				if (found?.id) {
+					const SlashData = command.SlashData as CreateSlashCommandOptions;
+					// Cant really compare OPtions
+					if (SlashData.description !== found.description) {
+						list.push(await upsertSlashCommand(found.id, SlashData, guildID));
+					}
+
+					/**
+					 * If it doesnt create it
+					 */
+				} else {
+					if (guildID) command.SlashData['guildID'] = guildID;
+					const SlashData = command.SlashData as CreateSlashCommandOptions;
+
+					list.push(await createSlashCommand(SlashData));
+				}
 			}
 		});
 		return list;
@@ -194,6 +239,9 @@ export default class CommandHandler {
 	public async loadALL() {
 		for await (const Command of Deno.readDir(this.dir)) {
 			const command = (await import(`${this.dir}/${Command.name}`)).default;
+			/**
+			 * Pretty much copy the stuff over for easier slash command registering
+			 */
 			if (command?.slash && command.SlashData) {
 				command.SlashData['name'] = command.name;
 				command.SlashData['description'] = command.description;
