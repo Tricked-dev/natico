@@ -9,7 +9,6 @@ import {
 	CommandInteraction,
 	LimitedCommand,
 	HandlerMessage,
-	addReaction,
 	getSlashCommands,
 	upsertSlashCommand,
 	SlashOptions,
@@ -83,11 +82,7 @@ export default class CommandHandler {
 		//I would put this in one if but the formatting uglyfies
 		if (this.cooldowns.has(message.author.id))
 			if (!this.IgnoreCD.includes(message.author.id))
-				return addReaction(
-					message.channelID,
-					message.id,
-					'no:838017092216946748'
-				);
+				return message.addReaction('no:838017092216946748');
 		(message as HandlerMessage)['api'] = credentials.github;
 		(message as HandlerMessage)['handler'] = this;
 		(message as HandlerMessage)['embed'] = embed;
@@ -104,7 +99,8 @@ export default class CommandHandler {
 				Command.cooldown || this.cooldown
 			);
 		} catch (e) {
-			message.reply(e.stack);
+			console.log(e);
+			message.channel.send(`<:no:838017092216946748> Try again`);
 		}
 	}
 	/**
@@ -213,6 +209,7 @@ export default class CommandHandler {
 		this.commands.forEach(async (command: LimitedCommand) => {
 			if (command.SlashData) {
 				const found = Enabled.find((i: SlashOptions) => i.name == command.name);
+
 				/**
 				 * If the commands exists edit it
 				 */
@@ -220,7 +217,7 @@ export default class CommandHandler {
 					const SlashData = command.SlashData as CreateSlashCommandOptions;
 					// Cant really compare OPtions
 					if (SlashData.description !== found.description) {
-						list.push(await upsertSlashCommand(found.id, SlashData, guildID));
+						await upsertSlashCommand(found.id, SlashData, guildID);
 					}
 
 					/**
@@ -230,7 +227,7 @@ export default class CommandHandler {
 					if (guildID) command.SlashData['guildID'] = guildID;
 					const SlashData = command.SlashData as CreateSlashCommandOptions;
 
-					list.push(await createSlashCommand(SlashData));
+					await createSlashCommand(SlashData);
 				}
 			}
 		});

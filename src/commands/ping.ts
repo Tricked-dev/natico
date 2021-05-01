@@ -1,11 +1,11 @@
-import { Message, CommandInteraction } from '../../deps.ts';
+import { HandlerMessage, CommandInteraction } from '../../deps.ts';
 export default {
 	name: 'ping',
 	description: 'What to ping next?',
 	enabled: true,
 	slash: true,
 	category: 'general',
-	exec(message: Message) {
+	exec(message: HandlerMessage) {
 		message.reply('ping');
 	},
 	SlashData: {
