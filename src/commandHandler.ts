@@ -3,7 +3,6 @@ import {
 	Collection,
 	executeSlashCommand,
 	SlashCommandCallbackData,
-	Guild,
 	createSlashCommand,
 	CreateSlashCommandOptions,
 } from '../deps.ts';

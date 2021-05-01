@@ -50,6 +50,4 @@ export interface HandlerMessage extends Message {
  * @param data - Slash command data to be send in the reply
  * @returns - Idk? message object
  */
-export type Reply = (
-	data: SlashCommandCallbackData
-) => void | Message | HandlerMessage | string | string[];
+export type Reply = (data: SlashCommandCallbackData) => Promise<any>;
