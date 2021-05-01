@@ -35,6 +35,7 @@ export default class CommandHandler {
 		cooldown = 5000,
 		rateLimit = 3,
 		superusers = [],
+		guildonly = false,
 	}: {
 		dir: string;
 		prefix: (msg: Message) => Promise<string[]>;

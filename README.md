@@ -9,6 +9,11 @@
 
 </div>
 
+## todo
+
+make aliases work
+add most of this https://gist.github.com/jasonrudolph/6065289
+
 ## limited
 
 Discord deno bot from scratch has slash commands

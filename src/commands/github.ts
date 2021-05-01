@@ -11,9 +11,12 @@ export default {
 	slash: true,
 	category: 'general',
 	async exec(message: HandlerMessage) {
-		const user = await fetch(
-			`https://api.github.com/users/${message.args}`
-		).then((response) => response.json());
+		const user = await fetch(`https://api.github.com/users/${message.args}`, {
+			method: 'GET',
+			headers: {
+				Authorization: `token ${message.api}`,
+			},
+		}).then((response) => response.json());
 		if (user?.message) return message.reply('User not found');
 
 		let info = '';
