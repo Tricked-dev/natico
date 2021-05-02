@@ -4,6 +4,7 @@ import {
 	getUser,
 	settings,
 } from '../../deps.ts';
+
 export default {
 	name: 'github',
 	description: 'Sends some stats about a user github profile',
@@ -46,7 +47,7 @@ export default {
 				type: 3,
 				name: 'user',
 				description: 'github user you want to see the stats of',
-				default: false,
+				required: true,
 			},
 		],
 	},

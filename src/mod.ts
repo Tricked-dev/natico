@@ -7,6 +7,11 @@ import {
 } from '../deps.ts';
 import { commandHandler } from './client.ts';
 await commandHandler.loadALL();
+
+
+
+
+
 startBot({
 	token,
 	intents: ['GUILDS', 'GUILD_MESSAGES'],
