@@ -4,7 +4,7 @@ export default {
 	description: 'Eval some super javascript deno code',
 	enabled: true,
 	slash: true,
-	category: 'general',
+	category: 'dev',
 	ownerOnly: true,
 	async exec(message: HandlerMessage) {
 		const response = await eval(message.args);

@@ -4,7 +4,7 @@ export default {
 	description: 'test command used for official testing',
 	enabled: true,
 	slash: true,
-	category: 'general',
+	category: 'dev',
 	async exec(message: HandlerMessage) {
 		if (!message.guild)
 			return message.reply('NO YOU CANT CHANGE THE PREFIX IN DMS STOP TRYING');

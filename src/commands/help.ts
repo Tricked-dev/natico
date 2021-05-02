@@ -16,7 +16,10 @@ export default {
 			.setFooter('Use -help <command> to see more info');
 
 		const commands = [...message.handler.commands.values()]
-			.map((c: LimitedCommand) => `\`${c.name}\``)
+			.map((c: LimitedCommand) => {
+				if (c.category == 'dev') return;
+				else return `\`${c.name}\``;
+			})
 			.join(' ');
 		embed.addField('commands', commands, false);
 		await message.channel?.send({ embed });
@@ -55,7 +58,10 @@ export default {
 			.setFooter('Use l!help <command> to see more info');
 
 		const commands = [...interaction.handler.commands.values()]
-			.map((c: LimitedCommand) => `\`${c.name}\``)
+			.map((c: LimitedCommand) => {
+				if (c.category == 'dev') return;
+				else return `\`${c.name}\``;
+			})
 			.join(' ');
 		embed.addField('commands', commands, false);
 		await interaction.reply({
