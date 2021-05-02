@@ -1,24 +1,15 @@
 import { HandlerMessage, CommandInteraction } from '../../deps.ts';
 export default {
 	name: 'ping',
-	description: 'What to ping next?',
+	description: 'Ping the bot',
 	enabled: true,
 	slash: true,
 	category: 'general',
 	exec(message: HandlerMessage) {
-		message.reply('ping');
+		message.reply('ping🏓');
 	},
-	SlashData: {
-		options: [
-			{
-				type: 3,
-				name: 'yes',
-				description: 'no?',
-				default: false,
-			},
-		],
-	},
+	SlashData: {},
 	async execSlash(interaction: CommandInteraction) {
-		console.log(await interaction.reply({ content: 'Hello world' }));
+		await interaction.reply({ content: 'Pong🏓' });
 	},
 };

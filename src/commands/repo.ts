@@ -6,6 +6,9 @@ export default {
 	slash: true,
 	category: 'general',
 	async exec(message: HandlerMessage) {
+		return await message.reply(
+			'Currently no clue how to use github api to find a repo'
+		);
 		const user = await fetch(`https://api.github.com/users/${message.args}`, {
 			method: 'GET',
 			headers: {
@@ -25,6 +28,8 @@ export default {
 		],
 	},
 	async execSlash(interaction: CommandInteraction) {
-		console.log(await interaction.reply({ content: 'Hello world' }));
+		return await interaction.reply({
+			content: 'Currently no clue how to find a repo by name',
+		});
 	},
 };

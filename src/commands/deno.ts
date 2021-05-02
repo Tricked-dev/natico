@@ -35,7 +35,7 @@ export default {
 			embed: message
 				.embed()
 				.setColor('#FF0000')
-				.setDescription(result.description)
+				.setDescription(result.description || 'No description provided')
 				.setTitle(`🦕 ${result.name}`, `https://deno.land/x/${result.name}`),
 		});
 	},
@@ -73,7 +73,7 @@ export default {
 		const embed = interaction
 			.embed()
 			.setColor('#FF0000')
-			.setDescription(result.description)
+			.setDescription(result.description || 'No description provided')
 			.setTitle(`🦕 ${result.name}`, `https://deno.land/x/${result.name}`);
 		interaction.reply({ content: 'deno', embeds: [embed] });
 	},

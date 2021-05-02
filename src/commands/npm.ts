@@ -29,7 +29,7 @@ export default {
 			embed: message
 				.embed()
 				.setColor('#FF0000')
-				.setDescription(result.description)
+				.setDescription(result.description || 'No description provided')
 				.addField('❯ Author', result.author.name)
 				.addField('❯ Created', result.date)
 				.addField('❯ Scoped', `${result.scoped || 'No'}`)
@@ -70,7 +70,7 @@ export default {
 		const embed = interaction
 			.embed()
 			.setColor('#FF0000')
-			.setDescription(result.description)
+			.setDescription(result.description || 'No description provided')
 			.addField('❯ Author', result.author.name)
 			.addField('❯ Created', result.date)
 			.addField('❯ Scoped', `${result.scoped || 'No'}`)
