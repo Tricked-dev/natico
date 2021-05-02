@@ -58,6 +58,8 @@ export default {
 		],
 	},
 	async execSlash(interaction: CommandInteraction) {
-		console.log(await interaction.reply({ content: 'Hello world' }));
+		await interaction.reply({
+			content: 'Currently no clue how to find trending github pages',
+		});
 	},
 };

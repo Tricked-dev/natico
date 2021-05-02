@@ -3,6 +3,7 @@ export default {
 	settings: {
 		channels: {
 			error: '',
+			suggestions: '',
 		},
 
 		ids: {
