@@ -24,7 +24,7 @@ export default {
 				content: '<:no:838017092216946748> Please provide a valid deno package',
 			});
 
-		if (!pkg.data.data.success)
+		if (!pkg.data?.data?.results[0])
 			return message.reply({
 				content: '<:no:838017092216946748> Please provide a valid deno package',
 			});
@@ -51,6 +51,7 @@ export default {
 	},
 	async execSlash(interaction: CommandInteraction) {
 		const query = interaction?.data?.options[0]?.value;
+
 		const pkg = await axiod(`https://api.deno.land/modules/`, {
 			method: 'GET',
 			params: {
@@ -63,7 +64,7 @@ export default {
 			return interaction.reply({
 				content: '<:no:838017092216946748> Please provide a valid deno package',
 			});
-		if (!pkg.data.data.success)
+		if (!pkg.data?.data?.results[0])
 			return interaction.reply({
 				content: '<:no:838017092216946748> Please provide a valid deno package',
 			});
