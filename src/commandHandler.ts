@@ -217,7 +217,7 @@ export default class CommandHandler {
 		 * Updates the slash command data or creates a slash command
 		 */
 		this.commands.forEach(async (command: LimitedCommand) => {
-			if (command.SlashData) {
+			if (command.slash && command.SlashData) {
 				const found = Enabled.find((i: SlashOptions) => i.name == command.name);
 
 				/**
@@ -236,7 +236,7 @@ export default class CommandHandler {
 				} else {
 					if (guildID) command.SlashData['guildID'] = guildID;
 					const SlashData = command.SlashData as CreateSlashCommandOptions;
-
+					//console.log(SlashData);
 					await createSlashCommand(SlashData);
 				}
 			}

@@ -3,7 +3,7 @@ export default {
 	name: 'test',
 	description: 'test command used for official testing',
 	enabled: true,
-	slash: true,
+	slash: false,
 	category: 'dev',
 	async exec(message: HandlerMessage) {
 		if (!message.guild)

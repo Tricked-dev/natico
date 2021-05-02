@@ -3,8 +3,8 @@ export default {
 	name: 'repo',
 	description: 'Gets info about a github repository',
 	enabled: true,
-	slash: true,
-	category: 'general',
+	slash: false,
+	category: 'dev',
 	async exec(message: HandlerMessage) {
 		return await message.reply(
 			'Currently no clue how to use github api to find a repo'

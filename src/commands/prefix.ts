@@ -3,8 +3,8 @@ export default {
 	name: 'prefix',
 	description: 'Set the prefix of limited',
 	enabled: true,
-	slash: true,
-	category: 'general',
+	slash: false,
+	category: 'dev',
 	async exec(message: HandlerMessage) {
 		if (!message.guild)
 			return message.reply('NO YOU CANT CHANGE THE PREFIX IN DMS STOP TRYING');
@@ -14,7 +14,7 @@ export default {
 		options: [
 			{
 				type: 3,
-				name: 'prefix',
+				name: 'newprefix',
 				description: 'What should the new prefix be?',
 				default: false,
 			},

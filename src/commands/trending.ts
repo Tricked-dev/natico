@@ -4,8 +4,8 @@ export default {
 	name: 'ping',
 	description: 'What to ping next?',
 	enabled: true,
-	slash: true,
-	category: 'general',
+	slash: false,
+	category: 'dev',
 	async exec(message: HandlerMessage) {
 		return await message.reply('Soon:tm:');
 		/*
