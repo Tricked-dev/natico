@@ -13,7 +13,7 @@ export default {
 		const embed = message
 			.embed()
 			.setTitle('Help')
-			.setFooter('Use -help <command> to see more info');
+			.setFooter('Use `l!help` <command> to see more info');
 
 		const commands = [...message.handler.commands.values()]
 			.map((c: LimitedCommand) => {
@@ -55,7 +55,7 @@ export default {
 		const embed = interaction
 			.embed()
 			.setTitle('Help')
-			.setFooter('Use l!help <command> to see more info');
+			.setFooter('Use `l!help` <command> to see more info');
 
 		const commands = [...interaction.handler.commands.values()]
 			.map((c: LimitedCommand) => {

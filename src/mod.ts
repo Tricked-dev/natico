@@ -3,14 +3,11 @@ import {
 	Message,
 	token,
 	Interaction,
+	editBotsStatus,
 	CommandInteraction,
 } from '../deps.ts';
 import { commandHandler } from './client.ts';
 await commandHandler.loadALL();
-
-
-
-
 
 startBot({
 	token,
@@ -21,6 +18,7 @@ startBot({
 		},
 		async ready() {
 			await commandHandler.EnableSlash('748956745409232945');
+			await editBotsStatus('online', 'with deno modules');
 			console.log('Successfully connected to gateway');
 		},
 		messageCreate(message: Message) {
