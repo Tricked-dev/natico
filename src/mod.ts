@@ -7,9 +7,10 @@ import {
 	naticoInteraction,
 	naticoMessage,
 	yellow,
+	white,
 } from '../deps.ts';
 import { commandHandler } from './client.ts';
-console.log(yellow('starting'));
+console.log(white('[i]'), yellow('starting'));
 await commandHandler.loadALL();
 //denod ocs stable https://doc.deno.land/builtin/stable
 startBot({
@@ -22,7 +23,7 @@ startBot({
 		async ready() {
 			await commandHandler.EnableSlash('748956745409232945');
 			editBotsStatus('online', 'with deno modules');
-			console.log(yellow('Bot succesfully started'));
+			console.log(white('[i]'), yellow('Bot succesfully started'));
 		},
 		messageCreate(message: Message) {
 			commandHandler.handleCommand(message as naticoMessage);

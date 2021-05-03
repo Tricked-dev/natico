@@ -11,6 +11,7 @@ import {
 	naticoMessage,
 	getSlashCommands,
 	upsertSlashCommand,
+	yellow,
 	naticoSlashOptions,
 	deleteSlashCommand,
 	credentials,
@@ -115,6 +116,7 @@ export default class CommandHandler {
 			 * Log usage to prevent abuse
 			 */
 			console.info(
+				yellow('[!]'),
 				green(`command ran`),
 				blue(command.name),
 				green(`user`),
@@ -164,7 +166,20 @@ export default class CommandHandler {
 		interaction['handler'] = this;
 		const command = this.commands.get(interaction.name);
 		if (!command) return;
-		return command.execSlash(interaction);
+		try {
+			console.info(
+				yellow('[!]'),
+				green(`slash ran`),
+				blue(command.name),
+				green(`user`),
+				blue(`${interaction.member.username} ${interaction.member.id}`)
+			);
+
+			return command.execSlash(interaction);
+		} catch (e) {
+			console.log(e);
+			interaction.reply({ content: `<:no:838017092216946748> Try again` });
+		}
 	}
 
 	/**
@@ -173,6 +188,7 @@ export default class CommandHandler {
 	 * @returns - What Run Command returns
 	 */
 	public async handleCommand(message: naticoMessage) {
+		if (message.author.bot) return;
 		if (message.content == `<@!${botID}>`) {
 			return await message.reply(
 				`Hello my prefix is ${settings.prefix.join(', ')}`
