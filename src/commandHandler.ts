@@ -19,6 +19,7 @@ import {
 	EditSlashResponseOptions,
 	green,
 	blue,
+	botID,
 } from '../deps.ts';
 export default class CommandHandler {
 	commands: Collection<string, naticoCommand>;
@@ -175,17 +176,17 @@ export default class CommandHandler {
 		/**
 		 * Allowing pings to be used as prefix!
 		 */
-		if (message.content.startsWith(`<@!${settings.clientid}>`)) {
+		if (message.content.startsWith(`<@!${botID}>`)) {
 			const command = message.content
 				.toLowerCase()
-				.slice(`<@!${settings.clientid}>`.length)
+				.slice(`<@!${botID}>`.length)
 				.trim()
 				.split(' ')[0];
 			const Command = this.FindCommand(command);
 
 			if (Command) {
 				const args = message.content
-					.slice(`<@!${settings.clientid}>`.length)
+					.slice(`<@!${botID}>`.length)
 					.trim()
 					.slice(command.length)
 					.trim();

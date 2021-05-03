@@ -5,8 +5,12 @@ import {
 	Interaction,
 	editBotsStatus,
 	naticoInteraction,
+	naticoMessage,
+	yellow,
+	botID,
 } from '../deps.ts';
 import { commandHandler } from './client.ts';
+console.log(yellow('starting'));
 await commandHandler.loadALL();
 
 startBot({
@@ -18,14 +22,14 @@ startBot({
 		},
 		async ready() {
 			await commandHandler.EnableSlash('748956745409232945');
-			await editBotsStatus('online', 'with deno modules');
-			console.log('Successfully connected to gateway');
+			editBotsStatus('online', 'with deno modules');
+			console.log(yellow('Bot succesfully started'));
 		},
 		messageCreate(message: Message) {
-			commandHandler.handleCommand(message);
+			commandHandler.handleCommand(message as naticoMessage);
 		},
 		messageUpdate(message: Message) {
-			commandHandler.handleCommand(message);
+			commandHandler.handleCommand(message as naticoMessage);
 		},
 	},
 });

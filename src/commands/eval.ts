@@ -8,7 +8,11 @@ export default {
 	category: 'dev',
 	ownerOnly: true,
 	async exec(message: naticoMessage) {
-		const response = await eval(message.args);
-		message.reply('```js\n' + response + '```');
+		try {
+			const response = await eval(message.args);
+			message.reply('```js\n' + response + '```');
+		} catch (e) {
+			message.reply(`${e}`);
+		}
 	},
 };
