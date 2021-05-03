@@ -7,12 +7,11 @@ import {
 	naticoInteraction,
 	naticoMessage,
 	yellow,
-	botID,
 } from '../deps.ts';
 import { commandHandler } from './client.ts';
 console.log(yellow('starting'));
 await commandHandler.loadALL();
-
+//denod ocs stable https://doc.deno.land/builtin/stable
 startBot({
 	token,
 	intents: ['GUILDS', 'GUILD_MESSAGES'],
