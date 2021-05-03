@@ -23,7 +23,7 @@ export default {
 			})
 			.join(' ');
 		embed.addField('commands', commands, false);
-		await message.channel?.send({ embed });
+		return await message.channel?.send({ embed });
 	},
 	SlashData: {
 		options: [
@@ -37,18 +37,22 @@ export default {
 	},
 	async execSlash(interaction: CommandInteraction) {
 		if (interaction?.data?.options) {
-			const found = interaction.handler.commands.find(
-				(i) => i.name == interaction?.data?.options[0]?.value
+			const found = interaction.handler.FindCommand(
+				interaction?.data?.options[0].value
 			);
+
 			if (found)
 				return interaction.reply({
 					content: 'Limited help',
 					embeds: [
 						interaction
 							.embed()
-							.setDescription(
-								`**${found.name}**\n\n**Description**: ${found.description}`
-							),
+							.addField('Description »', found.description || 'No description')
+							.addField(
+								'aliases »',
+								found.aliases.map((x) => `\`${x}\``).join(' | ')
+							)
+							.addField('category »', found.category || 'No category'),
 					],
 				});
 		}
