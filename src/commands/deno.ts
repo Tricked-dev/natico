@@ -12,7 +12,7 @@ export default {
 			return message.reply({
 				content: '<:no:838017092216946748> Please provide a message',
 			});
-		const pkg = await axiod(`https://api.deno.land/modules/`, {
+		const pkg = await axiod(`https://api.deno.land/modules`, {
 			method: 'GET',
 			params: {
 				limit: 1,

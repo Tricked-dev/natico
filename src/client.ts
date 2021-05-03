@@ -7,8 +7,8 @@ export const commandHandler: CommandHandler = new CommandHandler({
 	guildonly: true,
 	prefix: async (message: Message) => {
 		return message.guild
-			? ['l!', 'Natico', 'l?', 'l-']
-			: ['l!', 'Natico', 'l?', 'l-'];
+			? ['l!', 'Natico', 'l?', 'l-', 'n!']
+			: ['l!', 'Natico', 'l?', 'l-', 'n!'];
 
 		//[('l!', 'Natico', 'l?', 'l-')];
 	},
