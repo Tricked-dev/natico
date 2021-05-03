@@ -3,7 +3,7 @@ export default {
 	name: 'eval',
 	description: 'Eval some super javascript deno code',
 	enabled: true,
-	slash: true,
+	slash: false,
 	category: 'dev',
 	ownerOnly: true,
 	async exec(message: HandlerMessage) {
