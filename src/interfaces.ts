@@ -9,12 +9,12 @@ import {
 /**
  * Needed to add types to message extender and interaction
  */
-import CommandHandler from './commandHandler.ts';
+import naticoCommandHandler from './commandHandler.ts';
 
 /**
  * Interface for the commands that shall be made
  */
-export interface LimitedCommand {
+export interface naticoCommand {
 	/**
 	 * Name of the command
 	 */
@@ -48,25 +48,25 @@ export interface LimitedCommand {
 /**
  * Extending the interaction so i can get types on the reply/handler
  */
-export interface CommandInteraction extends Interaction {
+export interface naticoInteraction extends Interaction {
 	api: string;
 	name: string;
 	reply: Reply;
 	edit: Edit;
-	handler: CommandHandler;
+	handler: naticoCommandHandler;
 	embed: typeof embed;
 }
 
 /**
  * Interface created so i can pass the handler through
  */
-export interface HandlerMessage extends Message {
+export interface naticoMessage extends Message {
 	api: string;
-	handler: CommandHandler;
+	handler: naticoCommandHandler;
 	args: string;
 	embed: typeof embed;
 }
-export interface SlashOptions {
+export interface naticoSlashOptions {
 	id: string;
 	application_id: string;
 	name: string;
@@ -80,5 +80,5 @@ export interface SlashOptions {
  * @param data - Slash command data to be send in the reply
  * @returns - Void
  */
-export type Reply = (data: SlashCommandCallbackData) => Promise<void>;
-export type Edit = (data: EditSlashResponseOptions) => Promise<void>;
+export type naticoReply = (data: SlashCommandCallbackData) => Promise<void>;
+export type naticoEdit = (data: EditSlashResponseOptions) => Promise<void>;

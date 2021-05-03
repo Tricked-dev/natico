@@ -6,20 +6,22 @@ import {
 	createSlashCommand,
 	CreateSlashCommandOptions,
 	settings,
-	CommandInteraction,
-	LimitedCommand,
-	HandlerMessage,
+	naticoInteraction,
+	naticoCommand,
+	naticoMessage,
 	getSlashCommands,
 	upsertSlashCommand,
-	SlashOptions,
+	naticoSlashOptions,
 	deleteSlashCommand,
 	credentials,
 	embed,
 	editSlashResponse,
 	EditSlashResponseOptions,
+	green,
+	blue,
 } from '../deps.ts';
 export default class CommandHandler {
-	commands: Collection<string, LimitedCommand>;
+	commands: Collection<string, naticoCommand>;
 	cooldowns: Set<string>;
 	dir: string;
 	IgnoreCD: string[];
@@ -75,12 +77,13 @@ export default class CommandHandler {
 	 * @param args - arguments to be passed though
 	 * @returns - What the ran command returned
 	 */
-	public async runCommand(command: string, message: Message, args: string) {
-		const Command = this.commands.get(command);
+	public async runCommand(
+		command: naticoCommand,
+		message: naticoMessage,
+		args: string
+	) {
+		if (!command) return;
 
-		if (!Command) return;
-
-		//I would put this in one if but the formatting uglyfies
 		if (this.cooldowns.has(message.author.id))
 			if (!this.IgnoreCD.includes(message.author.id))
 				return message.addReaction('no:838017092216946748');
@@ -89,28 +92,40 @@ export default class CommandHandler {
 			if (!this.superusers.includes(message.author.id))
 				if (!message.guildID) return;
 
-		if (Command.ownerOnly)
+		if (command.ownerOnly)
 			if (!this.owners.includes(message.author.id))
 				return message.reply('This command is only for owners');
 
-		if (Command.superUserOnly)
+		if (command.superUserOnly)
 			if (!this.superusers.includes(message.author.id))
 				return message.reply('This command is only for superusers');
 
-		(message as HandlerMessage)['api'] = credentials.github;
-		(message as HandlerMessage)['handler'] = this;
-		(message as HandlerMessage)['embed'] = embed;
-		(message as HandlerMessage)['args'] = args;
-		//(message as HandlerMessage).util.embed = embed;
+		message['api'] = credentials.github;
+		message['handler'] = this;
+		message['embed'] = embed;
+		message['args'] = args;
+
 		try {
-			await Command.exec(message as HandlerMessage);
+			/**
+			 * Executes the command
+			 */
+			await command.exec(message);
+			/**
+			 * Log usage to prevent abuse
+			 */
+			console.info(
+				green(`command ran`),
+				blue(command.name),
+				green(`user`),
+				blue(`${message.author.username} ${message.author.id}`)
+			);
 			/**
 			 * Adding the user to a set and deleting them later!
 			 */
 			this.cooldowns.add(message.author.id);
 			setTimeout(
 				() => this.cooldowns.delete(message.author.id),
-				Command.cooldown || this.cooldown
+				command.cooldown || this.cooldown
 			);
 		} catch (e) {
 			console.log(e);
@@ -122,7 +137,7 @@ export default class CommandHandler {
 	 * @param interaction - Needed for data
 	 * @returns - What the ran command returned
 	 */
-	public runSlash(interaction: CommandInteraction) {
+	public runSlash(interaction: naticoInteraction) {
 		if (!interaction.data) return console.log('Empty interaction');
 		/**
 		 *
@@ -156,46 +171,47 @@ export default class CommandHandler {
 	 * @param message - Message needed to find the command to run
 	 * @returns - What Run Command returns
 	 */
-	public async handleCommand(message: Message) {
+	public async handleCommand(message: naticoMessage) {
 		/**
 		 * Allowing pings to be used as prefix!
 		 */
 		if (message.content.startsWith(`<@!${settings.clientid}>`)) {
 			const command = message.content
+				.toLowerCase()
 				.slice(`<@!${settings.clientid}>`.length)
 				.trim()
 				.split(' ')[0];
-			const name = this.FindCommand(command);
+			const Command = this.FindCommand(command);
 
-			if (name) {
+			if (Command) {
 				const args = message.content
 					.slice(`<@!${settings.clientid}>`.length)
 					.trim()
 					.slice(command.length)
 					.trim();
 
-				return this.runCommand(name.name, message, args);
+				return this.runCommand(Command, message, args);
 			}
 		}
 
 		const prefixes = await this.prefix(message);
 
 		for await (const prefix of prefixes) {
-			if (message.content.toLocaleLowerCase().startsWith(prefix)) {
+			if (message.content.toLowerCase().startsWith(prefix)) {
 				const command = message.content
-					.toLocaleLowerCase()
+					.toLowerCase()
 					.slice(prefix.length)
 					.trim()
 					.split(' ')[0];
-				const name = this.FindCommand(command);
+				const Command = this.FindCommand(command);
 
-				if (name) {
+				if (Command) {
 					const args = message.content
 						.slice(prefix.length)
 						.trim()
 						.slice(command.length)
 						.trim();
-					return this.runCommand(name.name, message, args);
+					return this.runCommand(Command, message, args);
 				} else continue;
 			}
 		}
@@ -222,7 +238,7 @@ export default class CommandHandler {
 	public async EnableSlash(guildID?: string) {
 		const Enabled = guildID
 			? await getSlashCommands(guildID)
-			: await getSlashCommands(guildID);
+			: await getSlashCommands();
 
 		const list: any[] /** Anyone any idea what to put instead of any? */ = [];
 
@@ -241,9 +257,11 @@ export default class CommandHandler {
 		/**
 		 * Updates the slash command data or creates a slash command
 		 */
-		this.commands.forEach(async (command: LimitedCommand) => {
+		this.commands.forEach(async (command: naticoCommand) => {
 			if (command.slash && command.SlashData) {
-				const found = Enabled.find((i: SlashOptions) => i.name == command.name);
+				const found = Enabled.find(
+					(i: naticoSlashOptions) => i.name == command.name
+				);
 
 				/**
 				 * If the commands exists edit it
@@ -267,6 +285,12 @@ export default class CommandHandler {
 			}
 		});
 		return list;
+	}
+	public async deleteAllSlash(guildID?: string) {
+		const SlashCommands = await getSlashCommands(guildID);
+		for (const command of SlashCommands) {
+			await deleteSlashCommand(command.id, guildID);
+		}
 	}
 	/**
 	 * Does nothing :kek:
