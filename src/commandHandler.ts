@@ -56,11 +56,11 @@ export default class CommandHandler {
 	}) {
 		this.dir = dir;
 		this.prefix = prefix;
-		this.IgnoreCD = IgnoreCD;
 		this.owners = owners;
 		this.cooldown = cooldown;
 		this.rateLimit = rateLimit;
 		this.superusers = [...owners, ...superusers];
+		this.IgnoreCD = [...IgnoreCD, ...this.superusers];
 		this.cooldowns = new Set();
 		this.guildonly = guildonly;
 		/**
@@ -85,7 +85,9 @@ export default class CommandHandler {
 			if (!this.IgnoreCD.includes(message.author.id))
 				return message.addReaction('no:838017092216946748');
 
-		if (this.guildonly) if (!message.guildID) return;
+		if (this.guildonly)
+			if (!this.superusers.includes(message.author.id))
+				if (!message.guildID) return;
 
 		if (Command.ownerOnly)
 			if (!this.owners.includes(message.author.id))
@@ -112,7 +114,7 @@ export default class CommandHandler {
 			);
 		} catch (e) {
 			console.log(e);
-			message.channel.send(`<:no:838017092216946748> Try again`);
+			message.channel?.send(`<:no:838017092216946748> Try again`);
 		}
 	}
 	/**
@@ -163,13 +165,16 @@ export default class CommandHandler {
 				.slice(`<@!${settings.clientid}>`.length)
 				.trim()
 				.split(' ')[0];
-			if (this.commands.has(command)) {
+			const name = this.FindCommand(command);
+
+			if (name) {
 				const args = message.content
 					.slice(`<@!${settings.clientid}>`.length)
 					.trim()
 					.slice(command.length)
 					.trim();
-				return this.runCommand(command, message, args);
+
+				return this.runCommand(name.name, message, args);
 			}
 		}
 
@@ -182,16 +187,29 @@ export default class CommandHandler {
 					.slice(prefix.length)
 					.trim()
 					.split(' ')[0];
-				if (this.commands.has(command)) {
+				const name = this.FindCommand(command);
+
+				if (name) {
 					const args = message.content
 						.slice(prefix.length)
 						.trim()
 						.slice(command.length)
 						.trim();
-					return this.runCommand(command, message, args);
+					return this.runCommand(name.name, message, args);
 				} else continue;
 			}
 		}
+	}
+	/**
+	 * Simple function to find a command could be useful outside of the handler
+	 * @param command - Command you want to search for
+	 * @returns Command object or undefined
+	 */
+	public FindCommand(command: string) {
+		return (
+			this.commands.find((handler) => handler.aliases.includes(command)) ||
+			this.commands.get(command)
+		);
 	}
 	/**
 	 * Check if commands have slash data and if they do it will activete it

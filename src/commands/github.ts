@@ -7,6 +7,7 @@ import {
 
 export default {
 	name: 'github',
+	aliases: ['github', 'githubuser'],
 	description: 'Sends some stats about a user github profile',
 	enabled: true,
 	slash: true,

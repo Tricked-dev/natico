@@ -1,6 +1,7 @@
 import { HandlerMessage, CommandInteraction } from '../../deps.ts';
 export default {
 	name: 'ping',
+	aliases: ['ping'],
 	description: 'Ping the bot',
 	enabled: true,
 	slash: true,

@@ -1,7 +1,8 @@
 import { HandlerMessage, CommandInteraction } from '../../deps.ts';
-import axiod from 'https://deno.land/x/axiod/mod.ts';
+//import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
-	name: 'ping',
+	name: 'trending',
+	aliases: ['trending'],
 	description: 'What to ping next?',
 	enabled: true,
 	slash: false,

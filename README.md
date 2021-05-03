@@ -11,7 +11,6 @@
 
 ## todo
 
-make aliases work  
 ~~add most of this https://gist.github.com/jasonrudolph/6065289~~ pain  
 package searching to add: maven?(java)  
 docs to add: deno, discordeno, discordjs

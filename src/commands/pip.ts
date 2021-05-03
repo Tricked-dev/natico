@@ -2,6 +2,7 @@ import { HandlerMessage, CommandInteraction } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'pip',
+	aliases: ['pip', 'python'],
 	description: 'Search for a pip package',
 	enabled: true,
 	slash: true,

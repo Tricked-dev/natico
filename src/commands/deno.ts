@@ -2,6 +2,7 @@ import { HandlerMessage, CommandInteraction } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'deno',
+	aliases: ['deno'],
 	description: 'Search for a deno package',
 	enabled: true,
 	slash: true,

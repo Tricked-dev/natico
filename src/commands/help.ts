@@ -5,6 +5,7 @@ import {
 } from '../../deps.ts';
 export default {
 	name: 'help',
+	aliases: ['ls', 'h'],
 	description: 'Limited help command',
 	enabled: true,
 	slash: true,

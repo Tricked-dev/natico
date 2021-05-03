@@ -2,6 +2,7 @@ import { HandlerMessage, CommandInteraction } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'crate',
+	aliases: ['crate', 'cargo'],
 	description: 'Search for a crate package',
 	enabled: true,
 	slash: true,

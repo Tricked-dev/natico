@@ -4,9 +4,9 @@ import {
 	cache,
 	settings,
 } from '../../deps.ts';
-import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'suggest',
+	aliases: ['suggest'],
 	description: 'Search for a npm package',
 	enabled: true,
 	slash: true,

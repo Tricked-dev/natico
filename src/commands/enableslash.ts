@@ -1,6 +1,7 @@
 import { HandlerMessage } from '../../deps.ts';
 export default {
 	name: 'enableslash',
+	aliases: ['enableslash', 'enslash'],
 	description: 'Slash commands i hear?',
 	enabled: true,
 	slash: true,

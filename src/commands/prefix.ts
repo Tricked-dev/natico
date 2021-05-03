@@ -1,6 +1,7 @@
 import { HandlerMessage, CommandInteraction } from '../../deps.ts';
 export default {
 	name: 'prefix',
+	aliases: ['prefix', 'pf'],
 	description: 'Set the prefix of limited',
 	enabled: true,
 	slash: false,

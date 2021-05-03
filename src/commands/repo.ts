@@ -1,6 +1,7 @@
 import { HandlerMessage, CommandInteraction } from '../../deps.ts';
 export default {
 	name: 'repo',
+	aliases: ['repo'],
 	description: 'Gets info about a github repository',
 	enabled: true,
 	slash: false,

@@ -1,7 +1,8 @@
 import { HandlerMessage, CommandInteraction } from '../../deps.ts';
 export default {
 	name: 'test',
-	description: 'test command used for official testing',
+	aliases: ['test'],
+	description: 'test command used for official testing:tm:',
 	enabled: true,
 	slash: false,
 	category: 'dev',

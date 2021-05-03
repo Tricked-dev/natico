@@ -2,6 +2,7 @@ import { HandlerMessage, CommandInteraction } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'npm',
+	aliases: ['npm', 'node', 'nodejs', 'yarn'],
 	description: 'Search for a npm package',
 	enabled: true,
 	slash: true,
@@ -19,7 +20,6 @@ export default {
 			},
 			headers: {},
 		});
-		console.log(pkg?.data);
 		if (!pkg?.data?.results[0])
 			return message.reply({
 				content: '<:no:838017092216946748> Please provide a message',
