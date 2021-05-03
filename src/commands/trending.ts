@@ -1,4 +1,4 @@
-import { HandlerMessage, CommandInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction } from '../../deps.ts';
 //import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'trending',
@@ -7,7 +7,7 @@ export default {
 	enabled: true,
 	slash: false,
 	category: 'dev',
-	async exec(message: HandlerMessage) {
+	async exec(message: naticoMessage) {
 		return await message.reply('Soon:tm:');
 		/*
 		var date = new Date(Date.now() - 604800000);
@@ -58,7 +58,7 @@ export default {
 			},
 		],
 	},
-	async execSlash(interaction: CommandInteraction) {
+	async execSlash(interaction: naticoInteraction) {
 		await interaction.reply({
 			content: 'Currently no clue how to find trending github pages',
 		});

@@ -1,6 +1,6 @@
 import {
-	HandlerMessage,
-	CommandInteraction,
+	naticoMessage,
+	naticoInteraction,
 	getUser,
 	settings,
 } from '../../deps.ts';
@@ -12,7 +12,7 @@ export default {
 	enabled: true,
 	slash: true,
 	category: 'general',
-	async exec(message: HandlerMessage) {
+	async exec(message: naticoMessage) {
 		const user = await fetch(`https://api.github.com/users/${message.args}`, {
 			method: 'GET',
 			headers: {
@@ -52,7 +52,7 @@ export default {
 			},
 		],
 	},
-	async execSlash(interaction: CommandInteraction) {
+	async execSlash(interaction: naticoInteraction) {
 		if (!interaction.data?.options[0]?.value)
 			return interaction.reply({ content: 'Please provide a user' });
 		const user = await fetch(

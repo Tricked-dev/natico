@@ -4,7 +4,7 @@ import {
 	token,
 	Interaction,
 	editBotsStatus,
-	CommandInteraction,
+	naticoInteraction,
 } from '../deps.ts';
 import { commandHandler } from './client.ts';
 await commandHandler.loadALL();
@@ -14,7 +14,7 @@ startBot({
 	intents: ['GUILDS', 'GUILD_MESSAGES'],
 	eventHandlers: {
 		interactionCreate(interaction: Interaction) {
-			commandHandler.runSlash(interaction as CommandInteraction);
+			commandHandler.runSlash(interaction as naticoInteraction);
 		},
 		async ready() {
 			await commandHandler.EnableSlash('748956745409232945');

@@ -1,4 +1,4 @@
-import { HandlerMessage } from '../../deps.ts';
+import { naticoMessage } from '../../deps.ts';
 export default {
 	name: 'eval',
 	aliases: ['eval', 'ev'],
@@ -7,7 +7,7 @@ export default {
 	slash: false,
 	category: 'dev',
 	ownerOnly: true,
-	async exec(message: HandlerMessage) {
+	async exec(message: naticoMessage) {
 		const response = await eval(message.args);
 		message.reply('```js\n' + response + '```');
 	},

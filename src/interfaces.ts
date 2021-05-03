@@ -34,15 +34,15 @@ export interface naticoCommand {
 	 * Runs the normal version of the command not the slash one!
 	 */
 	exec: (
-		message: HandlerMessage
-	) => Promise<void | Message | HandlerMessage | string | string[]>;
+		message: naticoMessage
+	) => Promise<void | Message | naticoMessage | string | string[]>;
 	SlashData?: CreateSlashCommandOptions;
 	/**
 	 * Runs the slash command
 	 */
 	execSlash: (
 		interaction: Interaction
-	) => Promise<void | Message | HandlerMessage | string | string[]>;
+	) => Promise<void | Message | naticoMessage | string | string[]>;
 }
 
 /**
@@ -51,8 +51,8 @@ export interface naticoCommand {
 export interface naticoInteraction extends Interaction {
 	api: string;
 	name: string;
-	reply: Reply;
-	edit: Edit;
+	reply: naticoReply;
+	edit: naticoEdit;
 	handler: naticoCommandHandler;
 	embed: typeof embed;
 }

@@ -1,5 +1,3 @@
-# IN SEARCH OF A GOOD DENO DATABASE HMU IF YOU GOT ONE
-
 <div align="center">
 
 [![discord badge](https://img.shields.io/badge/Join%20the-Discord-blue?style=for-the-badge)](https://discord.gg/mY8zTARu4g)
@@ -11,11 +9,11 @@
 
 ## todo
 
-~~add most of this https://gist.github.com/jasonrudolph/6065289~~ pain  
 package searching to add: maven?(java)  
 docs to add: deno, discordeno, discordjs
+_no clue how to add discorddeno/deno docs there doesnt seem to be a api_
 
-## limited
+## Natico
 
 Discord deno bot from scratch has slash commands
 Feel free to use this as a base for your own deno bot has pretty good docs for how the handler works,

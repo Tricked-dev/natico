@@ -1,4 +1,4 @@
-import { HandlerMessage } from '../../deps.ts';
+import { naticoMessage } from '../../deps.ts';
 export default {
 	name: 'enableslash',
 	aliases: ['enableslash', 'enslash'],
@@ -7,7 +7,7 @@ export default {
 	slash: true,
 	category: 'dev',
 	ownerOnly: true,
-	async exec(message: HandlerMessage) {
+	async exec(message: naticoMessage) {
 		if (message.args == 'global') return await message.handler.EnableSlash();
 		else return await message.handler.EnableSlash(message.guild?.id);
 	},

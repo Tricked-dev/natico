@@ -1,6 +1,6 @@
 import {
-	HandlerMessage,
-	CommandInteraction,
+	naticoMessage,
+	naticoInteraction,
 	cache,
 	settings,
 } from '../../deps.ts';
@@ -11,11 +11,11 @@ export default {
 	enabled: true,
 	slash: true,
 	category: 'general',
-	async exec(message: HandlerMessage) {
+	async exec(message: naticoMessage) {
 		if (!message.args)
 			return message.reply({
 				content:
-					'<:no:838017092216946748> Please provide a suggestion for limited',
+					'<:no:838017092216946748> Please provide a suggestion for natico',
 			});
 		const channel = cache.channels.get(settings.channels.suggestions);
 		if (channel) channel.send(message.args);
@@ -31,7 +31,7 @@ export default {
 			},
 		],
 	},
-	async execSlash(interaction: CommandInteraction) {
+	async execSlash(interaction: naticoInteraction) {
 		const suggestion = interaction?.data?.options[0]?.value;
 		const channel = cache.channels.get(settings.channels.suggestions);
 		if (channel) channel.send(suggestion);

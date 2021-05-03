@@ -1,4 +1,4 @@
-import { HandlerMessage, CommandInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction } from '../../deps.ts';
 export default {
 	name: 'test',
 	aliases: ['test'],
@@ -6,13 +6,13 @@ export default {
 	enabled: true,
 	slash: false,
 	category: 'dev',
-	async exec(message: HandlerMessage) {
+	async exec(message: naticoMessage) {
 		if (!message.guild)
 			return message.reply('NO YOU CANT CHANGE THE PREFIX IN DMS STOP TRYING');
 		await message.reply(`Anyone knows a good deno database?`);
 	},
 	SlashData: {},
-	async execSlash(interaction: CommandInteraction) {
+	async execSlash(interaction: naticoInteraction) {
 		await interaction.reply({ content: 'I need help finding a database' });
 	},
 };

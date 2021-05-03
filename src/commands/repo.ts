@@ -1,4 +1,4 @@
-import { HandlerMessage, CommandInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction } from '../../deps.ts';
 export default {
 	name: 'repo',
 	aliases: ['repo'],
@@ -6,7 +6,7 @@ export default {
 	enabled: true,
 	slash: false,
 	category: 'dev',
-	async exec(message: HandlerMessage) {
+	async exec(message: naticoMessage) {
 		return await message.reply(
 			'Currently no clue how to use github api to find a repo'
 		);
@@ -28,7 +28,7 @@ export default {
 			},
 		],
 	},
-	async execSlash(interaction: CommandInteraction) {
+	async execSlash(interaction: naticoInteraction) {
 		return await interaction.reply({
 			content: 'Currently no clue how to find a repo by name',
 		});

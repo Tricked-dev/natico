@@ -1,23 +1,19 @@
-import {
-	HandlerMessage,
-	LimitedCommand,
-	CommandInteraction,
-} from '../../deps.ts';
+import { naticoMessage, naticoCommand, naticoInteraction } from '../../deps.ts';
 export default {
 	name: 'help',
 	aliases: ['ls', 'h'],
-	description: 'Limited help command',
+	description: 'natico help command',
 	enabled: true,
 	slash: true,
 	category: 'general',
-	async exec(message: HandlerMessage) {
+	async exec(message: naticoMessage) {
 		const embed = message
 			.embed()
 			.setTitle('Help')
 			.setFooter('Use `l!help` <command> to see more info');
 
 		const commands = [...message.handler.commands.values()]
-			.map((c: LimitedCommand) => {
+			.map((c: naticoCommand) => {
 				if (c.category == 'dev') return;
 				else return `\`${c.name}\``;
 			})
@@ -35,7 +31,7 @@ export default {
 			},
 		],
 	},
-	async execSlash(interaction: CommandInteraction) {
+	async execSlash(interaction: naticoInteraction) {
 		if (interaction?.data?.options) {
 			const found = interaction.handler.FindCommand(
 				interaction?.data?.options[0].value
@@ -43,7 +39,7 @@ export default {
 
 			if (found)
 				return interaction.reply({
-					content: 'Limited help',
+					content: 'natico help',
 					embeds: [
 						interaction
 							.embed()
@@ -63,7 +59,7 @@ export default {
 			.setFooter('Use `l!help` <command> to see more info')
 			.setDescription('[support](https://discord.com/invite/mY8zTARu4g)');
 		const commands = [...interaction.handler.commands.values()]
-			.map((c: LimitedCommand) => {
+			.map((c: naticoCommand) => {
 				if (c.category == 'dev') return;
 				else return `\`${c.name}\``;
 			})
@@ -71,7 +67,7 @@ export default {
 		embed.addField('commands', commands, false);
 		return await interaction.reply({
 			embeds: [embed],
-			content: 'Limited help',
+			content: 'natico help',
 		});
 	},
 };

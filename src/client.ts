@@ -7,10 +7,10 @@ export const commandHandler: CommandHandler = new CommandHandler({
 	guildonly: true,
 	prefix: async (message: Message) => {
 		return message.guild
-			? ['l!', 'limited', 'l?', 'l-']
-			: ['l!', 'limited', 'l?', 'l-'];
+			? ['l!', 'Natico', 'l?', 'l-']
+			: ['l!', 'Natico', 'l?', 'l-'];
 
-		//[('l!', 'limited', 'l?', 'l-')];
+		//[('l!', 'Natico', 'l?', 'l-')];
 	},
 	owners: settings.ids.owner,
 });

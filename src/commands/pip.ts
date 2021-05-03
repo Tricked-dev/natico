@@ -1,4 +1,4 @@
-import { HandlerMessage, CommandInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'pip',
@@ -7,7 +7,7 @@ export default {
 	enabled: true,
 	slash: true,
 	category: 'general',
-	async exec(message: HandlerMessage) {
+	async exec(message: naticoMessage) {
 		if (!message.args)
 			return message.reply({
 				content: '<:no:838017092216946748> Please provide a package',
@@ -49,7 +49,7 @@ export default {
 			},
 		],
 	},
-	async execSlash(interaction: CommandInteraction) {
+	async execSlash(interaction: naticoInteraction) {
 		const query = interaction?.data?.options[0]?.value;
 		interaction.reply({ content: 'searching' });
 		const pkg = await axiod(`https://api.anaconda.org/search`, {

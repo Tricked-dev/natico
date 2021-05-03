@@ -1,4 +1,4 @@
-import { HandlerMessage, CommandInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction } from '../../deps.ts';
 export default {
 	name: 'ping',
 	aliases: ['ping'],
@@ -6,11 +6,11 @@ export default {
 	enabled: true,
 	slash: true,
 	category: 'general',
-	exec(message: HandlerMessage) {
+	exec(message: naticoMessage) {
 		message.reply('ping🏓');
 	},
 	SlashData: {},
-	async execSlash(interaction: CommandInteraction) {
+	async execSlash(interaction: naticoInteraction) {
 		await interaction.reply({ content: 'Pong🏓' });
 	},
 };
