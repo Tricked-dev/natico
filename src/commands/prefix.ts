@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction, settings } from '../../deps.ts';
 export default {
 	name: 'prefix',
 	aliases: ['prefix', 'pf'],
@@ -7,6 +7,7 @@ export default {
 	slash: false,
 	category: 'dev',
 	async exec(message: naticoMessage) {
+		return await message.reply(`My prefixes are ${settings.prefix.join(', ')}`);
 		if (!message.guild)
 			return message.reply('NO YOU CANT CHANGE THE PREFIX IN DMS STOP TRYING');
 		await message.reply(`Anyone knows a good deno database?`);

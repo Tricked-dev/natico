@@ -6,11 +6,7 @@ export const commandHandler: CommandHandler = new CommandHandler({
 	cooldown: 5000, // 5 seconds
 	guildonly: true,
 	prefix: async (message: Message) => {
-		return message.guild
-			? ['l!', 'Natico', 'l?', 'l-', 'n!']
-			: ['l!', 'Natico', 'l?', 'l-', 'n!'];
-
-		//[('l!', 'Natico', 'l?', 'l-')];
+		return message.guild ? settings.prefix : settings.prefix;
 	},
 	owners: settings.ids.owner,
 });

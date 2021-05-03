@@ -173,6 +173,11 @@ export default class CommandHandler {
 	 * @returns - What Run Command returns
 	 */
 	public async handleCommand(message: naticoMessage) {
+		if (message.content == `<@!${botID}>`) {
+			return await message.reply(
+				`Hello my prefix is ${settings.prefix.join(', ')}`
+			);
+		}
 		/**
 		 * Allowing pings to be used as prefix!
 		 */
