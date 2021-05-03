@@ -55,8 +55,8 @@ export default {
 		const embed = interaction
 			.embed()
 			.setTitle('Help')
-			.setFooter('Use `l!help` <command> to see more info');
-
+			.setFooter('Use `l!help` <command> to see more info')
+			.setDescription('[support](https://discord.com/invite/mY8zTARu4g)');
 		const commands = [...interaction.handler.commands.values()]
 			.map((c: LimitedCommand) => {
 				if (c.category == 'dev') return;
@@ -64,7 +64,7 @@ export default {
 			})
 			.join(' ');
 		embed.addField('commands', commands, false);
-		await interaction.reply({
+		return await interaction.reply({
 			embeds: [embed],
 			content: 'Limited help',
 		});

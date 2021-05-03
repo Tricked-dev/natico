@@ -15,6 +15,8 @@ import {
 	deleteSlashCommand,
 	credentials,
 	embed,
+	editSlashResponse,
+	EditSlashResponseOptions,
 } from '../deps.ts';
 export default class CommandHandler {
 	commands: Collection<string, LimitedCommand>;
@@ -131,10 +133,14 @@ export default class CommandHandler {
 				data,
 			});
 		};
+		const edit = async (data: EditSlashResponseOptions): Promise<void> => {
+			return await editSlashResponse(interaction.token, data);
+		};
 
 		//Make a alias to the name
 		interaction['name'] = interaction.data.name;
 		interaction['reply'] = reply;
+		interaction['edit'] = edit;
 		interaction['api'] = credentials.github;
 		interaction['embed'] = embed;
 		interaction['handler'] = this;
@@ -170,8 +176,9 @@ export default class CommandHandler {
 		const prefixes = await this.prefix(message);
 
 		for await (const prefix of prefixes) {
-			if (message.content.startsWith(prefix)) {
+			if (message.content.toLocaleLowerCase().startsWith(prefix)) {
 				const command = message.content
+					.toLocaleLowerCase()
 					.slice(prefix.length)
 					.trim()
 					.split(' ')[0];

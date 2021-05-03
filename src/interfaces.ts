@@ -4,6 +4,7 @@ import {
 	SlashCommandCallbackData,
 	CreateSlashCommandOptions,
 	embed,
+	EditSlashResponseOptions,
 } from '../deps.ts';
 /**
  * Needed to add types to message extender and interaction
@@ -51,6 +52,7 @@ export interface CommandInteraction extends Interaction {
 	api: string;
 	name: string;
 	reply: Reply;
+	edit: Edit;
 	handler: CommandHandler;
 	embed: typeof embed;
 }
@@ -79,3 +81,4 @@ export interface SlashOptions {
  * @returns - Void
  */
 export type Reply = (data: SlashCommandCallbackData) => Promise<void>;
+export type Edit = (data: EditSlashResponseOptions) => Promise<void>;
