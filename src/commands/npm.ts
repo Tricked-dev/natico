@@ -25,7 +25,7 @@ export default {
 				content: '<:no:838017092216946748> Please provide a message',
 			});
 		const result = pkg.data.results[0].package;
-		message.channel.send({
+		message.channel?.send({
 			embed: message
 				.embed()
 				.setColor('#FF0000')

@@ -24,7 +24,7 @@ export default {
 				content: '<:no:838017092216946748> Please provide a message',
 			});
 		const result = pkg.data.crates[0];
-		message.channel.send({
+		message.channel?.send({
 			embed: message
 				.embed()
 				.setColor('#3B6837')

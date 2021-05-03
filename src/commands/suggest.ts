@@ -19,7 +19,7 @@ export default {
 			});
 		const channel = cache.channels.get(settings.channels.suggestions);
 		if (channel) channel.send(message.args);
-		return await message.channel.send('Suggestion has been left ');
+		return await message.channel?.send('Suggestion has been left ');
 	},
 	SlashData: {
 		options: [

@@ -39,7 +39,7 @@ export default {
 			.addField('➥ Info', info)
 			.addField('➥ Stats', stats)
 			.setThumbnail(user.avatar_url || (await getUser(settings.clientid)));
-		message.channel.send({ embed });
+		message.channel?.send({ embed });
 	},
 	SlashData: {
 		options: [

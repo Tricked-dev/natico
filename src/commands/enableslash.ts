@@ -7,7 +7,7 @@ export default {
 	category: 'dev',
 	ownerOnly: true,
 	async exec(message: HandlerMessage) {
-		if (message.args == 'gloval') return await message.handler.EnableSlash();
-		else return await message.handler.EnableSlash(message.guild.id);
+		if (message.args == 'global') return await message.handler.EnableSlash();
+		else return await message.handler.EnableSlash(message.guild?.id);
 	},
 };

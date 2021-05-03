@@ -26,7 +26,7 @@ export default {
 
 		const result = pkg.data[0];
 
-		message.channel.send({
+		message.channel?.send({
 			embed: message
 				.embed()
 				.setColor('#0080ff')
