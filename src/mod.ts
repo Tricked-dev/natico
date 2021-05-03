@@ -8,6 +8,8 @@ import {
 	naticoMessage,
 	yellow,
 	white,
+	getUser,
+	botID,
 } from '../deps.ts';
 import { commandHandler } from './client.ts';
 console.log(white('[i]'), yellow('starting'));

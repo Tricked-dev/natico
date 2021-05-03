@@ -6,9 +6,12 @@ import {
 	createSlashCommand,
 	CreateSlashCommandOptions,
 	settings,
+	getUser,
 	naticoInteraction,
 	naticoCommand,
 	naticoMessage,
+	cache,
+	naticoUser,
 	getSlashCommands,
 	upsertSlashCommand,
 	yellow,
@@ -105,7 +108,15 @@ export default class CommandHandler {
 		message['api'] = credentials.github;
 		message['handler'] = this;
 		message['embed'] = embed;
+		/**
+		 * Just want to import message and not having (message, args, aything)
+		 */
 		message['args'] = args;
+		/**
+		 * I like to use me to get the id etc without having to import stuff
+		 */
+		message['me'] =
+			(cache.members.get(botID) as naticoUser) || (await getUser(botID));
 
 		try {
 			/**
@@ -140,7 +151,7 @@ export default class CommandHandler {
 	 * @param interaction - Needed for data
 	 * @returns - What the ran command returned
 	 */
-	public runSlash(interaction: naticoInteraction) {
+	public async runSlash(interaction: naticoInteraction) {
 		if (!interaction.data) return console.log('Empty interaction');
 		/**
 		 *
@@ -164,6 +175,9 @@ export default class CommandHandler {
 		interaction['api'] = credentials.github;
 		interaction['embed'] = embed;
 		interaction['handler'] = this;
+		interaction['me'] =
+			(cache.members.get(botID) as naticoUser) || (await getUser(botID));
+
 		const command = this.commands.get(interaction.name);
 		if (!command) return;
 		try {

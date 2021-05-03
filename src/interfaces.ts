@@ -49,6 +49,7 @@ export interface naticoCommand {
  * Extending the interaction so i can get types on the reply/handler
  */
 export interface naticoInteraction extends Interaction {
+	me: naticoUser;
 	api: string;
 	name: string;
 	reply: naticoReply;
@@ -61,6 +62,7 @@ export interface naticoInteraction extends Interaction {
  * Interface created so i can pass the handler through
  */
 export interface naticoMessage extends Message {
+	me: naticoUser;
 	api: string;
 	handler: naticoCommandHandler;
 	args: string;
@@ -74,6 +76,17 @@ export interface naticoSlashOptions {
 	version: string;
 	default_permission: boolean;
 	options: any;
+}
+/**
+ * Gives the client user object
+ */
+export interface naticoUser {
+	id: string;
+	username: string;
+	avatar?: string;
+	discriminator: string;
+	public_flags?: number;
+	bot?: boolean;
 }
 /**
  *

@@ -1,5 +1,4 @@
 import { naticoMessage, naticoInteraction } from '../../deps.ts';
-import axiod from 'https://deno.land/x/axiod/mod.ts';
 import { denodoc } from '../../docs/discorddeno.ts';
 export default {
 	name: 'ddoc',
@@ -60,7 +59,7 @@ export default {
 		const result = denodoc.nodes.find(
 			(p) => p.name.toLowerCase() == query.toLowerCase() && p.kind !== 'import'
 		);
-		if (!result) return await interaction.reply('Docs not found');
+		if (!result) return await interaction.reply({ content: 'Docs not found' });
 		const srcUrl = `${result.location.filename}#L${result.location.line}`;
 		const embed = interaction
 			.embed()
@@ -81,8 +80,6 @@ export default {
 				`https://doc.deno.land/https/deno.land/x/discordeno/mod.ts#${result.name}`
 			)
 			.setColor('#1F85DE');
-		interaction.reply({
-			embeds: [embed],
-		});
+		interaction.reply({ content: 'Deno docs', embeds: [embed] });
 	},
 };
