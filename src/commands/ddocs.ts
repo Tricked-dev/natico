@@ -1,4 +1,5 @@
 import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import Fuse from 'https://deno.land/x/fuse/dist/fuse.esm.min.js';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'ddoc',
@@ -17,13 +18,13 @@ export default {
 				content: '<:no:838017092216946748> Please provide a search',
 			});
 
-		const result = denodoc.data.find(
-			(p) =>
-				p.name.toLowerCase() == message.args.toLowerCase() &&
-				p.kind !== 'import'
-		);
+		const fuse = new Fuse(denodoc.data, { keys: ['name'] });
+
+		const result = fuse.search(message.args)[0].item;
+
 		if (!result) return await message.reply('Docs not found');
 		const srcUrl = `${result.location.filename}#L${result.location.line}`;
+
 		message.channel?.send({
 			embed: message
 				.embed()
@@ -59,11 +60,22 @@ export default {
 	async execSlash(interaction: naticoInteraction) {
 		const query = interaction?.data?.options[0]?.value;
 
-		const result = denodoc.nodes.find(
-			(p) => p.name.toLowerCase() == query.toLowerCase() && p.kind !== 'import'
+		const denodoc = await axiod(
+			'https://gist.githubusercontent.com/SkyBlockDev/aa24237591b296c528a322d4a352199f/raw/5d365841be7611f046315653bd5555eabade6d65/denodocs.json',
+			{ method: 'get' }
 		);
+		if (!interaction.args)
+			return interaction.reply({
+				content: '<:no:838017092216946748> Please provide a search',
+			});
+
+		const fuse = new Fuse(denodoc.data, { keys: ['name'] });
+
+		const result = fuse.search(query)[0].item;
+
 		if (!result) return await interaction.reply({ content: 'Docs not found' });
 		const srcUrl = `${result.location.filename}#L${result.location.line}`;
+
 		const embed = interaction
 			.embed()
 			.setColor('#FF0000')
