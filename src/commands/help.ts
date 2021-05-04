@@ -8,6 +8,26 @@ export default {
 	slash: true,
 	category: 'general',
 	async exec(message: naticoMessage) {
+		if (message.args) {
+			const found = message.handler.FindCommand(message.args);
+
+			if (found)
+				return message?.channel?.send({
+					embed: message
+						.embed()
+						.addField('Description »', found.description || 'No description')
+						.addField(
+							'aliases »',
+							found.aliases.map((x) => `\`${x}\``).join(' | ')
+						)
+
+						.addField(
+							'examples »',
+							found.examples.map((x) => `\`${x}\``).join(' | ')
+						)
+						.addField('category »', found.category || 'No category'),
+				});
+		}
 		const embed = message
 			.embed()
 			.setTitle('Help')
@@ -50,6 +70,11 @@ export default {
 							.addField(
 								'aliases »',
 								found.aliases.map((x) => `\`${x}\``).join(' | ')
+							)
+
+							.addField(
+								'examples »',
+								found.examples.map((x) => `\`${x}\``).join(' | ')
 							)
 							.addField('category »', found.category || 'No category'),
 					],

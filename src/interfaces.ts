@@ -34,6 +34,7 @@ export interface naticoCommand {
 	ownerOnly: boolean;
 	superUserOnly: boolean;
 	cooldown: number;
+	examples: string[];
 	/**
 	 * Runs the normal version of the command not the slash one!
 	 */
