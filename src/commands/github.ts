@@ -8,9 +8,11 @@ import {
 export default {
 	name: 'github',
 	aliases: ['github', 'githubuser'],
+	examples: ['github skyblockdev'],
 	description: 'Sends some stats about a user github profile',
 	enabled: true,
 	slash: true,
+	required: true,
 	category: 'general',
 	async exec(message: naticoMessage) {
 		const user = await fetch(`https://api.github.com/users/${message.args}`, {

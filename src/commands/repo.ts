@@ -2,6 +2,7 @@ import { naticoMessage, naticoInteraction } from '../../deps.ts';
 export default {
 	name: 'repo',
 	aliases: ['repo'],
+	examples: ['repo skyblockdev/natico'],
 	description: 'Gets info about a github repository',
 	enabled: true,
 	slash: false,

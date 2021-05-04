@@ -26,6 +26,10 @@ export interface naticoCommand {
 	description: string;
 	enabled: boolean;
 	slash: boolean;
+	/**
+	 * Wheater or not args are required
+	 */
+	required: boolean;
 	category: string;
 	ownerOnly: boolean;
 	superUserOnly: boolean;
@@ -76,6 +80,12 @@ export interface naticoSlashOptions {
 	version: string;
 	default_permission: boolean;
 	options: any;
+	author: {
+		name: string;
+	};
+	links: {
+		npm: string;
+	};
 }
 /**
  * Gives the client user object

@@ -2,6 +2,7 @@ import { naticoMessage, naticoInteraction } from '../../deps.ts';
 export default {
 	name: 'test',
 	aliases: ['test'],
+	examples: ['test'],
 	description: 'test command used for official testing:tm:',
 	enabled: true,
 	slash: false,

@@ -3,15 +3,13 @@ import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'npm',
 	aliases: ['npm', 'node', 'nodejs', 'yarn'],
+	examples: ['npm discord.js'],
 	description: 'Search for a npm package',
 	enabled: true,
 	slash: true,
+	required: true,
 	category: 'general',
 	async exec(message: naticoMessage) {
-		if (!message.args)
-			return message.reply({
-				content: '<:no:838017092216946748> Please provide a message',
-			});
 		const pkg = await axiod(`https://api.npms.io/v2/search`, {
 			method: 'GET',
 			params: {

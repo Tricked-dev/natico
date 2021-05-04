@@ -2,6 +2,7 @@ import { naticoMessage, naticoCommand, naticoInteraction } from '../../deps.ts';
 export default {
 	name: 'help',
 	aliases: ['ls', 'h'],
+	examples: ['help', 'help help'],
 	description: 'natico help command',
 	enabled: true,
 	slash: true,

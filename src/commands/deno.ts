@@ -3,20 +3,18 @@ import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'deno',
 	aliases: ['deno'],
+	examples: ['deno discorddeno'],
 	description: 'Search for a deno package',
 	enabled: true,
 	slash: true,
+	required: true,
 	category: 'general',
 	async exec(message: naticoMessage) {
-		if (!message.args)
-			return message.reply({
-				content: '<:no:838017092216946748> Please provide a message',
-			});
 		const pkg = await axiod(`https://api.deno.land/modules`, {
 			method: 'GET',
 			params: {
 				limit: 1,
-				query: message.args,
+				query: message.args.replace('discordeno', 'discorddeno'), // its discorddeno not discord-eno
 			},
 		});
 

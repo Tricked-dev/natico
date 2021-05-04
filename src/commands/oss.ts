@@ -2,6 +2,7 @@ import { naticoMessage, naticoInteraction, settings } from '../../deps.ts';
 export default {
 	name: 'oss',
 	aliases: ['oss'],
+	examples: ['oss'],
 	description: 'Sends to repository for the source code of the bot',
 	enabled: true,
 	slash: true,

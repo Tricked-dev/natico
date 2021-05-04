@@ -3,15 +3,13 @@ import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'crate',
 	aliases: ['crate', 'cargo'],
+	examples: ['crate serde'],
 	description: 'Search for a crate package',
 	enabled: true,
 	slash: true,
+	required: true,
 	category: 'general',
 	async exec(message: naticoMessage) {
-		if (!message.args)
-			return message.reply({
-				content: '<:no:838017092216946748> Please provide a message',
-			});
 		const pkg = await axiod(`https://crates.io/api/v1/crates`, {
 			method: 'GET',
 			params: {

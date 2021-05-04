@@ -2,9 +2,11 @@ import { naticoMessage, naticoInteraction, settings } from '../../deps.ts';
 export default {
 	name: 'prefix',
 	aliases: ['prefix', 'pf'],
+	examples: ['prefix'],
 	description: 'Set the prefix of natico',
 	enabled: true,
 	slash: false,
+	required: true,
 	category: 'dev',
 	async exec(message: naticoMessage) {
 		return await message.reply(`My prefixes are ${settings.prefix.join(', ')}`);

@@ -88,7 +88,7 @@ export default class CommandHandler {
 		args: string
 	) {
 		if (!command) return;
-
+		const no = '<:no:838017092216946748>';
 		if (this.cooldowns.has(message.author.id))
 			if (!this.IgnoreCD.includes(message.author.id))
 				return message.addReaction('no:838017092216946748');
@@ -99,12 +99,15 @@ export default class CommandHandler {
 
 		if (command.ownerOnly)
 			if (!this.owners.includes(message.author.id))
-				return message.reply('This command is only for owners');
+				return message.reply(`${no} This command is only for owners`);
 
 		if (command.superUserOnly)
 			if (!this.superusers.includes(message.author.id))
-				return message.reply('This command is only for superusers');
+				return message.reply(`${no} This command is only for superusers`);
 
+		if (command.required)
+			if (!args)
+				return message.reply(`${no} ${command.name} requires arguments`);
 		message['api'] = credentials.github;
 		message['handler'] = this;
 		message['embed'] = embed;

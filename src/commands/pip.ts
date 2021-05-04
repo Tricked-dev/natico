@@ -3,15 +3,13 @@ import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'pip',
 	aliases: ['pip', 'python'],
+	examples: ['pip discord.py'],
 	description: 'Search for a pip package',
 	enabled: true,
 	slash: true,
+	required: true,
 	category: 'general',
 	async exec(message: naticoMessage) {
-		if (!message.args)
-			return message.reply({
-				content: '<:no:838017092216946748> Please provide a package',
-			});
 		const pkg = await axiod(`https://api.anaconda.org/search`, {
 			method: 'GET',
 			params: {

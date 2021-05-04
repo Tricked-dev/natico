@@ -2,6 +2,7 @@ import { naticoMessage, botID } from '../../deps.ts';
 export default {
 	name: 'invite',
 	aliases: ['invite', 'inv'],
+	examples: ['invite'],
 	description: 'Eval some super javascript deno code',
 	enabled: true,
 	slash: false,

@@ -3,6 +3,7 @@ import { naticoMessage, naticoInteraction } from '../../deps.ts';
 export default {
 	name: 'trending',
 	aliases: ['trending'],
+	examples: ['trending'],
 	description: 'What to ping next?',
 	enabled: true,
 	slash: false,

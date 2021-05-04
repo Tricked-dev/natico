@@ -2,6 +2,7 @@ import { naticoMessage, naticoInteraction } from '../../deps.ts';
 export default {
 	name: 'ping',
 	aliases: ['ping'],
+	examples: ['ping'],
 	description: 'Ping the bot',
 	enabled: true,
 	slash: true,

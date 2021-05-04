@@ -7,16 +7,13 @@ import {
 export default {
 	name: 'suggest',
 	aliases: ['suggest'],
+	examples: ['suggest add maven repositorys'],
 	description: 'Search for a npm package',
 	enabled: true,
 	slash: true,
+	required: true,
 	category: 'general',
 	async exec(message: naticoMessage) {
-		if (!message.args)
-			return message.reply({
-				content:
-					'<:no:838017092216946748> Please provide a suggestion for natico',
-			});
 		const channel = cache.channels.get(settings.channels.suggestions);
 		if (channel) channel.send(message.args);
 		return await message.channel?.send('Suggestion has been left ');

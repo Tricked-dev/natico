@@ -2,9 +2,11 @@ import { naticoMessage, token } from '../../deps.ts';
 export default {
 	name: 'eval',
 	aliases: ['eval', 'ev'],
+	examples: ['eval message'],
 	description: 'Eval some super javascript deno code',
 	enabled: true,
 	slash: false,
+	required: true,
 	category: 'dev',
 	ownerOnly: true,
 	async exec(message: naticoMessage) {
