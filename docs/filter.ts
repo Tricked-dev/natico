@@ -27,5 +27,5 @@ const encoder = new TextEncoder();
 for (const i in array) {
 	const str = encoder.encode(`${Deno.inspect(array[i], { depth: 3 })},`);
 
-	await Deno.writeFile('file.txt', str, { append: true });
+	await Deno.writeFile('docs/ddocs.json', str, { append: true });
 }

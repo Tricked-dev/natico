@@ -1,5 +1,5 @@
 import { naticoMessage, naticoInteraction } from '../../deps.ts';
-import { denodoc } from '../../docs/discorddeno.ts';
+import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'ddoc',
 	aliases: ['ddoc', 'discorddeno', 'discordeno', 'ddocs'],
@@ -8,12 +8,16 @@ export default {
 	slash: true,
 	category: 'general',
 	async exec(message: naticoMessage) {
+		const denodoc = await axiod(
+			'https://gist.githubusercontent.com/SkyBlockDev/aa24237591b296c528a322d4a352199f/raw/5d365841be7611f046315653bd5555eabade6d65/denodocs.json',
+			{ method: 'get' }
+		);
 		if (!message.args)
 			return message.reply({
 				content: '<:no:838017092216946748> Please provide a search',
 			});
 
-		const result = denodoc.find(
+		const result = denodoc.data.find(
 			(p) =>
 				p.name.toLowerCase() == message.args.toLowerCase() &&
 				p.kind !== 'import'
