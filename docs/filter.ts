@@ -6,7 +6,9 @@ const denodoc = await axiod(
 		method: 'get',
 	}
 );
-const iss = denodoc.data.nodes.filter((i) => i.kind !== 'import');
+const iss = denodoc.data.nodes.filter(
+	(i) => i.kind !== 'import' && i.kind !== 'interface'
+);
 const uniqueChars = [...new Set(iss)];
 const functions = new Collection();
 uniqueChars.forEach((i) => {

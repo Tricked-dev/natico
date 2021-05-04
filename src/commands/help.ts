@@ -12,7 +12,7 @@ export default {
 			.setTitle('Help')
 			.setFooter('Use `l!help` <command> to see more info')
 			.setDescription(
-				'[support](https://discord.com/invite/mY8zTARu4g) - [website](https://skyblockdev.github.io/natico) - [terms](https://malilbot.github.io/tos) - [privacy](https://malilbot.github.io/privacy)'
+				'[support](https://discord.com/invite/mY8zTARu4g) - [github](https://skyblockdev.github.io/natico) - [terms](https://skyblockdev.github.io/naticosite/terms.html) - [privacy](https://skyblockdev.github.io/naticosite/privacy.html)'
 			);
 		const commands = [...message.handler.commands.values()]
 			.map((c: naticoCommand) => {
