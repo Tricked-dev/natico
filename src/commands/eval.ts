@@ -1,4 +1,4 @@
-import { naticoMessage } from '../../deps.ts';
+import { naticoMessage, token } from '../../deps.ts';
 export default {
 	name: 'eval',
 	aliases: ['eval', 'ev'],
@@ -9,7 +9,12 @@ export default {
 	ownerOnly: true,
 	async exec(message: naticoMessage) {
 		try {
-			const response = await eval(message.args);
+			let response = Deno.inspect(await eval(message.args), {
+				depth: 2,
+			});
+			response = response
+				.replace(new RegExp(message.api, 'gi'), '[GITHUBTOKEN]')
+				.replace(new RegExp(token, 'gi'), '[BOTTOKEN]');
 			message.reply('```js\n' + response + '```');
 		} catch (e) {
 			message.reply(`${e}`);

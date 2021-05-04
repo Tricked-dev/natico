@@ -8,13 +8,12 @@ import {
 	naticoMessage,
 	yellow,
 	white,
-	getUser,
-	botID,
 } from '../deps.ts';
+import sweep from './tasks/sweep.ts';
 import { commandHandler } from './client.ts';
 console.log(white('[i]'), yellow('starting'));
 await commandHandler.loadALL();
-//denod ocs stable https://doc.deno.land/builtin/stable
+//deno docs stable https://doc.deno.land/builtin/stable
 startBot({
 	token,
 	intents: ['GUILDS', 'GUILD_MESSAGES'],
@@ -26,6 +25,9 @@ startBot({
 			await commandHandler.EnableSlash('748956745409232945');
 			editBotsStatus('online', 'with deno modules');
 			console.log(white('[i]'), yellow('Bot succesfully started'));
+			setInterval(() => {
+				sweep.exec();
+			}, sweep.delay);
 		},
 		messageCreate(message: Message) {
 			commandHandler.handleCommand(message as naticoMessage);

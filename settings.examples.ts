@@ -11,7 +11,7 @@ export default {
 			superuser: [],
 			nocooldown: [],
 		},
-		prefix: 'l!', //yes i know this isnt used
+		prefix: ['l!'],
 		tesetserver: '',
 		clientid: '',
 		invite: '',

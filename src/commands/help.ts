@@ -10,8 +10,10 @@ export default {
 		const embed = message
 			.embed()
 			.setTitle('Help')
-			.setFooter('Use `l!help` <command> to see more info');
-
+			.setFooter('Use `l!help` <command> to see more info')
+			.setDescription(
+				'[support](https://discord.com/invite/mY8zTARu4g) - [website](https://skyblockdev.github.io/natico) - [terms](https://malilbot.github.io/tos) - [privacy](https://malilbot.github.io/privacy)'
+			);
 		const commands = [...message.handler.commands.values()]
 			.map((c: naticoCommand) => {
 				if (c.category == 'dev') return;
@@ -57,7 +59,9 @@ export default {
 			.embed()
 			.setTitle('Help')
 			.setFooter('Use `l!help` <command> to see more info')
-			.setDescription('[support](https://discord.com/invite/mY8zTARu4g)');
+			.setDescription(
+				'[support](https://discord.com/invite/mY8zTARu4g) - [website](https://skyblockdev.github.io/natico) - [terms](https://malilbot.github.io/tos) - [privacy](https://malilbot.github.io/privacy)'
+			);
 		const commands = [...interaction.handler.commands.values()]
 			.map((c: naticoCommand) => {
 				if (c.category == 'dev') return;
