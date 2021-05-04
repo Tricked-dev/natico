@@ -22,7 +22,7 @@ startBot({
 			commandHandler.runSlash(interaction as naticoInteraction);
 		},
 		async ready() {
-			await commandHandler.EnableSlash('748956745409232945');
+			await commandHandler.enableSlash('748956745409232945');
 			editBotsStatus('online', 'with deno modules');
 			console.log(white('[i]'), yellow('Bot succesfully started'));
 			setInterval(() => {

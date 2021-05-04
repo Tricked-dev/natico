@@ -271,7 +271,7 @@ export default class CommandHandler {
 	 * @param guildID - Specific guild to enable slash commands on
 	 * @returns - List of enabled commands
 	 */
-	public async EnableSlash(guildID?: string) {
+	public async enableSlash(guildID?: string) {
 		const Enabled = guildID
 			? await getSlashCommands(guildID)
 			: await getSlashCommands();
@@ -328,6 +328,22 @@ export default class CommandHandler {
 			await deleteSlashCommand(command.id, guildID);
 		}
 	}
+
+	/**
+	 * Enables all slash command on the specified server no check used or anything
+	 * @param guildID ID of the guild
+	 *
+	 */
+	public forceSlash(guildID?: string) {
+		this.commands.forEach(async (command: naticoCommand) => {
+			if (command.slash && command.SlashData) {
+				if (guildID) command.SlashData['guildID'] = guildID;
+				const SlashData = command.SlashData as CreateSlashCommandOptions;
+				await createSlashCommand(SlashData);
+			}
+		});
+	}
+
 	/**
 	 * Does nothing :kek:
 	 */
