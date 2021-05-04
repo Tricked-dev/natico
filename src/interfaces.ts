@@ -88,6 +88,21 @@ export interface naticoUser {
 	public_flags?: number;
 	bot?: boolean;
 }
+export interface naticoRes {
+	description: string;
+	repository: string;
+	newest_version: string;
+	downloads: string | number;
+	recent_downloads: number | string;
+	id: string;
+	name: string;
+	date: string;
+	scoped: string;
+	version: string;
+	keywords: string[];
+	versions: string[];
+	summary: string;
+}
 /**
  *
  * @param data - Slash command data to be send in the reply

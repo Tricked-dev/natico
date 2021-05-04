@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'npm',
@@ -24,7 +24,7 @@ export default {
 			return message.reply({
 				content: '<:no:838017092216946748> Please provide a message',
 			});
-		const result = pkg.data.results[0].package;
+		const result: naticoRes = pkg.data.results[0].package;
 		message.channel?.send({
 			embed: message
 				.embed()
@@ -66,7 +66,7 @@ export default {
 			return interaction.reply({
 				content: '<:no:838017092216946748> Package not found',
 			});
-		const result = pkg.data.results[0].package;
+		const result: naticoRes = pkg.data.results[0].package;
 		const embed = interaction
 			.embed()
 			.setColor('#FF0000')

@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'pip',
@@ -25,7 +25,7 @@ export default {
 				content: '<:no:838017092216946748> Please provide a valid pip package',
 			});
 
-		const result = pkg.data[0];
+		const result: naticoRes = pkg.data[0];
 
 		message.channel?.send({
 			embed: message
@@ -65,7 +65,7 @@ export default {
 				content: '<:no:838017092216946748> Please provide a valid pip package',
 			});
 
-		const result = pkg.data[0];
+		const result: naticoRes = pkg.data[0];
 
 		const embed = interaction
 			.embed()
