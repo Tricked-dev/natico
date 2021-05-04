@@ -276,8 +276,6 @@ export default class CommandHandler {
 			? await getSlashCommands(guildID)
 			: await getSlashCommands();
 
-		const list: any[] /** Anyone any idea what to put instead of any? */ = [];
-
 		/**
 		 * Goes over the commands and checks if it still exists
 		 */
@@ -320,13 +318,16 @@ export default class CommandHandler {
 				}
 			}
 		});
-		return list;
+		return true;
 	}
 	public async deleteAllSlash(guildID?: string) {
 		const SlashCommands = await getSlashCommands(guildID);
 		for (const command of SlashCommands) {
-			await deleteSlashCommand(command.id, guildID);
+			await deleteSlashCommand(command.id, guildID).catch((e) => {
+				return e;
+			});
 		}
+		return true;
 	}
 
 	/**
@@ -339,15 +340,20 @@ export default class CommandHandler {
 			if (command.slash && command.SlashData) {
 				if (guildID) command.SlashData['guildID'] = guildID;
 				const SlashData = command.SlashData as CreateSlashCommandOptions;
-				await createSlashCommand(SlashData);
+				await createSlashCommand(SlashData).catch((e) => {
+					return e;
+				});
 			}
 		});
+		return true;
 	}
 
 	/**
 	 * Does nothing :kek:
 	 */
-	public handleSlash() {}
+	public handleSlash() {
+		return false;
+	}
 	/**
 	 * Used to load all commands
 	 */
@@ -364,5 +370,6 @@ export default class CommandHandler {
 
 			this.commands.set(Command.name.replace('.ts', ''), command);
 		}
+		return true;
 	}
 }
