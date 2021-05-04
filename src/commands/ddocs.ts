@@ -20,7 +20,6 @@ export default {
 		);
 		if (!result) return await message.reply('Docs not found');
 		const srcUrl = `${result.location.filename}#L${result.location.line}`;
-		console.log(result.location.filename);
 		message.channel?.send({
 			embed: message
 				.embed()

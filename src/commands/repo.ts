@@ -16,7 +16,6 @@ export default {
 				Authorization: `token ${message.api}`,
 			},
 		}).then((response) => response.json());
-		console.log(user);
 	},
 	SlashData: {
 		options: [
