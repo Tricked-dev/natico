@@ -13,7 +13,7 @@ export default {
 				content: '<:no:838017092216946748> Please provide a search',
 			});
 
-		const result = denodoc.nodes.find(
+		const result = denodoc.find(
 			(p) =>
 				p.name.toLowerCase() == message.args.toLowerCase() &&
 				p.kind !== 'import'
