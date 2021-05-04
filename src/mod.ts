@@ -7,6 +7,7 @@ import {
 	naticoInteraction,
 	naticoMessage,
 	yellow,
+	settings,
 	white,
 } from '../deps.ts';
 import sweep from './tasks/sweep.ts';
@@ -22,7 +23,10 @@ startBot({
 			commandHandler.runSlash(interaction as naticoInteraction);
 		},
 		async ready() {
-			await commandHandler.enableSlash('748956745409232945');
+			if (settings.dev == true) {
+				await commandHandler.enableSlash(settings.testserver);
+			}
+
 			editBotsStatus('online', 'with deno modules');
 			console.log(white('[i]'), yellow('Bot succesfully started'));
 			setInterval(() => {
