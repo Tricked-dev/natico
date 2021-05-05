@@ -2,7 +2,7 @@ import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'npm',
-	aliases: ['npm', 'node', 'nodejs', 'yarn'],
+	aliases: ['npm', 'node', 'nodejs', 'yarn', 'bloat'],
 	examples: ['npm discord.js'],
 	description: 'Search for a npm package',
 	enabled: true,

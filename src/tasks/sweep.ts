@@ -6,7 +6,6 @@ export default {
 	name: 'sweep',
 	delay: 600000, // 10 mins
 	exec() {
-		console.log(cyan('[$]'), gray('Sweeping cache'));
 		const now = Date.now();
 
 		cacheHandlers.clear('presences');
