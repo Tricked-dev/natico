@@ -1,4 +1,4 @@
-import { botID, cache, cacheHandlers, cyan, gray } from '../../deps.ts';
+import { botId, cache, cacheHandlers, cyan, gray } from '../../deps.ts';
 // original code from https://github.com/discordeno/template/blob/master/src/tasks/sweeper.ts
 // slightly stripped down
 const MESSAGE_LIFETIME = 600000; //10 minutes
@@ -14,7 +14,7 @@ export default {
 			guild.presences.clear();
 
 			guild.members.forEach((member) => {
-				if (member.id === botID) return;
+				if (member.id === botId) return;
 
 				if (guild.voiceStates.has(member.id)) return;
 

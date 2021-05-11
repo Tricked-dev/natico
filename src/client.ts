@@ -1,4 +1,4 @@
-import CommandHandler from './commandHandler.ts';
+import CommandHandler from '../lib/commandHandler.ts';
 import { join, Message, settings } from '../deps.ts';
 
 export const commandHandler: CommandHandler = new CommandHandler({

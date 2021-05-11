@@ -1,10 +1,10 @@
 import {
 	Interaction,
 	Message,
-	SlashCommandCallbackData,
-	CreateSlashCommandOptions,
 	embed,
-	EditSlashResponseOptions,
+	ApplicationCommandOptionChoice,
+	DiscordenoMessage,
+	InteractionApplicationCommandCallbackData,
 } from '../deps.ts';
 /**
  * Needed to add types to message extender and interaction
@@ -41,7 +41,7 @@ export interface naticoCommand {
 	exec: (
 		message: naticoMessage
 	) => Promise<void | Message | naticoMessage | string | string[]>;
-	SlashData?: CreateSlashCommandOptions;
+	SlashData?: ApplicationCommandOptionChoice;
 	/**
 	 * Runs the slash command
 	 */
@@ -66,7 +66,7 @@ export interface naticoInteraction extends Interaction {
 /**
  * Interface created so i can pass the handler through
  */
-export interface naticoMessage extends Message {
+export interface naticoMessage extends Message, DiscordenoMessage {
 	me: naticoUser;
 	api: string;
 	handler: naticoCommandHandler;
@@ -74,19 +74,13 @@ export interface naticoMessage extends Message {
 	embed: typeof embed;
 }
 export interface naticoSlashOptions {
-	id: string;
+	id: bigint;
 	application_id: string;
 	name: string;
 	description: string;
 	version: string;
 	default_permission: boolean;
 	options: any;
-	author: {
-		name: string;
-	};
-	links: {
-		npm: string;
-	};
 }
 /**
  * Gives the client user object
@@ -103,6 +97,7 @@ export interface naticoRes {
 	description: string;
 	repository: string;
 	newest_version: string;
+	ApplicationCommand;
 	downloads: string | number;
 	recent_downloads: number | string;
 	id: string;
@@ -113,11 +108,19 @@ export interface naticoRes {
 	keywords: string[];
 	versions: string[];
 	summary: string;
+	author: {
+		name: string;
+	};
+	links: {
+		npm: string;
+	};
 }
 /**
  *
  * @param data - Slash command data to be send in the reply
  * @returns - Void
  */
-export type naticoReply = (data: SlashCommandCallbackData) => Promise<void>;
-export type naticoEdit = (data: EditSlashResponseOptions) => Promise<void>;
+export type naticoReply = (
+	data: InteractionApplicationCommandCallbackData
+) => Promise<void>;
+export type naticoEdit = (data: any) => Promise<void>;

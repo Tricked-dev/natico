@@ -89,6 +89,6 @@ export default {
 				`https://doc.deno.land/https/deno.land/x/discordeno/mod.ts#${result.name}`
 			)
 			.setColor('#1F85DE');
-		interaction.reply({ content: 'Deno docs', embeds: [embed] });
+		interaction.reply({ content: '', embeds: [embed] });
 	},
 };

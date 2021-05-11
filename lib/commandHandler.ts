@@ -1,11 +1,9 @@
 import {
 	Message,
 	Collection,
-	executeSlashCommand,
-	SlashCommandCallbackData,
 	createSlashCommand,
-	CreateSlashCommandOptions,
 	settings,
+	sendInteractionResponse,
 	getUser,
 	naticoInteraction,
 	naticoCommand,
@@ -19,11 +17,11 @@ import {
 	deleteSlashCommand,
 	credentials,
 	embed,
-	editSlashResponse,
-	EditSlashResponseOptions,
+	ApplicationCommandOptionChoice,
+	DiscordenoCreateApplicationCommand,
 	green,
 	blue,
-	botID,
+	botId,
 } from '../deps.ts';
 export default class CommandHandler {
 	commands: Collection<string, naticoCommand>;
@@ -95,7 +93,7 @@ export default class CommandHandler {
 
 		if (this.guildonly)
 			if (!this.superusers.includes(message.author.id))
-				if (!message.guildID) return;
+				if (!message.guildId) return;
 
 		if (command.ownerOnly)
 			if (!this.owners.includes(message.author.id))
@@ -118,8 +116,8 @@ export default class CommandHandler {
 		/**
 		 * I like to use me to get the id etc without having to import stuff
 		 */
-		message['me'] =
-			(cache.members.get(botID) as naticoUser) || (await getUser(botID));
+		//message['me'] =
+		//	(cache.members.get(botId) as naticoUser) || (await getUser(botId));
 
 		try {
 			/**
@@ -156,30 +154,35 @@ export default class CommandHandler {
 	 */
 	public async runSlash(interaction: naticoInteraction) {
 		if (!interaction.data) return console.log('Empty interaction');
+		else if (!interaction.data.name) return;
 		/**
 		 *
 		 * @param data - Slash command data to be send in the reply
 		 * @returns Idk? message object
 		 */
-		const reply = async (data: SlashCommandCallbackData): Promise<void> => {
-			return await executeSlashCommand(interaction.id, interaction.token, {
+		const reply = async (data: any): Promise<void> => {
+			return await sendInteractionResponse(interaction.id, interaction.token, {
 				type: 4,
 				data,
 			});
 		};
-		const edit = async (data: EditSlashResponseOptions): Promise<void> => {
-			return await editSlashResponse(interaction.token, data);
+		const edit = async (data: any): Promise<void> => {
+			return await sendInteractionResponse(
+				interaction.id,
+				interaction.token,
+				data
+			);
 		};
 
 		//Make a alias to the name
 		interaction['name'] = interaction.data.name;
-		interaction['reply'] = reply;
+		interactionApplicationCommandOptionChoice['reply'] = reply;
 		interaction['edit'] = edit;
 		interaction['api'] = credentials.github;
 		interaction['embed'] = embed;
 		interaction['handler'] = this;
 		interaction['me'] =
-			(cache.members.get(botID) as naticoUser) || (await getUser(botID));
+			(cache.members.get(botId) as naticoUser) || (await getUser(botId));
 
 		const command = this.commands.get(interaction.name);
 		if (!command) return;
@@ -189,7 +192,7 @@ export default class CommandHandler {
 				green(`slash ran`),
 				blue(command.name),
 				green(`user`),
-				blue(`${interaction.member.username} ${interaction.member.id}`)
+				blue(`${interaction?.user?.username} ${interaction?.user?.id}`)
 			);
 
 			return command.execSlash(interaction);
@@ -205,8 +208,9 @@ export default class CommandHandler {
 	 * @returns - What Run Command returns
 	 */
 	public async handleCommand(message: naticoMessage) {
-		if (message.author.bot) return;
-		if (message.content == `<@!${botID}>`) {
+		if (!message?.content) return;
+		if (message.isBot) return;
+		if (message.content == `<@!${botId}>`) {
 			return await message.reply(
 				`Hello my prefix is ${settings.prefix.join(', ')}`
 			);
@@ -214,17 +218,17 @@ export default class CommandHandler {
 		/**
 		 * Allowing pings to be used as prefix!
 		 */
-		if (message.content.startsWith(`<@!${botID}>`)) {
+		if (message.content.startsWith(`<@!${botId}>`)) {
 			const command = message.content
 				.toLowerCase()
-				.slice(`<@!${botID}>`.length)
+				.slice(`<@!${botId}>`.length)
 				.trim()
 				.split(' ')[0];
 			const Command = this.FindCommand(command);
 
 			if (Command) {
 				const args = message.content
-					.slice(`<@!${botID}>`.length)
+					.slice(`<@!${botId}>`.length)
 					.trim()
 					.slice(command.length)
 					.trim();
@@ -274,7 +278,7 @@ export default class CommandHandler {
 	 * @param guildID - Specific guild to enable slash commands on
 	 * @returns - List of enabled commands
 	 */
-	public async enableSlash(guildID?: string) {
+	public async enableSlash(guildID?: bigint) {
 		const Enabled = guildID
 			? await getSlashCommands(guildID)
 			: await getSlashCommands();
@@ -304,8 +308,8 @@ export default class CommandHandler {
 				 * If the commands exists edit it
 				 */
 				if (found?.id) {
-					const SlashData = command.SlashData as CreateSlashCommandOptions;
-					// Cant really compare OPtions
+					const SlashData = command.SlashData as naticoSlashOptions;
+					// Cant really compare options
 					if (SlashData.description !== found.description) {
 						await upsertSlashCommand(found.id, SlashData, guildID);
 					}
@@ -315,7 +319,7 @@ export default class CommandHandler {
 					 */
 				} else {
 					if (guildID) command.SlashData['guildID'] = guildID;
-					const SlashData = command.SlashData as CreateSlashCommandOptions;
+					const SlashData = command.SlashData as naticoSlashOptions;
 					//console.log(SlashData);
 					await createSlashCommand(SlashData);
 				}
@@ -342,7 +346,8 @@ export default class CommandHandler {
 		this.commands.forEach(async (command: naticoCommand) => {
 			if (command.slash && command.SlashData) {
 				if (guildID) command.SlashData['guildID'] = guildID;
-				const SlashData = command.SlashData as CreateSlashCommandOptions;
+				const SlashData =
+					command.SlashData as DiscordenoCreateApplicationCommand;
 				await createSlashCommand(SlashData).catch((e) => {
 					return e;
 				});

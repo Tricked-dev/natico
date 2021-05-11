@@ -3,12 +3,12 @@ import {
 	Message,
 	token,
 	Interaction,
-	editBotsStatus,
 	naticoInteraction,
 	naticoMessage,
 	yellow,
 	settings,
 	white,
+	DiscordenoMessage,
 } from '../deps.ts';
 import sweep from './tasks/sweep.ts';
 import { commandHandler } from './client.ts';
@@ -17,26 +17,26 @@ await commandHandler.loadALL();
 //deno docs stable https://doc.deno.land/builtin/stable
 startBot({
 	token,
-	intents: ['GUILDS', 'GUILD_MESSAGES'],
+	intents: ['Guilds', 'GuildMessages', 'GuildVoiceStates'],
 	eventHandlers: {
 		interactionCreate(interaction: Interaction) {
 			commandHandler.runSlash(interaction as naticoInteraction);
 		},
 		async ready() {
-			if (settings.dev == true) {
-				await commandHandler.enableSlash(settings.testserver);
-			}
+			//if (settings.dev == true) {
+			//	await commandHandler.enableSlash(settings.testserver);
+			//}
 
-			editBotsStatus('online', 'with deno modules');
+			//editBotStatus("afk");
 			console.log(white('[i]'), yellow('Bot succesfully started'));
 			setInterval(() => {
 				sweep.exec();
 			}, sweep.delay);
 		},
-		messageCreate(message: Message) {
+		messageCreate(message: DiscordenoMessage) {
 			commandHandler.handleCommand(message as naticoMessage);
 		},
-		messageUpdate(message: Message) {
+		messageUpdate(message: DiscordenoMessage) {
 			commandHandler.handleCommand(message as naticoMessage);
 		},
 	},
