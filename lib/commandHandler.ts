@@ -87,20 +87,20 @@ export default class CommandHandler {
 	) {
 		if (!command) return;
 		const no = '<:no:838017092216946748>';
-		if (this.cooldowns.has(message.author.id))
-			if (!this.IgnoreCD.includes(message.author.id))
+		if (this.cooldowns.has(message.authorId.toString()))
+			if (!this.IgnoreCD.includes(message.authorId.toString()))
 				return message.addReaction('no:838017092216946748');
 
 		if (this.guildonly)
-			if (!this.superusers.includes(message.author.id))
+			if (!this.superusers.includes(message.authorId.toString()))
 				if (!message.guildId) return;
 
 		if (command.ownerOnly)
-			if (!this.owners.includes(message.author.id))
+			if (!this.owners.includes(message.authorId.toString()))
 				return message.reply(`${no} This command is only for owners`);
 
 		if (command.superUserOnly)
-			if (!this.superusers.includes(message.author.id))
+			if (!this.superusers.includes(message.authorId.toString()))
 				return message.reply(`${no} This command is only for superusers`);
 
 		if (command.required)
@@ -132,14 +132,14 @@ export default class CommandHandler {
 				green(`command ran`),
 				blue(command.name),
 				green(`user`),
-				blue(`${message.author.username} ${message.author.id}`)
+				blue(`${message.tag} ${message.authorId.toString()}`)
 			);
 			/**
 			 * Adding the user to a set and deleting them later!
 			 */
-			this.cooldowns.add(message.author.id);
+			this.cooldowns.add(message.authorId.toString());
 			setTimeout(
-				() => this.cooldowns.delete(message.author.id),
+				() => this.cooldowns.delete(message.authorId.toString()),
 				command.cooldown || this.cooldown
 			);
 		} catch (e) {
