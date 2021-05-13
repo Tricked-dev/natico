@@ -16,12 +16,12 @@ export default {
 				q: message.args,
 			},
 		});
-		//https://pub.dev/api/packages
+
 		if (!pkg.data.packages[0])
 			return message.reply({
 				content: '<:no:838017092216946748> Please provide a valid dart package',
 			});
-		//pub.dev/api/packages
+
 		const data = await axiod(
 			`https://pub.dev/api/packages/${pkg.data.packages[0].package}`,
 			{
