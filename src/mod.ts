@@ -1,12 +1,12 @@
 import {
 	startBot,
-	Message,
 	token,
 	Interaction,
 	naticoInteraction,
 	naticoMessage,
 	yellow,
-	settings,
+	editBotStatus,
+	DiscordActivityTypes,
 	white,
 	DiscordenoMessage,
 } from '../deps.ts';
@@ -22,12 +22,21 @@ startBot({
 		interactionCreate(interaction: Interaction) {
 			commandHandler.runSlash(interaction as naticoInteraction);
 		},
-		async ready() {
+		ready() {
 			//if (settings.dev == true) {
 			//	await commandHandler.enableSlash(settings.testserver);
 			//}
 
-			//editBotStatus("afk");
+			editBotStatus({
+				activities: [
+					{
+						name: 'deno packages',
+						type: DiscordActivityTypes.Competing,
+						createdAt: Date.now(),
+					},
+				],
+				status: 'online',
+			});
 			console.log(white('[i]'), yellow('Bot succesfully started'));
 			setInterval(() => {
 				sweep.exec();
