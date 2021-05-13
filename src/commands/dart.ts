@@ -42,7 +42,7 @@ export default {
 			)
 			.addField('❯ Version', result.latest.pubspec.version) //dependencies
 
-			.setTitle(`🦕 ${result.name}`, `https://pub.dev/packages${result.name}`);
+			.setTitle(`🐦 ${result.name}`, `https://pub.dev/packages${result.name}`);
 		let depsMessage = '';
 		const deps = result.latest.pubspec.dependencies;
 		console.log(deps);
@@ -54,7 +54,7 @@ export default {
 
 		embed.addField(
 			'❯ dependencies',
-			depsMessage || 'this package doesnt have any dependencies'
+			depsMessage ?? 'this package doesnt have any dependencies'
 		);
 
 		message.channel?.send({
