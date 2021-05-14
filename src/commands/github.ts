@@ -35,7 +35,7 @@ export default {
 		stats += `**Public repos** ${user.public_repos || 'none'}\n`;
 		stats += `**Public gists** ${user.public_gists || 'none'}\n`;
 		stats += `**Followers** ${user.followers}\n`;
-		stats += `**following** ${user.following}`;
+		stats += `**Following** ${user.following}`;
 		const embed = message
 			.embed()
 			.setTitle(user.login, user.html_url)
@@ -78,7 +78,7 @@ export default {
 			user.public_gists || 'none'
 		}\n`;
 		stats += `**[Followers](${user.followers_url})** ${user.followers}\n`;
-		stats += `**[following](${user.following_url})** ${user.following}`;
+		stats += `**[Following](${user.following_url})** ${user.following}`;
 		const embed = interaction
 			.embed()
 			.setTitle(user.login, user.html_url)
