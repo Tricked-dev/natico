@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
+import { naticoMessage, naticoInteraction } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'aur',
@@ -47,22 +47,24 @@ export default {
 	async execSlash(interaction: naticoInteraction, { arch }) {
 		const pkg = await data(arch.value);
 
-		if (!pkg.data[0])
+		if (!pkg.data.results[0])
 			return interaction.reply({
 				content: '<:no:838017092216946748> Please provide a valid AUR package',
 			});
 
-		const result: naticoRes = pkg.data[0];
+		const result = pkg.data.results[0];
 
 		const embed = interaction
 			.embed()
 			.setColor('#0080ff')
-			.addField('❯ Version', result.versions[0])
-			.setDescription(result.summary || 'No description provided')
-			.setTitle(
-				`<:arch:844981756246622209> ${result.name}`,
-				`https://pypi.org/project/${result.name}`
-			);
+			.addField('❯ Version', result.Version || 'no version')
+			.addField('❯ Maintainer', result.Maintainer || 'no Maintainer')
+			.addField(
+				'❯ Popularity',
+				`${result.Popularity}, no clue but its on the api` || 'no Maintainer'
+			)
+			.setDescription(result.Description || 'No description provided')
+			.setTitle(`<:arch:844981756246622209> ${result.Name}`, `${result.URL}`);
 
 		interaction.edit({ content: 'python', embeds: [embed] });
 	},
