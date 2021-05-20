@@ -290,19 +290,23 @@ export default class CommandHandler {
 		const Enabled = guildID
 			? await getSlashCommands(guildID)
 			: await getSlashCommands();
-
 		/**
 		 * Goes over the commands and checks if it still exists
 		 */
-		for (const command of Enabled) {
-			/**
-			 * "finds" the command
-			 */
+		await Enabled.map(async (command) => {
 			if (!this.commands.find((cmd) => cmd.name == command.name)) {
-				if (guildID) await deleteSlashCommand(command.id, guildID);
-				else await deleteSlashCommand(command.id);
+				if (guildID) {
+					await deleteSlashCommand(command.id, [guildID]);
+					return command.id;
+				} else {
+					await deleteSlashCommand(command.id);
+					return command.id;
+				}
+			} else {
+				return false;
 			}
-		}
+		});
+
 		/**
 		 * Updates the slash command data or creates a slash command
 		 */
@@ -311,25 +315,23 @@ export default class CommandHandler {
 				const found = Enabled.find(
 					(i: naticoSlashOptions) => i.name == command.name
 				);
-
 				/**
 				 * If the commands exists edit it
 				 */
+
 				if (found?.id) {
 					const SlashData = command.SlashData as naticoSlashOptions;
 					// Cant really compare options
 					if (SlashData.description !== found.description) {
-						await upsertSlashCommand(found.id, SlashData, guildID);
+						await upsertSlashCommand(found.id, SlashData, [guildID]);
 					}
-
 					/**
 					 * If it doesnt create it
 					 */
 				} else {
-					if (guildID) command.SlashData['guildID'] = guildID;
 					const SlashData = command.SlashData as naticoSlashOptions;
 					//console.log(SlashData);
-					await createSlashCommand(SlashData);
+					await createSlashCommand(SlashData, [guildID]);
 				}
 			}
 		});
