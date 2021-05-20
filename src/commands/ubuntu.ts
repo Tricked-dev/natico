@@ -19,7 +19,6 @@ export default {
 			});
 
 		const result = pkg.data.entries[0];
-		console.log(result.distro_series_link.split('/').reverse());
 		const user =
 			result.distro_series_link.split('/').reverse()[0] || 'no thing';
 		const url =

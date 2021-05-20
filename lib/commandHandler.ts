@@ -148,7 +148,13 @@ export default class CommandHandler {
 			);
 		} catch (e) {
 			console.log(e);
-			message.channel?.send(`<:no:838017092216946748> Try again`);
+			if (e?.response?.status && e?.response?.status !== 200)
+				return message.reply(
+					`${no} Something went wrong with this api request theres most likely something wrong on their end`
+				);
+			if (message.channel)
+				message.channel.send(`${no} A error occurred, Try again`);
+			else message.reply(`${no} A error occurred, Try again`);
 		}
 	}
 	/**

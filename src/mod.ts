@@ -23,10 +23,10 @@ startBot({
 		interactionCreate(interaction: Interaction) {
 			commandHandler.runSlash(interaction as any as naticoInteraction);
 		},
-		async ready() {
-			if (settings.dev == true) {
-				await commandHandler.enableSlash(settings.testserver);
-			}
+		ready() {
+			//if (settings.dev == true) {
+			//	await commandHandler.enableSlash(settings.testserver);
+			//}
 
 			editBotStatus({
 				activities: [
