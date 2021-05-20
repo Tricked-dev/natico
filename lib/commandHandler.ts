@@ -33,7 +33,9 @@ export default class CommandHandler {
 	rateLimit: number;
 	superusers: string[];
 	guildonly: boolean;
-	prefix: (msg: Message) => Promise<string[]>;
+	prefix: (
+		msg: Message
+	) => Promise<string[]> | string | string[] | Promise<string> | string;
 	constructor({
 		dir,
 		prefix,
@@ -45,7 +47,9 @@ export default class CommandHandler {
 		guildonly = false,
 	}: {
 		dir: string;
-		prefix: (msg: Message) => Promise<string[]>;
+		prefix: (
+			msg: Message
+		) => Promise<string[]> | string | string[] | Promise<string> | string;
 		IgnoreCD?: string[];
 		owners?: string[];
 		/**
@@ -176,7 +180,7 @@ export default class CommandHandler {
 
 		//Make a alias to the name
 		interaction['name'] = interaction.data.name;
-		interactionApplicationCommandOptionChoice['reply'] = reply;
+		interaction['reply'] = reply;
 		interaction['edit'] = edit;
 		interaction['api'] = credentials.github;
 		interaction['embed'] = embed;
@@ -194,8 +198,12 @@ export default class CommandHandler {
 				green(`user`),
 				blue(`${interaction?.user?.username} ${interaction?.user?.id}`)
 			);
-
-			return command.execSlash(interaction);
+			const convertedOptions: any = {};
+			if (interaction.data.options)
+				for (const option of interaction.data.options) {
+					convertedOptions[option.name] = option;
+				}
+			return command.execSlash(interaction, convertedOptions);
 		} catch (e) {
 			console.log(e);
 			interaction.reply({ content: `<:no:838017092216946748> Try again` });

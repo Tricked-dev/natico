@@ -1,4 +1,4 @@
-export * from 'https://raw.githubusercontent.com/discordeno/discordeno/ff3731d7ce536bbe5ca84aed9b4eb8bd50b1af27/mod.ts';
+export * from 'https://raw.githubusercontent.com/discordeno/discordeno/main/mod.ts';
 export { join } from 'https://deno.land/std@0.95.0/path/mod.ts';
 export * from 'https://deno.land/std@0.95.0/fmt/colors.ts';
 export * from './lib/interfaces.ts';

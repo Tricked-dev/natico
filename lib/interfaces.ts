@@ -46,7 +46,8 @@ export interface naticoCommand {
 	 * Runs the slash command
 	 */
 	execSlash: (
-		interaction: Interaction
+		interaction: Interaction,
+		options: any
 	) => Promise<void | Message | naticoMessage | string | string[]>;
 }
 
@@ -54,6 +55,7 @@ export interface naticoCommand {
  * Extending the interaction so i can get types on the reply/handler
  */
 export interface naticoInteraction extends Interaction {
+	id: bigint;
 	me: naticoUser;
 	api: string;
 	name: string;
@@ -66,7 +68,7 @@ export interface naticoInteraction extends Interaction {
 /**
  * Interface created so i can pass the handler through
  */
-export interface naticoMessage extends Message, DiscordenoMessage {
+export interface naticoMessage extends DiscordenoMessage {
 	me: naticoUser;
 	api: string;
 	handler: naticoCommandHandler;
@@ -75,7 +77,7 @@ export interface naticoMessage extends Message, DiscordenoMessage {
 }
 export interface naticoSlashOptions {
 	id: bigint;
-	application_id: string;
+	application_id: bigint;
 	name: string;
 	description: string;
 	version: string;
@@ -97,7 +99,6 @@ export interface naticoRes {
 	description: string;
 	repository: string;
 	newest_version: string;
-	ApplicationCommand;
 	downloads: string | number;
 	recent_downloads: number | string;
 	id: string;
