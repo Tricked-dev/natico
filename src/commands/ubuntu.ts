@@ -2,7 +2,7 @@ import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default {
 	name: 'apt',
-	aliases: ['apt', 'ubuntu', 'apt', 'mint'],
+	aliases: ['apt', 'ubuntu', 'apt', 'mint', 'debian'],
 	examples: ['apt neofetch'],
 	description:
 		'Searches the apt repositorys for some juicy arch :thumbsup: packages',
