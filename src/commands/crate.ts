@@ -12,6 +12,14 @@ export default class crate extends Command {
 			slash: true,
 			required: true,
 			category: 'general',
+			options: [
+				{
+					type: 3,
+					name: 'crate',
+					description: 'The crate you want to search for',
+					required: true,
+				},
+			],
 		});
 	}
 	async exec(message: naticoMessage, { args }: { args: string }) {
@@ -52,12 +60,14 @@ export default class crate extends Command {
 				),
 		});
 	}
-	async execSlash(interaction: naticoInteraction) {
-		const query = interaction?.data?.options[0]?.value;
+	async execSlash(
+		interaction: naticoInteraction,
+		{ crate }: { crate: { value: string } }
+	) {
 		const pkg = await axiod(`https://crates.io/api/v1/crates`, {
 			method: 'GET',
 			params: {
-				q: query,
+				q: crate.value,
 				max: '1',
 			},
 			headers: {},

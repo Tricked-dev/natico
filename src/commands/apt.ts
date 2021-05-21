@@ -13,6 +13,14 @@ export default class apt extends Command {
 			slash: true,
 			required: true,
 			category: 'general',
+			options: [
+				{
+					type: 3,
+					name: 'apt',
+					description: 'The package you want to search for',
+					required: true,
+				},
+			],
 		});
 	}
 	async exec(message: naticoMessage, { args }: { args: string }) {

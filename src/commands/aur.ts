@@ -13,6 +13,14 @@ export default class aur extends Command {
 			slash: true,
 			required: true,
 			category: 'general',
+			options: [
+				{
+					type: 3,
+					name: 'arch',
+					description: 'The package you want to search for',
+					required: true,
+				},
+			],
 		});
 	}
 	async exec(message: naticoMessage, { args }: { args: string }) {

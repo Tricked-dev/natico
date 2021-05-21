@@ -11,6 +11,14 @@ export default class github extends Command {
 			slash: true,
 			required: true,
 			category: 'general',
+			options: [
+				{
+					type: 3,
+					name: 'user',
+					description: 'github user you want to see the stats of',
+					required: true,
+				},
+			],
 		});
 	}
 	async exec(message: naticoMessage, { args }: { args: string }) {

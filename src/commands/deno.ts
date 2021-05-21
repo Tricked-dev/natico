@@ -12,6 +12,14 @@ export default class deno extends Command {
 			slash: true,
 			required: true,
 			category: 'general',
+			options: [
+				{
+					type: 3,
+					name: 'deno',
+					description: 'The package you want to search for',
+					required: true,
+				},
+			],
 		});
 	}
 	async exec(message: naticoMessage, { args }: { args: string }) {
@@ -43,14 +51,15 @@ export default class deno extends Command {
 				.setTitle(`🦕 ${result.name}`, `https://deno.land/x/${result.name}`),
 		});
 	}
-	async execSlash(interaction: naticoInteraction) {
-		const query = interaction?.data?.options[0]?.value;
-
+	async execSlash(
+		interaction: naticoInteraction,
+		{ deno }: { deno: { value: string } }
+	) {
 		const pkg = await axiod(`https://api.deno.land/modules/`, {
 			method: 'GET',
 			params: {
 				limit: 1,
-				query: query,
+				query: deno.value,
 			},
 		});
 

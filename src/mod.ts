@@ -11,7 +11,7 @@ import {
 	DiscordenoMessage,
 } from '../deps.ts';
 import sweep from './tasks/sweep.ts';
-//import { settings } from '../deps.ts';
+import { settings } from '../deps.ts';
 import { commandHandler } from './client.ts';
 console.log(white('[i]'), yellow('starting'));
 await commandHandler.loadALL();
@@ -23,10 +23,10 @@ startBot({
 		interactionCreate(interaction: Interaction) {
 			commandHandler.runSlash(interaction as unknown as naticoInteraction);
 		},
-		ready() {
-			//if (settings.dev == true) {
-			//	await commandHandler.enableSlash(settings.testserver);
-			//}
+		async ready() {
+			if (settings.dev == true) {
+				await commandHandler.enableSlash(settings.testserver);
+			}
 
 			editBotStatus({
 				activities: [

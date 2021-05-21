@@ -13,6 +13,7 @@ export default class Command {
 	slash: boolean | undefined;
 	enabled: boolean | undefined;
 	superUserOnly: boolean | undefined;
+	options: any | any[];
 	constructor(
 		id: string,
 		{
@@ -26,7 +27,9 @@ export default class Command {
 			category,
 			ownerOnly,
 			superUserOnly,
+			options,
 		}: {
+			options?: any | any[];
 			name?: string;
 			aliases?: string[];
 			examples?: string[];
@@ -39,6 +42,7 @@ export default class Command {
 			superUserOnly?: boolean;
 		}
 	) {
+		this.options = options;
 		this.superUserOnly = superUserOnly;
 		this.enabled = enabled;
 		this.slash = slash;

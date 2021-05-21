@@ -12,6 +12,14 @@ export default class dart extends Command {
 			slash: true,
 			required: true,
 			category: 'general',
+			options: [
+				{
+					type: 3,
+					name: 'dart',
+					description: 'The package you want to search for',
+					required: true,
+				},
+			],
 		});
 	}
 	async exec(message: naticoMessage, { args }: { args: string }) {
@@ -83,14 +91,15 @@ export default class dart extends Command {
 			});
 		}
 	}
-	async execSlash(interaction: naticoInteraction) {
+	async execSlash(
+		interaction: naticoInteraction,
+		{ dart }: { dart: { value: string } }
+	) {
 		try {
-			const query = interaction?.data?.options[0]?.value;
-
 			const pkg = await axiod(`https://pub.dev/api/search`, {
 				method: 'GET',
 				params: {
-					q: query,
+					q: dart.value,
 				},
 			});
 

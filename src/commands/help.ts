@@ -10,6 +10,14 @@ export default class help extends Command {
 			enabled: true,
 			slash: true,
 			category: 'general',
+			options: [
+				{
+					type: 3,
+					name: 'command',
+					description: 'Command you want help for',
+					default: false,
+				},
+			],
 		});
 	}
 	async exec(message: naticoMessage, { args }: { args: string }) {
@@ -56,11 +64,12 @@ export default class help extends Command {
 		embed.addField('commands', commands, false);
 		return await message.channel?.send({ embed });
 	}
-	async execSlash(interaction: naticoInteraction) {
-		if (interaction?.data?.options) {
-			const found = this.handler.FindCommand(
-				interaction?.data?.options[0].value
-			);
+	async execSlash(
+		interaction: naticoInteraction,
+		{ command }: { command: { value: string } }
+	) {
+		if (command) {
+			const found = this.handler.FindCommand(command.value);
 
 			if (found) {
 				const embed = this.handler

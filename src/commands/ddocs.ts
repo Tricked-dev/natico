@@ -13,6 +13,14 @@ export default class ddoc extends Command {
 			slash: true,
 			required: true,
 			category: 'general',
+			options: [
+				{
+					type: 3,
+					name: 'query',
+					description: 'query',
+					required: true,
+				},
+			],
 		});
 	}
 	async exec(message: naticoMessage, { args }: { args: string }) {
@@ -50,9 +58,10 @@ export default class ddoc extends Command {
 				.setColor('#1F85DE'),
 		});
 	}
-	async execSlash(interaction: naticoInteraction) {
-		const query = interaction?.data?.options[0]?.value;
-
+	async execSlash(
+		interaction: naticoInteraction,
+		{ query }: { query: { value: string } }
+	) {
 		const denodoc = await axiod(
 			'https://gist.githubusercontent.com/SkyBlockDev/aa24237591b296c528a322d4a352199f/raw/5d365841be7611f046315653bd5555eabade6d65/denodocs.json',
 			{ method: 'get' }

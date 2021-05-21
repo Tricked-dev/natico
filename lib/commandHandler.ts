@@ -159,7 +159,7 @@ export default class CommandHandler {
 	 * @param interaction - Needed for data
 	 * @returns - What the ran command returned
 	 */
-	public runSlash(interaction: naticoInteraction) {
+	async runSlash(interaction: naticoInteraction) {
 		if (!interaction.data) return console.log('Empty interaction');
 		else if (!interaction.data.name) return;
 		/**
@@ -186,8 +186,8 @@ export default class CommandHandler {
 		};
 		interaction['edit'] = edit;
 		interaction['reply'] = reply;
-
-		const command = this.commands.get(interaction.name);
+		//@ts-ignore
+		const command = this.FindCommand(interaction.data.name);
 		if (!command) return;
 		try {
 			console.info(
@@ -202,7 +202,8 @@ export default class CommandHandler {
 				for (const option of interaction.data.options) {
 					convertedOptions[option.name] = option;
 				}
-			return command.execSlash(interaction, convertedOptions);
+			/*@ts-ignore*/
+			await command.execSlash(interaction, convertedOptions);
 		} catch (e) {
 			console.log(e);
 			interaction.reply({ content: `<:no:838017092216946748> Try again` });
@@ -272,6 +273,16 @@ export default class CommandHandler {
 	 * @returns Command object or undefined
 	 */
 	public FindCommand(command: string) {
+		this.commands.find((cmd) => {
+			if (cmd.name == command) {
+				return true;
+			}
+			if (cmd.aliases) {
+				if (cmd.aliases.includes(command)) {
+					return true;
+				}
+			} else return false;
+		});
 		return (
 			this.commands.find((handler) => handler.aliases.includes(command)) ||
 			this.commands.get(command)
@@ -286,13 +297,13 @@ export default class CommandHandler {
 	 * @returns - List of enabled commands
 	 */
 	public async enableSlash(guildID?: bigint) {
-		const Enabled = guildID
+		const enabled = guildID
 			? await getSlashCommands(guildID)
 			: await getSlashCommands();
 		/**
 		 * Goes over the commands and checks if it still exists
 		 */
-		Enabled.map(async (command) => {
+		enabled.map(async (command) => {
 			if (!this.commands.find((cmd) => cmd.name == command.name)) {
 				if (guildID) {
 					await deleteSlashCommand(command.id, [guildID]);
@@ -310,27 +321,29 @@ export default class CommandHandler {
 		 * Updates the slash command data or creates a slash command
 		 */
 		this.commands.forEach(async (command: naticoCommand) => {
-			if (command.slash && command.SlashData) {
-				const found = Enabled.find(
+			if (command.enabled && command.slash && command.options) {
+				const found = enabled.find(
 					(i: naticoSlashOptions) => i.name == command.name
 				);
 				/**
 				 * If the commands exists edit it
 				 */
+				const slashData = {
+					name: command.name || command.id,
+					description: command.description || 'no description',
+					options: command.options,
+				};
 
 				if (found?.id) {
-					const SlashData = command.SlashData as naticoSlashOptions;
 					// Cant really compare options
-					if (SlashData.description !== found.description) {
-						await upsertSlashCommand(found.id, SlashData, [guildID]);
+					if (slashData.description !== found.description) {
+						await upsertSlashCommand(found.id, slashData, [guildID]);
 					}
 					/**
 					 * If it doesnt create it
 					 */
 				} else {
-					const SlashData = command.SlashData as naticoSlashOptions;
-					//console.log(SlashData);
-					await createSlashCommand(SlashData, [guildID]);
+					await createSlashCommand(slashData, [guildID]);
 				}
 			}
 		});
