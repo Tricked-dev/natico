@@ -9,15 +9,43 @@ export default class prefix extends Command {
 			description: 'Set the prefix of natico',
 			enabled: true,
 			slash: false,
-			required: true,
+			required: false,
 			category: 'dev',
 		});
 	}
 	async exec(message: naticoMessage) {
+		// const option = args.split(' ');
+		// if (!option || !args) {
+		// 	let prefixes = await this.db.guilds.getPrefix(message.guild!.id);
+		// 	if (!prefixes) prefixes = settings.prefix.join(', ');
+		// 	if (Array.isArray(prefixes)) {
+		// 		prefixes = prefixes.join(', ');
+		// 	}
 		return await message.reply(`My prefixes are ${settings.prefix.join(', ')}`);
-		// if (!message.guild)
-		// 	return message.reply('NO YOU CANT CHANGE THE PREFIX IN DMS STOP TRYING');
-		// await message.reply(`Anyone knows a good deno database?`);
+		//}
+		// if (
+		// 	hasGuildPermissions(message.guildId, message.authorId, ['MANAGE_GUILD'])
+		// ) {
+		// 	if (option[0] == 'set') {
+		// 		await this.db.guilds.setPrefix(message.guild!.id, option[1]);
+		// 		return message.reply(`Set my prefix to ${option[1]}`);
+		// 	} else if (option[0] == 'add') {
+		// 		await this.db.guilds.addPrefix(message.guild!.id, option[1]);
+		// 		return message.reply(`added prefix ${option[1]}`);
+		// 	} else if (option[0] == 'delete' || option[0] == 'remove') {
+		// 		await this.db.guilds.delPrefix(message.guild!.id, option[1]);
+		// 		return message.reply(`removed prefix ${option[1]}`);
+		// 	} else {
+		// 		await this.db.guilds.setPrefix(message.guild!.id, option[0]);
+		// 		return message.reply(`Set my prefix to ${option[0]}`);
+		// 	}
+		// } else {
+		// 	message.reply(
+		// 		'You need the permissions manage guild to use this command'
+		// 	);
+		// }
+
+		//! is a fancy way
 	}
 	async execSlash(interaction: naticoInteraction) {
 		await interaction.reply({ content: 'I need help finding a database' });

@@ -1,22 +1,18 @@
 import {
-	Message,
 	Collection,
-	createSlashCommand,
 	settings,
 	sendInteractionResponse,
 	naticoInteraction,
 	naticoMessage,
-	getSlashCommands,
-	upsertSlashCommand,
 	yellow,
-	naticoSlashOptions,
-	deleteSlashCommand,
-	DiscordenoCreateApplicationCommand,
+	EditGlobalApplicationCommand,
 	green,
 	blue,
 	botId,
 	join,
 	Embed,
+	hasGuildPermissions,
+	upsertSlashCommands,
 } from '../deps.ts';
 import naticoCommand from './Command.ts';
 export default class CommandHandler {
@@ -30,7 +26,7 @@ export default class CommandHandler {
 	superusers: string[];
 	guildonly: boolean;
 	prefix: (
-		msg: Message
+		msg: naticoMessage
 	) => Promise<string[]> | string | string[] | Promise<string> | string;
 	constructor({
 		dir,
@@ -44,7 +40,7 @@ export default class CommandHandler {
 	}: {
 		dir: string;
 		prefix: (
-			msg: Message
+			msg: naticoMessage
 		) => Promise<string[]> | string | string[] | Promise<string> | string;
 		IgnoreCD?: string[];
 		owners?: string[];
@@ -118,6 +114,18 @@ export default class CommandHandler {
 		if (command.required)
 			if (!args)
 				return message.reply(`${no} ${command.name} requires arguments`);
+		if (command.permissions)
+			if (!this.superusers.includes(message.authorId.toString()))
+				if (
+					!hasGuildPermissions(
+						message!.guildId,
+						message.authorId,
+						command.permissions
+					)
+				)
+					return message.reply(
+						`${no} You dont have enough permissions to run this command`
+					);
 
 		try {
 			/**
@@ -186,7 +194,7 @@ export default class CommandHandler {
 		};
 		interaction['edit'] = edit;
 		interaction['reply'] = reply;
-		const command = this.FindCommand(interaction.data.name);
+		const command = this.findCommand(interaction.data.name);
 		if (!command) return;
 		try {
 			console.info(
@@ -231,7 +239,7 @@ export default class CommandHandler {
 				.slice(`<@!${botId}>`.length)
 				.trim()
 				.split(' ')[0];
-			const Command = this.FindCommand(command);
+			const Command = this.findCommand(command);
 
 			if (Command) {
 				const args = message.content
@@ -253,7 +261,7 @@ export default class CommandHandler {
 					.slice(prefix.length)
 					.trim()
 					.split(' ')[0];
-				const Command = this.FindCommand(command);
+				const Command = this.findCommand(command);
 
 				if (Command) {
 					const args = message.content
@@ -271,8 +279,8 @@ export default class CommandHandler {
 	 * @param command - Command you want to search for
 	 * @returns Command object or undefined
 	 */
-	public FindCommand(command: string) {
-		this.commands.find((cmd) => {
+	public findCommand(command: string) {
+		return this.commands.find((cmd) => {
 			if (cmd.name == command) {
 				return true;
 			}
@@ -280,12 +288,9 @@ export default class CommandHandler {
 				if (cmd.aliases.includes(command)) {
 					return true;
 				}
-			} else return false;
+			}
+			return false;
 		});
-		return (
-			this.commands.find((handler) => handler.aliases.includes(command)) ||
-			this.commands.get(command)
-		);
 	}
 	/**
 	 * Check if commands have slash data and if they do it will activete it
@@ -296,93 +301,27 @@ export default class CommandHandler {
 	 * @returns - List of enabled commands
 	 */
 	public async enableSlash(guildID?: bigint) {
-		const enabled = guildID
-			? await getSlashCommands(guildID)
-			: await getSlashCommands();
-		/**
-		 * Goes over the commands and checks if it still exists
-		 */
-		enabled.map(async (command) => {
-			if (!this.commands.find((cmd) => cmd.name == command.name)) {
-				if (guildID) {
-					await deleteSlashCommand(command.id, [guildID]);
-					return command.id;
-				} else {
-					await deleteSlashCommand(command.id);
-					return command.id;
-				}
-			} else {
-				return false;
-			}
+		const commands: EditGlobalApplicationCommand[] = [];
+		const data = this.commands.filter(
+			(command) => (command.enabled && command.slash) || false
+		);
+		data.forEach((command: naticoCommand) => {
+			const slashdata: EditGlobalApplicationCommand = {
+				name: command.name || command.id,
+				description: command.description || 'no description',
+			};
+			//@ts-ignore - types are a lie
+			if (command.options) slashdata['options'] = command.options;
 		});
-
-		/**
-		 * Updates the slash command data or creates a slash command
-		 */
-		this.commands.forEach(async (command: naticoCommand) => {
-			if (command.enabled && command.slash && command.options) {
-				const found = enabled.find(
-					(i: naticoSlashOptions) => i.name == command.name
-				);
-				/**
-				 * If the commands exists edit it
-				 */
-				const slashData = {
-					name: command.name || command.id,
-					description: command.description || 'no description',
-					options: command.options,
-				};
-
-				if (found?.id) {
-					// Cant really compare options
-					if (slashData.description !== found.description) {
-						await upsertSlashCommand(found.id, slashData, [guildID]);
-					}
-					/**
-					 * If it doesnt create it
-					 */
-				} else {
-					await createSlashCommand(slashData, [guildID]);
-				}
-			}
-		});
-		return true;
-	}
-	public async deleteAllSlash(guildID?: string) {
-		const SlashCommands = await getSlashCommands(guildID);
-		for (const command of SlashCommands) {
-			await deleteSlashCommand(command.id, guildID).catch((e) => {
-				return e;
-			});
-		}
-		return true;
-	}
-
-	/**
-	 * Enables all slash command on the specified server no check used or anything
-	 * @param guildID ID of the guild
-	 *
-	 */
-	public forceSlash(guildID?: string) {
-		this.commands.forEach(async (command: naticoCommand) => {
-			if (command.slash && command.SlashData) {
-				if (guildID) command.SlashData['guildID'] = guildID;
-				const SlashData =
-					command.SlashData as DiscordenoCreateApplicationCommand;
-				await createSlashCommand(SlashData).catch((e) => {
-					return e;
-				});
-			}
-		});
-		return true;
+		return await upsertSlashCommands(commands, guildID);
 	}
 
 	/**
 	 * Does nothing :kek:
 	 */
-	public handleSlash() {
-		return false;
-	}
+	// public handleSlash() {
+	// 	return false;
+	// }
 	/**
 	 * Used to load all commands
 	 */
@@ -420,19 +359,9 @@ export default class CommandHandler {
 	}
 
 	public async load(thing: string) {
-		//if (!isClass && !this.extensions.has(Deno.extname(thing))) return undefined;
-
 		let mod = await import('file://' + thing);
 		mod = new mod.default();
 
-		/*
-		if (mod) {
-			mod = new mod(this); // eslint-disable-line new-cap
-		} else {
-			if (!isClass) delete require.cache[require.resolve(thing)];
-			return undefined;
-		}
-*/
 		this.register(mod, thing);
 
 		return mod;
