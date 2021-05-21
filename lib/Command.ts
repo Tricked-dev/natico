@@ -21,7 +21,7 @@ export default class Command {
 			aliases,
 			examples,
 			description,
-			enabled,
+			enabled = true,
 			slash,
 			required,
 			category,

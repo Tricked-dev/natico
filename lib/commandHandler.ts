@@ -92,10 +92,16 @@ export default class CommandHandler {
 		args: string
 	) {
 		if (!command) return;
+		/*"no" */
 		const no = '<:no:838017092216946748>';
+
+		if (!command.enabled)
+			if (!this.superusers.includes(message.authorId.toString()))
+				return message.reply(`${no} This command is currently disabled`);
+
 		if (this.cooldowns.has(message.authorId.toString()))
 			if (!this.IgnoreCD.includes(message.authorId.toString()))
-				return message.addReaction('no:838017092216946748');
+				return message.addReaction(`${no}`);
 
 		if (this.guildonly)
 			if (!this.superusers.includes(message.authorId.toString()))
@@ -112,12 +118,6 @@ export default class CommandHandler {
 		if (command.required)
 			if (!args)
 				return message.reply(`${no} ${command.name} requires arguments`);
-
-		/**
-		 * I like to use me to get the id etc without having to import stuff
-		 */
-		//message['me'] =
-		//	(cache.members.get(botId) as naticoUser) || (await getUser(botId));
 
 		try {
 			/**
@@ -186,7 +186,6 @@ export default class CommandHandler {
 		};
 		interaction['edit'] = edit;
 		interaction['reply'] = reply;
-		//@ts-ignore
 		const command = this.FindCommand(interaction.data.name);
 		if (!command) return;
 		try {
@@ -387,20 +386,45 @@ export default class CommandHandler {
 	/**
 	 * Used to load all commands
 	 */
-	public loadALL() {
+	public async loadALL() {
 		const filepaths = this.readdirRecursive(this.dir);
 		for (let filepath of filepaths) {
 			filepath = join(filepath);
-			if (filepath) this.load(filepath);
+			if (filepath) await this.load(filepath);
 		}
+		console.log(
+			blue('[:]'),
+			yellow(`Loaded`),
+			green(`${this.commands.size}`),
+			yellow('commands,'),
+			blue('slashed'),
+			green(
+				`${
+					this.commands.filter((command) => {
+						if (command.slash) return true;
+						else return false;
+					}).size
+				},`
+			),
+			blue('disabled'),
+			green(
+				`${
+					this.commands.filter((command) => {
+						if (!command.enabled) return true;
+						else return false;
+					}).size
+				}`
+			)
+		);
 		return this;
 	}
 
-	public async load(thing) {
+	public async load(thing: string) {
 		//if (!isClass && !this.extensions.has(Deno.extname(thing))) return undefined;
 
 		let mod = await import('file://' + thing);
 		mod = new mod.default();
+
 		/*
 		if (mod) {
 			mod = new mod(this); // eslint-disable-line new-cap
@@ -413,7 +437,7 @@ export default class CommandHandler {
 
 		return mod;
 	}
-	readdirRecursive(directory) {
+	readdirRecursive(directory: string) {
 		const result = [];
 
 		(function read(dir) {
@@ -432,7 +456,7 @@ export default class CommandHandler {
 
 		return result;
 	}
-	register(mod, filepath) {
+	register(mod, filepath: string) {
 		mod.filepath = filepath;
 		mod.handler = this;
 		this.commands.set(mod.id, mod);
