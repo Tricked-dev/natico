@@ -11,7 +11,7 @@ import {
 	DiscordenoMessage,
 } from '../deps.ts';
 import sweep from './tasks/sweep.ts';
-import { settings } from '../deps.ts';
+//import { settings } from '../deps.ts';
 import { commandHandler } from './client.ts';
 console.log(white('[i]'), yellow('starting'));
 await commandHandler.loadALL();

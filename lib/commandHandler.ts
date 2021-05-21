@@ -22,6 +22,9 @@ import {
 	green,
 	blue,
 	botId,
+	join,
+	relativePath,
+	statSync,
 } from '../deps.ts';
 export default class CommandHandler {
 	commands: Collection<string, naticoCommand>;
@@ -381,19 +384,54 @@ export default class CommandHandler {
 	/**
 	 * Used to load all commands
 	 */
-	public async loadALL() {
-		for await (const Command of Deno.readDir(this.dir)) {
-			const command = (await import(`${this.dir}/${Command.name}`)).default;
-			/**
-			 * Pretty much copy the stuff over for easier slash command registering
-			 */
-			if (command?.slash && command.SlashData) {
-				command.SlashData['name'] = command.name;
-				command.SlashData['description'] = command.description;
-			}
-
-			this.commands.set(Command.name.replace('.ts', ''), command);
+	public loadALL() {
+		const filepaths = this.readdirRecursive(this.dir);
+		for (let filepath of filepaths) {
+			filepath = join(filepath);
+			if (filepath) this.load(filepath);
 		}
-		return true;
+		return this;
+	}
+
+	public async load(thing) {
+		//if (!isClass && !this.extensions.has(Deno.extname(thing))) return undefined;
+
+		let mod = await import('file://' + thing);
+		mod = new mod.default();
+		/*
+		if (mod) {
+			mod = new mod(this); // eslint-disable-line new-cap
+		} else {
+			if (!isClass) delete require.cache[require.resolve(thing)];
+			return undefined;
+		}
+*/
+		this.register(mod, thing);
+
+		return mod;
+	}
+	readdirRecursive(directory) {
+		const result = [];
+
+		(function read(dir) {
+			const files = Deno.readDirSync(dir);
+
+			for (const file of files) {
+				const filepath = join(dir, `${file.name}`);
+
+				if (file.isDirectory) {
+					read(filepath);
+				} else {
+					result.push(filepath);
+				}
+			}
+		})(directory);
+
+		return result;
+	}
+	register(mod, filepath) {
+		mod.filepath = filepath;
+		mod.handler = this;
+		this.commands.set(mod.id, mod);
 	}
 }

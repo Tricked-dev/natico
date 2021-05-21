@@ -1,15 +1,20 @@
 import { naticoMessage, naticoInteraction } from '../../deps.ts';
 import Fuse from 'https://deno.land/x/fuse/dist/fuse.esm.min.js';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
-export default {
-	name: 'ddoc',
-	aliases: ['ddoc', 'discorddeno', 'discordeno', 'ddocs'],
-	examples: ['ddoc message'],
-	description: 'Searches the discord deno docs', //docs were obtained via https://doc.deno.land/api/docs?entrypoint=https://deno.land/x/discordeno/mod.ts
-	enabled: true,
-	slash: true,
-	required: true,
-	category: 'general',
+import Command from '../../lib/Command.ts';
+export default class ddoc extends Command {
+	constructor() {
+		super('ddoc', {
+			name: 'ddoc',
+			aliases: ['ddoc', 'discorddeno', 'discordeno', 'ddocs'],
+			examples: ['ddoc message'],
+			description: 'Searches the discord deno docs', //docs were obtained via https://doc.deno.land/api/docs?entrypoint=https://deno.land/x/discordeno/mod.ts
+			enabled: true,
+			slash: true,
+			required: true,
+			category: 'general',
+		});
+	}
 	async exec(message: naticoMessage) {
 		const denodoc = await axiod(
 			'https://gist.githubusercontent.com/SkyBlockDev/aa24237591b296c528a322d4a352199f/raw/5d365841be7611f046315653bd5555eabade6d65/denodocs.json',
@@ -44,17 +49,7 @@ export default {
 				)
 				.setColor('#1F85DE'),
 		});
-	},
-	SlashData: {
-		options: [
-			{
-				type: 3,
-				name: 'query',
-				description: 'query',
-				required: true,
-			},
-		],
-	},
+	}
 	async execSlash(interaction: naticoInteraction) {
 		const query = interaction?.data?.options[0]?.value;
 
@@ -90,5 +85,5 @@ export default {
 			)
 			.setColor('#1F85DE');
 		interaction.reply({ content: '', embeds: [embed] });
-	},
-};
+	}
+}

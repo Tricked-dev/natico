@@ -1,14 +1,19 @@
 import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
-export default {
-	name: 'deno',
-	aliases: ['deno'],
-	examples: ['deno discorddeno'],
-	description: 'Search for a deno package',
-	enabled: true,
-	slash: true,
-	required: true,
-	category: 'general',
+import Command from '../../lib/Command.ts';
+export default class deno extends Command {
+	constructor() {
+		super('deno', {
+			name: 'deno',
+			aliases: ['deno'],
+			examples: ['deno discorddeno'],
+			description: 'Search for a deno package',
+			enabled: true,
+			slash: true,
+			required: true,
+			category: 'general',
+		});
+	}
 	async exec(message: naticoMessage) {
 		const pkg = await axiod(`https://api.deno.land/modules`, {
 			method: 'GET',
@@ -37,17 +42,7 @@ export default {
 				.setDescription(result.description || 'No description provided')
 				.setTitle(`🦕 ${result.name}`, `https://deno.land/x/${result.name}`),
 		});
-	},
-	SlashData: {
-		options: [
-			{
-				type: 3,
-				name: 'package',
-				description: 'The package you want to search for',
-				required: true,
-			},
-		],
-	},
+	}
 	async execSlash(interaction: naticoInteraction) {
 		const query = interaction?.data?.options[0]?.value;
 
@@ -76,5 +71,5 @@ export default {
 			.setDescription(result.description || 'No description provided')
 			.setTitle(`🦕 ${result.name}`, `https://deno.land/x/${result.name}`);
 		interaction.reply({ content: 'deno', embeds: [embed] });
-	},
-};
+	}
+}

@@ -1,15 +1,20 @@
 import { naticoMessage, naticoInteraction } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
-export default {
-	name: 'aur',
-	aliases: ['aur', 'arch', 'paru'],
-	examples: ['aur neofetch'],
-	description:
-		'Searches the aur repositorys for some juicy arch :thumbsup: packages',
-	enabled: true,
-	slash: true,
-	required: true,
-	category: 'general',
+import Command from '../../lib/Command.ts';
+export default class aur extends Command {
+	constructor() {
+		super('aur', {
+			name: 'aur',
+			aliases: ['aur', 'arch', 'paru'],
+			examples: ['aur neofetch'],
+			description:
+				'Searches the aur repositorys for some juicy arch :thumbsup: packages',
+			enabled: true,
+			slash: true,
+			required: true,
+			category: 'general',
+		});
+	}
 	async exec(message: naticoMessage) {
 		const pkg = await data(message.args);
 		if (!pkg || !pkg?.data?.results[0])
@@ -36,17 +41,8 @@ export default {
 		message.channel?.send({
 			embed,
 		});
-	},
-	SlashData: {
-		options: [
-			{
-				type: 3,
-				name: 'arch',
-				description: 'The package you want to search for',
-				required: true,
-			},
-		],
-	},
+	}
+
 	async execSlash(interaction: naticoInteraction, { arch }) {
 		const pkg = await data(arch.value);
 
@@ -70,8 +66,8 @@ export default {
 			.setTitle(`<:arch:844981756246622209> ${result.Name}`, `${result.URL}`);
 
 		interaction.edit({ content: 'python', embeds: [embed] });
-	},
-};
+	}
+}
 function data(q) {
 	try {
 		return axiod(`https://aur.archlinux.org/rpc/`, {

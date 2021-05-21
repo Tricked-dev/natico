@@ -1,13 +1,18 @@
 import { naticoMessage, naticoInteraction } from '../../deps.ts';
 //import axiod from 'https://deno.land/x/axiod/mod.ts';
-export default {
-	name: 'trending',
-	aliases: ['trending'],
-	examples: ['trending'],
-	description: 'What to ping next?',
-	enabled: true,
-	slash: false,
-	category: 'dev',
+import Command from '../../lib/Command.ts';
+export default class trending extends Command {
+	constructor() {
+		super('trending', {
+			name: 'trending',
+			aliases: ['trending'],
+			examples: ['trending'],
+			description: 'What to ping next?',
+			enabled: true,
+			slash: false,
+			category: 'dev',
+		});
+	}
 	async exec(message: naticoMessage) {
 		return await message.reply('Soon:tm:');
 		/*
@@ -48,20 +53,10 @@ export default {
 
 		return message.channel.send('HI');
 		*/
-	},
-	SlashData: {
-		options: [
-			{
-				type: 3,
-				name: 'yes',
-				description: 'no?',
-				default: false,
-			},
-		],
-	},
+	}
 	async execSlash(interaction: naticoInteraction) {
 		await interaction.reply({
 			content: 'Currently no clue how to find trending github pages',
 		});
-	},
-};
+	}
+}

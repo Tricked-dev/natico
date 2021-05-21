@@ -1,14 +1,19 @@
 import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
-export default {
-	name: 'dart',
-	aliases: ['dart', 'flutter', '🐦'],
-	examples: ['dart http'],
-	description: 'Search for a 🐦 flutter package',
-	enabled: true,
-	slash: true,
-	required: true,
-	category: 'general',
+import Command from '../../lib/Command.ts';
+export default class dart extends Command {
+	constructor() {
+		super('dart', {
+			name: 'dart',
+			aliases: ['dart', 'flutter', '🐦'],
+			examples: ['dart http'],
+			description: 'Search for a 🐦 flutter package',
+			enabled: true,
+			slash: true,
+			required: true,
+			category: 'general',
+		});
+	}
 	async exec(message: naticoMessage) {
 		try {
 			const pkg = await axiod(`https://pub.dev/api/search`, {
@@ -76,17 +81,7 @@ export default {
 				content: '<:no:838017092216946748> Please provide a valid dart package',
 			});
 		}
-	},
-	SlashData: {
-		options: [
-			{
-				type: 3,
-				name: 'package',
-				description: 'The package you want to search for',
-				required: true,
-			},
-		],
-	},
+	}
 	async execSlash(interaction: naticoInteraction) {
 		try {
 			const query = interaction?.data?.options[0]?.value;
@@ -157,5 +152,5 @@ export default {
 				content: '<:no:838017092216946748> Please provide a valid dart package',
 			});
 		}
-	},
-};
+	}
+}

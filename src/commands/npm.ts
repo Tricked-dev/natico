@@ -1,14 +1,19 @@
 import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
-export default {
-	name: 'npm',
-	aliases: ['npm', 'node', 'nodejs', 'yarn', 'bloat'],
-	examples: ['npm discord.js'],
-	description: 'Search for a npm package',
-	enabled: true,
-	slash: true,
-	required: true,
-	category: 'general',
+import Command from '../../lib/Command.ts';
+export default class npm extends Command {
+	constructor() {
+		super('npm', {
+			name: 'npm',
+			aliases: ['npm', 'node', 'nodejs', 'yarn', 'bloat'],
+			examples: ['npm discord.js'],
+			description: 'Search for a npm package',
+			enabled: true,
+			slash: true,
+			required: true,
+			category: 'general',
+		});
+	}
 	async exec(message: naticoMessage) {
 		const pkg = await axiod(`https://api.npms.io/v2/search`, {
 			method: 'GET',
@@ -39,17 +44,7 @@ export default {
 				)
 				.setTitle(`<:npm:838350149725061169> ${result.name}`, result.links.npm),
 		});
-	},
-	SlashData: {
-		options: [
-			{
-				type: 3,
-				name: 'package',
-				description: 'The package you want to search for',
-				required: true,
-			},
-		],
-	},
+	}
 	async execSlash(interaction: naticoInteraction) {
 		const query = interaction?.data?.options[0]?.value;
 		const pkg = await axiod(`https://api.npms.io/v2/search`, {
@@ -80,5 +75,5 @@ export default {
 			)
 			.setTitle(`<:npm:838350149725061169> ${result.name}`, result.links.npm);
 		interaction.reply({ content: 'npm', embeds: [embed] });
-	},
-};
+	}
+}

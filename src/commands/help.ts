@@ -1,12 +1,17 @@
 import { naticoMessage, naticoCommand, naticoInteraction } from '../../deps.ts';
-export default {
-	name: 'help',
-	aliases: ['ls', 'h'],
-	examples: ['help', 'help help'],
-	description: 'natico help command',
-	enabled: true,
-	slash: true,
-	category: 'general',
+import Command from '../../lib/Command.ts';
+export default class help extends Command {
+	constructor() {
+		super('help', {
+			name: 'help',
+			aliases: ['ls', 'h'],
+			examples: ['help', 'help help'],
+			description: 'natico help command',
+			enabled: true,
+			slash: true,
+			category: 'general',
+		});
+	}
 	async exec(message: naticoMessage) {
 		if (message.args) {
 			const found = message.handler.FindCommand(message.args);
@@ -43,17 +48,7 @@ export default {
 			.join(' ');
 		embed.addField('commands', commands, false);
 		return await message.channel?.send({ embed });
-	},
-	SlashData: {
-		options: [
-			{
-				type: 3,
-				name: 'command',
-				description: 'Command you want help for',
-				default: false,
-			},
-		],
-	},
+	}
 	async execSlash(interaction: naticoInteraction) {
 		if (interaction?.data?.options) {
 			const found = interaction.handler.FindCommand(
@@ -99,5 +94,5 @@ export default {
 			embeds: [embed],
 			content: 'natico help',
 		});
-	},
-};
+	}
+}

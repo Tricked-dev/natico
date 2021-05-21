@@ -1,12 +1,17 @@
 import { naticoMessage, naticoInteraction, cache } from '../../deps.ts';
-export default {
-	name: 'stats',
-	aliases: ['stats'],
-	examples: ['stats'],
-	description: 'Sends some general stats of the bot',
-	enabled: true,
-	slash: true,
-	category: 'general',
+import Command from '../../lib/Command.ts';
+export default class stats extends Command {
+	constructor() {
+		super('stats', {
+			name: 'stats',
+			aliases: ['stats'],
+			examples: ['stats'],
+			description: 'Sends some general stats of the bot',
+			enabled: true,
+			slash: true,
+			category: 'general',
+		});
+	}
 	exec(message: naticoMessage) {
 		let totalMemberCount = 0;
 		let cachedMemberCount = 0;
@@ -31,8 +36,7 @@ export default {
 			.addField('Deno Version:', `v${Deno.version.deno}`, true);
 
 		return message.send({ embed });
-	},
-	SlashData: {},
+	}
 	async execSlash(interaction: naticoInteraction) {
 		let totalMemberCount = 0;
 		let cachedMemberCount = 0;
@@ -54,5 +58,5 @@ export default {
 			.addField('Deno Version:', `v${Deno.version.deno}`, true);
 
 		return await interaction.reply({ content: '', embeds: [embed] });
-	},
-};
+	}
+}

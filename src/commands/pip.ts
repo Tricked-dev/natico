@@ -1,14 +1,19 @@
 import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
-export default {
-	name: 'pip',
-	aliases: ['pip', 'python'],
-	examples: ['pip discord.py'],
-	description: 'Search for a pip package',
-	enabled: true,
-	slash: true,
-	required: true,
-	category: 'general',
+import Command from '../../lib/Command.ts';
+export default class pip extends Command {
+	constructor() {
+		super('pip', {
+			name: 'pip',
+			aliases: ['pip', 'python'],
+			examples: ['pip discord.py'],
+			description: 'Search for a pip package',
+			enabled: true,
+			slash: true,
+			required: true,
+			category: 'general',
+		});
+	}
 	async exec(message: naticoMessage) {
 		const pkg = await axiod(`https://api.anaconda.org/search`, {
 			method: 'GET',
@@ -36,17 +41,7 @@ export default {
 					`https://pypi.org/project/${result.name}`
 				),
 		});
-	},
-	SlashData: {
-		options: [
-			{
-				type: 3,
-				name: 'package',
-				description: 'The package you want to search for',
-				required: true,
-			},
-		],
-	},
+	}
 	async execSlash(interaction: naticoInteraction) {
 		const query = interaction?.data?.options[0]?.value;
 		interaction.reply({ content: 'searching' });
@@ -73,5 +68,5 @@ export default {
 			.setTitle(`🐍 ${result.name}`, `https://pypi.org/project/${result.name}`);
 
 		interaction.edit({ content: 'python', embeds: [embed] });
-	},
-};
+	}
+}

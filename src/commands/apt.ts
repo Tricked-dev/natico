@@ -1,15 +1,20 @@
 import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
-export default {
-	name: 'apt',
-	aliases: ['apt', 'ubuntu', 'apt', 'mint', 'debian'],
-	examples: ['apt neofetch'],
-	description:
-		'Searches the apt repositorys for some juicy arch :thumbsup: packages',
-	enabled: true,
-	slash: true,
-	required: true,
-	category: 'general',
+import Command from '../../lib/Command.ts';
+export default class apt extends Command {
+	constructor() {
+		super('apt', {
+			name: 'apt',
+			aliases: ['apt', 'ubuntu', 'apt', 'mint', 'debian'],
+			examples: ['apt neofetch'],
+			description:
+				'Searches the apt repositorys for some juicy arch :thumbsup: packages',
+			enabled: true,
+			slash: true,
+			required: true,
+			category: 'general',
+		});
+	}
 	async exec(message: naticoMessage) {
 		const pkg = await data(message.args);
 
@@ -41,17 +46,7 @@ export default {
 				.setDescription(result.Description || 'No description provided')
 				.setTitle(`${emoji} ${result.display_name}`, `${url}`),
 		});
-	},
-	SlashData: {
-		options: [
-			{
-				type: 3,
-				name: 'apt',
-				description: 'The package you want to search for',
-				required: true,
-			},
-		],
-	},
+	}
 	async execSlash(interaction: naticoInteraction, { apt }) {
 		const pkg = await data(apt.value);
 
@@ -85,8 +80,8 @@ export default {
 			.setTitle(`${emoji} ${result.display_name}`, `${url}`);
 
 		interaction.edit({ content: 'python', embeds: [embed] });
-	},
-};
+	}
+}
 function data(q: string) {
 	return axiod(
 		`https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources`,

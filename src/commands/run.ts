@@ -1,15 +1,19 @@
 import { naticoMessage, token } from '../../deps.ts';
-let decoder = new TextDecoder();
-export default {
-	name: 'run',
-	aliases: ['run', 'exec', 'sh'],
-	examples: ['eval message'],
-	description: 'Eval some super javascript deno code',
-	enabled: true,
-	slash: false,
-	required: true,
-	category: 'dev',
-	ownerOnly: true,
+import Command from '../../lib/Command.ts';
+export default class run extends Command {
+	constructor() {
+		super('run', {
+			name: 'run',
+			aliases: ['run', 'exec', 'sh'],
+			examples: ['eval message'],
+			description: 'Eval some super javascript deno code',
+			enabled: true,
+			slash: false,
+			required: true,
+			category: 'dev',
+			ownerOnly: true,
+		});
+	}
 	async exec(message: naticoMessage) {
 		try {
 			let out = await Deno.run({
@@ -24,5 +28,5 @@ export default {
 		} catch (e) {
 			message.reply(`${e}`);
 		}
-	},
-};
+	}
+}

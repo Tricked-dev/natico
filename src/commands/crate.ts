@@ -1,14 +1,19 @@
 import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
-export default {
-	name: 'crate',
-	aliases: ['crate', 'cargo'],
-	examples: ['crate serde'],
-	description: 'Search for a crate package',
-	enabled: true,
-	slash: true,
-	required: true,
-	category: 'general',
+import Command from '../../lib/Command.ts';
+export default class crate extends Command {
+	constructor() {
+		super('crate', {
+			name: 'crate',
+			aliases: ['crate', 'cargo'],
+			examples: ['crate serde'],
+			description: 'Search for a crate package',
+			enabled: true,
+			slash: true,
+			required: true,
+			category: 'general',
+		});
+	}
 	async exec(message: naticoMessage) {
 		const pkg = await axiod(`https://crates.io/api/v1/crates`, {
 			method: 'GET',
@@ -46,17 +51,7 @@ export default {
 					`https://crates.io/crates/${result.id}`
 				),
 		});
-	},
-	SlashData: {
-		options: [
-			{
-				type: 3,
-				name: 'crate',
-				description: 'The crate you want to search for',
-				required: true,
-			},
-		],
-	},
+	}
 	async execSlash(interaction: naticoInteraction) {
 		const query = interaction?.data?.options[0]?.value;
 		const pkg = await axiod(`https://crates.io/api/v1/crates`, {
@@ -95,5 +90,5 @@ export default {
 				`https://crates.io/crates/${result.id}`
 			);
 		interaction.reply({ content: 'crates', embeds: [embed] });
-	},
-};
+	}
+}

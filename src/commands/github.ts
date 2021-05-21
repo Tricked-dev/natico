@@ -4,16 +4,20 @@ import {
 	getUser,
 	settings,
 } from '../../deps.ts';
-
-export default {
-	name: 'github',
-	aliases: ['github', 'githubuser'],
-	examples: ['github skyblockdev'],
-	description: 'Sends some stats about a user github profile',
-	enabled: true,
-	slash: true,
-	required: true,
-	category: 'general',
+import Command from '../../lib/Command.ts';
+export default class github extends Command {
+	constructor() {
+		super('github', {
+			name: 'github',
+			aliases: ['github', 'githubuser'],
+			examples: ['github skyblockdev'],
+			description: 'Sends some stats about a user github profile',
+			enabled: true,
+			slash: true,
+			required: true,
+			category: 'general',
+		});
+	}
 	async exec(message: naticoMessage) {
 		const user = await fetch(`https://api.github.com/users/${message.args}`, {
 			method: 'GET',
@@ -43,17 +47,7 @@ export default {
 			.addField('➥ Stats', stats)
 			.setThumbnail(user.avatar_url || (await getUser(settings.clientid)));
 		message.channel?.send({ embed });
-	},
-	SlashData: {
-		options: [
-			{
-				type: 3,
-				name: 'user',
-				description: 'github user you want to see the stats of',
-				required: true,
-			},
-		],
-	},
+	}
 	async execSlash(interaction: naticoInteraction) {
 		if (!interaction.data?.options[0]?.value)
 			return interaction.reply({ content: 'Please provide a user' });
@@ -86,5 +80,5 @@ export default {
 			.addField('➥ Stats', stats)
 			.setThumbnail(user.avatar_url || (await getUser(settings.clientid)));
 		interaction.reply({ content: 'Github', embeds: [embed] });
-	},
-};
+	}
+}
