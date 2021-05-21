@@ -21,12 +21,8 @@ export default class stats extends Command {
 			cachedMemberCount += guild.members.size;
 		}
 
-		const embed = message
+		const embed = this.handler
 			.embed()
-			.setAuthor(
-				`${message.guild?.botMember?.nick || message.guild?.bot?.tag} Stats`,
-				message.guild?.bot?.avatarURL
-			)
 			.setColor('random')
 			.addField('Guilds:', cache.guilds.size.toLocaleString(), true)
 			.addField('Total Members:', totalMemberCount.toLocaleString(), true)
@@ -46,9 +42,8 @@ export default class stats extends Command {
 			cachedMemberCount += guild.members.size;
 		}
 
-		const embed = interaction
+		const embed = this.handler
 			.embed()
-			.setAuthor(`${interaction.me.username} Stats`)
 			.setColor('random')
 			.addField('Guilds:', cache.guilds.size.toLocaleString(), true)
 			.addField('Total Members:', totalMemberCount.toLocaleString(), true)

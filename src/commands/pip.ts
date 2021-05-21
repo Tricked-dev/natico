@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
+import { naticoMessage, naticoInteraction } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
 export default class pip extends Command {
@@ -14,12 +14,12 @@ export default class pip extends Command {
 			category: 'general',
 		});
 	}
-	async exec(message: naticoMessage) {
+	async exec(message: naticoMessage, { args }: { args: string }) {
 		const pkg = await axiod(`https://api.anaconda.org/search`, {
 			method: 'GET',
 			params: {
 				limit: 1,
-				name: message.args,
+				name: args,
 			},
 		});
 
@@ -28,10 +28,10 @@ export default class pip extends Command {
 				content: '<:no:838017092216946748> Please provide a valid pip package',
 			});
 
-		const result: naticoRes = pkg.data[0];
+		const result = pkg.data[0];
 
 		message.channel?.send({
-			embed: message
+			embed: this.handler
 				.embed()
 				.setColor('#0080ff')
 				.addField('❯ Version', result.versions[0])
@@ -58,9 +58,9 @@ export default class pip extends Command {
 				content: '<:no:838017092216946748> Please provide a valid pip package',
 			});
 
-		const result: naticoRes = pkg.data[0];
+		const result = pkg.data[0];
 
-		const embed = interaction
+		const embed = this.handler
 			.embed()
 			.setColor('#0080ff')
 			.addField('❯ Version', result.versions[0])

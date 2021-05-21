@@ -21,7 +21,7 @@ startBot({
 	intents: ['Guilds', 'GuildMessages', 'GuildVoiceStates'],
 	eventHandlers: {
 		interactionCreate(interaction: Interaction) {
-			commandHandler.runSlash(interaction as any as naticoInteraction);
+			commandHandler.runSlash(interaction as unknown as naticoInteraction);
 		},
 		ready() {
 			//if (settings.dev == true) {

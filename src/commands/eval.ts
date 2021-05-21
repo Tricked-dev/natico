@@ -14,14 +14,12 @@ export default class evalC extends Command {
 			ownerOnly: true,
 		});
 	}
-	async exec(message: naticoMessage) {
+	async exec(message: naticoMessage, { args }: { args: string }) {
 		try {
-			let response = Deno.inspect(await eval(message.args), {
+			let response = Deno.inspect(await eval(args), {
 				depth: 2,
 			});
-			response = response
-				.replace(new RegExp(message.api, 'gi'), '[GITHUBTOKEN]')
-				.replace(new RegExp(token, 'gi'), '[BOTTOKEN]');
+			response = response.replace(new RegExp(token, 'gi'), '[BOTTOKEN]');
 			message.reply('```js\n' + response + '```');
 		} catch (e) {
 			message.reply(`${e}`);

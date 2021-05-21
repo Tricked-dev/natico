@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
+import { naticoMessage, naticoInteraction } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
 export default class npm extends Command {
@@ -14,11 +14,11 @@ export default class npm extends Command {
 			category: 'general',
 		});
 	}
-	async exec(message: naticoMessage) {
+	async exec(message: naticoMessage, { args }: { args: string }) {
 		const pkg = await axiod(`https://api.npms.io/v2/search`, {
 			method: 'GET',
 			params: {
-				q: message.args,
+				q: args,
 				size: '1',
 			},
 			headers: {},
@@ -27,9 +27,9 @@ export default class npm extends Command {
 			return message.reply({
 				content: '<:no:838017092216946748> Please provide a message',
 			});
-		const result: naticoRes = pkg.data.results[0].package;
+		const result = pkg.data.results[0].package;
 		message.channel?.send({
-			embed: message
+			embed: this.handler
 				.embed()
 				.setColor('#FF0000')
 				.setDescription(result.description || 'No description provided')
@@ -59,8 +59,8 @@ export default class npm extends Command {
 			return interaction.reply({
 				content: '<:no:838017092216946748> Package not found',
 			});
-		const result: naticoRes = pkg.data.results[0].package;
-		const embed = interaction
+		const result = pkg.data.results[0].package;
+		const embed = this.handler
 			.embed()
 			.setColor('#FF0000')
 			.setDescription(result.description || 'No description provided')

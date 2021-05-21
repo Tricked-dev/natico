@@ -15,15 +15,15 @@ export default class aur extends Command {
 			category: 'general',
 		});
 	}
-	async exec(message: naticoMessage) {
-		const pkg = await data(message.args);
+	async exec(message: naticoMessage, { args }: { args: string }) {
+		const pkg = await data(args);
 		if (!pkg || !pkg?.data?.results[0])
 			return message.reply(
 				'<:no:838017092216946748> Please provide a valid AUR package'
 			);
 
 		const result = pkg.data.results[0];
-		const embed = message
+		const embed = this.handler
 			.embed()
 			.setColor('#0080ff')
 			.addField('❯ Version', result.Version || 'no version')
@@ -43,17 +43,20 @@ export default class aur extends Command {
 		});
 	}
 
-	async execSlash(interaction: naticoInteraction, { arch }) {
+	async execSlash(
+		interaction: naticoInteraction,
+		{ arch }: { arch: { value: string } }
+	) {
 		const pkg = await data(arch.value);
 
-		if (!pkg.data.results[0])
+		if (!pkg || !pkg.data.results[0])
 			return interaction.reply({
 				content: '<:no:838017092216946748> Please provide a valid AUR package',
 			});
 
 		const result = pkg.data.results[0];
 
-		const embed = interaction
+		const embed = this.handler
 			.embed()
 			.setColor('#0080ff')
 			.addField('❯ Version', result.Version || 'no version')
@@ -68,7 +71,7 @@ export default class aur extends Command {
 		interaction.edit({ content: 'python', embeds: [embed] });
 	}
 }
-function data(q) {
+function data(q: string) {
 	try {
 		return axiod(`https://aur.archlinux.org/rpc/`, {
 			method: 'GET',
@@ -79,6 +82,7 @@ function data(q) {
 			},
 		});
 	} catch (e) {
+		e;
 		return false;
 	}
 }

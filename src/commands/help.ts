@@ -1,4 +1,4 @@
-import { naticoMessage, naticoCommand, naticoInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction } from '../../deps.ts';
 import Command from '../../lib/Command.ts';
 export default class help extends Command {
 	constructor() {
@@ -12,36 +12,43 @@ export default class help extends Command {
 			category: 'general',
 		});
 	}
-	async exec(message: naticoMessage) {
-		if (message.args) {
-			const found = message.handler.FindCommand(message.args);
+	async exec(message: naticoMessage, { args }: { args: string }) {
+		if (args) {
+			const found = this.handler.FindCommand(args);
 
-			if (found)
+			if (found) {
+				const embed = this.handler
+					.embed()
+					.addField('Description »', found.description || 'No description')
+					.addField('category »', found.category || 'No category');
+				if (found.aliases) {
+					embed.addField(
+						'aliases »',
+						found.aliases.map((x) => `\`${x}\``).join(' | ')
+					);
+				}
+
+				if (found.examples) {
+					embed.addField(
+						'examples »',
+						found.examples.map((x) => `\`${x}\``).join(' | ')
+					);
+				}
+
 				return message?.channel?.send({
-					embed: message
-						.embed()
-						.addField('Description »', found.description || 'No description')
-						.addField(
-							'aliases »',
-							found.aliases.map((x) => `\`${x}\``).join(' | ')
-						)
-
-						.addField(
-							'examples »',
-							found.examples.map((x) => `\`${x}\``).join(' | ')
-						)
-						.addField('category »', found.category || 'No category'),
+					embed,
 				});
+			}
 		}
-		const embed = message
+		const embed = this.handler
 			.embed()
 			.setTitle('Help')
 			.setFooter('Use `l!help` <command> to see more info')
 			.setDescription(
 				'[support](https://discord.com/invite/mY8zTARu4g) - [github](https://skyblockdev.github.io/natico) - [terms](https://skyblockdev.github.io/naticosite/terms.html) - [privacy](https://skyblockdev.github.io/naticosite/privacy.html)'
 			);
-		const commands = [...message.handler.commands.values()]
-			.map((c: naticoCommand) => {
+		const commands = [...this.handler.commands.values()]
+			.map((c) => {
 				if (c.category == 'dev') return;
 				else return `\`${c.name}\``;
 			})
@@ -51,40 +58,45 @@ export default class help extends Command {
 	}
 	async execSlash(interaction: naticoInteraction) {
 		if (interaction?.data?.options) {
-			const found = interaction.handler.FindCommand(
+			const found = this.handler.FindCommand(
 				interaction?.data?.options[0].value
 			);
 
-			if (found)
+			if (found) {
+				const embed = this.handler
+					.embed()
+					.addField('Description »', found.description || 'No description')
+					.addField('category »', found.category || 'No category');
+				if (found.aliases) {
+					embed.addField(
+						'aliases »',
+						found.aliases.map((x) => `\`${x}\``).join(' | ')
+					);
+				}
+
+				if (found.examples) {
+					embed.addField(
+						'examples »',
+						found.examples.map((x) => `\`${x}\``).join(' | ')
+					);
+				}
+
 				return interaction.reply({
 					content: 'natico help',
-					embeds: [
-						interaction
-							.embed()
-							.addField('Description »', found.description || 'No description')
-							.addField(
-								'aliases »',
-								found.aliases.map((x) => `\`${x}\``).join(' | ')
-							)
-
-							.addField(
-								'examples »',
-								found.examples.map((x) => `\`${x}\``).join(' | ')
-							)
-							.addField('category »', found.category || 'No category'),
-					],
+					embeds: [embed],
 				});
+			}
 		}
 
-		const embed = interaction
+		const embed = this.handler
 			.embed()
 			.setTitle('Help')
 			.setFooter('Use `l!help` <command> to see more info')
 			.setDescription(
 				'[support](https://discord.com/invite/mY8zTARu4g) - [website](https://skyblockdev.github.io/natico) - [terms](https://malilbot.github.io/tos) - [privacy](https://malilbot.github.io/privacy)'
 			);
-		const commands = [...interaction.handler.commands.values()]
-			.map((c: naticoCommand) => {
+		const commands = [...this.handler.commands.values()]
+			.map((c) => {
 				if (c.category == 'dev') return;
 				else return `\`${c.name}\``;
 			})

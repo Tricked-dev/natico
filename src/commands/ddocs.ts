@@ -15,7 +15,7 @@ export default class ddoc extends Command {
 			category: 'general',
 		});
 	}
-	async exec(message: naticoMessage) {
+	async exec(message: naticoMessage, { args }: { args: string }) {
 		const denodoc = await axiod(
 			'https://gist.githubusercontent.com/SkyBlockDev/aa24237591b296c528a322d4a352199f/raw/5d365841be7611f046315653bd5555eabade6d65/denodocs.json',
 			{ method: 'get' }
@@ -23,13 +23,13 @@ export default class ddoc extends Command {
 
 		const fuse = new Fuse(denodoc.data, { keys: ['name'] });
 
-		const result = fuse.search(message.args)[0].item;
+		const result = fuse.search(args)[0].item;
 
 		if (!result) return await message.reply('Docs not found');
 		const srcUrl = `${result.location.filename}#L${result.location.line}`;
 
 		message.channel?.send({
-			embed: message
+			embed: this.handler
 				.embed()
 				.setColor('#FF0000')
 				.setDescription(
@@ -65,7 +65,7 @@ export default class ddoc extends Command {
 		if (!result) return await interaction.reply({ content: 'Docs not found' });
 		const srcUrl = `${result.location.filename}#L${result.location.line}`;
 
-		const embed = interaction
+		const embed = this.handler
 			.embed()
 			.setColor('#FF0000')
 			.setDescription(

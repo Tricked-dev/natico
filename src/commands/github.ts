@@ -1,9 +1,4 @@
-import {
-	naticoMessage,
-	naticoInteraction,
-	getUser,
-	settings,
-} from '../../deps.ts';
+import { naticoMessage, naticoInteraction } from '../../deps.ts';
 import Command from '../../lib/Command.ts';
 export default class github extends Command {
 	constructor() {
@@ -18,12 +13,12 @@ export default class github extends Command {
 			category: 'general',
 		});
 	}
-	async exec(message: naticoMessage) {
-		const user = await fetch(`https://api.github.com/users/${message.args}`, {
+	async exec(message: naticoMessage, { args }: { args: string }) {
+		const user = await fetch(`https://api.github.com/users/${args}`, {
 			method: 'GET',
-			headers: {
-				Authorization: `token ${message.api}`,
-			},
+			// headers: {
+			// 	Authorization: `token ${message.api}`,
+			// },
 		}).then((response) => response.json());
 		if (user?.message) return message.reply('User not found');
 
@@ -40,12 +35,12 @@ export default class github extends Command {
 		stats += `**Public gists** ${user.public_gists || 'none'}\n`;
 		stats += `**Followers** ${user.followers}\n`;
 		stats += `**Following** ${user.following}`;
-		const embed = message
+		const embed = this.handler
 			.embed()
 			.setTitle(user.login, user.html_url)
 			.addField('➥ Info', info)
 			.addField('➥ Stats', stats)
-			.setThumbnail(user.avatar_url || (await getUser(settings.clientid)));
+			.setThumbnail(user.avatar_url);
 		message.channel?.send({ embed });
 	}
 	async execSlash(interaction: naticoInteraction) {
@@ -73,12 +68,12 @@ export default class github extends Command {
 		}\n`;
 		stats += `**[Followers](${user.followers_url})** ${user.followers}\n`;
 		stats += `**[Following](${user.following_url})** ${user.following}`;
-		const embed = interaction
+		const embed = this.handler
 			.embed()
 			.setTitle(user.login, user.html_url)
 			.addField('➥ Info', info)
 			.addField('➥ Stats', stats)
-			.setThumbnail(user.avatar_url || (await getUser(settings.clientid)));
+			.setThumbnail(user.avatar_url);
 		interaction.reply({ content: 'Github', embeds: [embed] });
 	}
 }

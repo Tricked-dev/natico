@@ -4,28 +4,21 @@ import {
 	createSlashCommand,
 	settings,
 	sendInteractionResponse,
-	getUser,
 	naticoInteraction,
-	naticoCommand,
 	naticoMessage,
-	cache,
-	naticoUser,
 	getSlashCommands,
 	upsertSlashCommand,
 	yellow,
 	naticoSlashOptions,
 	deleteSlashCommand,
-	credentials,
-	embed,
-	ApplicationCommandOptionChoice,
 	DiscordenoCreateApplicationCommand,
 	green,
 	blue,
 	botId,
 	join,
-	relativePath,
-	statSync,
+	Embed,
 } from '../deps.ts';
+import naticoCommand from './Command.ts';
 export default class CommandHandler {
 	commands: Collection<string, naticoCommand>;
 	cooldowns: Set<string>;
@@ -81,6 +74,12 @@ export default class CommandHandler {
 		this.commands = new Collection();
 	}
 	/**
+	 * @returns a sneaky embed
+	 */
+	embed() {
+		return new Embed();
+	}
+	/**
 	 *
 	 * @param command - Command that gets executed
 	 * @param message - Message object to be passed through
@@ -113,13 +112,7 @@ export default class CommandHandler {
 		if (command.required)
 			if (!args)
 				return message.reply(`${no} ${command.name} requires arguments`);
-		message['api'] = credentials.github;
-		message['handler'] = this;
-		message['embed'] = embed;
-		/**
-		 * Just want to import message and not having (message, args, aything)
-		 */
-		message['args'] = args;
+
 		/**
 		 * I like to use me to get the id etc without having to import stuff
 		 */
@@ -130,7 +123,8 @@ export default class CommandHandler {
 			/**
 			 * Executes the command
 			 */
-			await command.exec(message);
+			/*@ts-ignore*/
+			await command.exec(message, { args });
 			/**
 			 * Log usage to prevent abuse
 			 */
@@ -147,7 +141,7 @@ export default class CommandHandler {
 			this.cooldowns.add(message.authorId.toString());
 			setTimeout(
 				() => this.cooldowns.delete(message.authorId.toString()),
-				command.cooldown || this.cooldown
+				this.cooldown
 			);
 		} catch (e) {
 			console.log(e);
@@ -165,7 +159,7 @@ export default class CommandHandler {
 	 * @param interaction - Needed for data
 	 * @returns - What the ran command returned
 	 */
-	public async runSlash(interaction: naticoInteraction) {
+	public runSlash(interaction: naticoInteraction) {
 		if (!interaction.data) return console.log('Empty interaction');
 		else if (!interaction.data.name) return;
 		/**
@@ -174,28 +168,24 @@ export default class CommandHandler {
 		 * @returns Idk? message object
 		 */
 		const reply = async (data: any): Promise<void> => {
-			return await sendInteractionResponse(interaction.id, interaction.token, {
-				type: 4,
-				data,
-			});
+			return await sendInteractionResponse(
+				interaction.id as unknown as bigint,
+				interaction.token,
+				{
+					type: 4,
+					data,
+				}
+			);
 		};
 		const edit = async (data: any): Promise<void> => {
 			return await sendInteractionResponse(
-				interaction.id,
+				interaction.id as unknown as bigint,
 				interaction.token,
 				data
 			);
 		};
-
-		//Make a alias to the name
-		interaction['name'] = interaction.data.name;
-		interaction['reply'] = reply;
 		interaction['edit'] = edit;
-		interaction['api'] = credentials.github;
-		interaction['embed'] = embed;
-		interaction['handler'] = this;
-		interaction['me'] =
-			(cache.members.get(botId) as naticoUser) || (await getUser(botId));
+		interaction['reply'] = reply;
 
 		const command = this.commands.get(interaction.name);
 		if (!command) return;
@@ -302,7 +292,7 @@ export default class CommandHandler {
 		/**
 		 * Goes over the commands and checks if it still exists
 		 */
-		await Enabled.map(async (command) => {
+		Enabled.map(async (command) => {
 			if (!this.commands.find((cmd) => cmd.name == command.name)) {
 				if (guildID) {
 					await deleteSlashCommand(command.id, [guildID]);

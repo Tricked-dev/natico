@@ -16,12 +16,12 @@ export default class repo extends Command {
 		return await message.reply(
 			'Currently no clue how to use github api to find a repo'
 		);
-		const user = await fetch(`https://api.github.com/users/${message.args}`, {
-			method: 'GET',
-			headers: {
-				Authorization: `token ${message.api}`,
-			},
-		}).then((response) => response.json());
+		// const user = await fetch(`https://api.github.com/users/${message.args}`, {
+		// 	method: 'GET',
+		// 	headers: {
+		// 		Authorization: `token ${message.api}`,
+		// 	},
+		// }).then((response) => response.json());
 	}
 	async execSlash(interaction: naticoInteraction) {
 		return await interaction.reply({

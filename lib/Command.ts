@@ -1,16 +1,18 @@
 import commandHandler from './commandHandler.ts';
+import { naticoMessage, naticoInteraction } from '../deps.ts';
 export default class Command {
-	handler: commandHandler | null;
+	handler: commandHandler;
 	id: string;
-	category: string;
-	aliases: string[];
+	category: string | undefined;
+	aliases: string[] | undefined;
 	name: string;
-	examples: string[];
-	ownerOnly: boolean;
-	required: boolean;
+	examples: string[] | undefined;
+	ownerOnly: boolean | undefined;
+	required: boolean | undefined;
 	description: string | undefined;
 	slash: boolean | undefined;
 	enabled: boolean | undefined;
+	superUserOnly: boolean | undefined;
 	constructor(
 		id: string,
 		{
@@ -23,6 +25,7 @@ export default class Command {
 			required,
 			category,
 			ownerOnly,
+			superUserOnly,
 		}: {
 			name?: string;
 			aliases?: string[];
@@ -33,13 +36,15 @@ export default class Command {
 			required?: boolean;
 			category?: string;
 			ownerOnly?: boolean;
+			superUserOnly?: boolean;
 		}
 	) {
+		this.superUserOnly = superUserOnly;
 		this.enabled = enabled;
 		this.slash = slash;
 		this.description = description;
-		this.required = required || false;
-		this.ownerOnly = ownerOnly || false;
+		this.required = required;
+		this.ownerOnly = ownerOnly;
 		this.name = name?.toLowerCase() || id.toLowerCase();
 		this.examples = examples || [`${name}`];
 		/**
@@ -65,6 +70,5 @@ export default class Command {
 		 * The handler.
 		 * @type {AkairoHandler}
 		 */
-		this.handler = null;
 	}
 }

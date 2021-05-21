@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
+import { naticoMessage, naticoInteraction } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
 export default class apt extends Command {
@@ -15,8 +15,8 @@ export default class apt extends Command {
 			category: 'general',
 		});
 	}
-	async exec(message: naticoMessage) {
-		const pkg = await data(message.args);
+	async exec(message: naticoMessage, { args }: { args: string }) {
+		const pkg = await data(args);
 
 		if (!pkg.data.entries[0])
 			return message.reply({
@@ -34,7 +34,7 @@ export default class apt extends Command {
 				? '<:ubuntu:844997080883134505>'
 				: '<:debian:844997118901092443>';
 		message.channel?.send({
-			embed: message
+			embed: this.handler
 				.embed()
 				.setColor('#0080ff')
 				.addField('❯ Version', result.source_package_version || 'no version')
@@ -47,7 +47,10 @@ export default class apt extends Command {
 				.setTitle(`${emoji} ${result.display_name}`, `${url}`),
 		});
 	}
-	async execSlash(interaction: naticoInteraction, { apt }) {
+	async execSlash(
+		interaction: naticoInteraction,
+		{ apt }: { apt: { value: string } }
+	) {
 		const pkg = await data(apt.value);
 
 		if (!pkg.data.entries[0])
@@ -67,7 +70,7 @@ export default class apt extends Command {
 				? '<:ubuntu:844997080883134505>'
 				: '<:debian:844997118901092443>';
 
-		const embed = interaction
+		const embed = this.handler
 			.embed()
 			.setColor('#0080ff')
 			.addField('❯ Version', result.source_package_version || 'no version')

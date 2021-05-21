@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction, naticoRes } from '../../deps.ts';
+import { naticoMessage, naticoInteraction } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
 export default class dart extends Command {
@@ -14,12 +14,12 @@ export default class dart extends Command {
 			category: 'general',
 		});
 	}
-	async exec(message: naticoMessage) {
+	async exec(message: naticoMessage, { args }: { args: string }) {
 		try {
 			const pkg = await axiod(`https://pub.dev/api/search`, {
 				method: 'GET',
 				params: {
-					q: message.args,
+					q: args,
 				},
 			});
 
@@ -42,7 +42,7 @@ export default class dart extends Command {
 						'<:no:838017092216946748> Please provide a valid dart package',
 				});
 			const result = data.data;
-			const embed = message
+			const embed = this.handler
 				.embed()
 				.setColor('#FF0000')
 				.setDescription(
@@ -77,6 +77,7 @@ export default class dart extends Command {
 				embed,
 			});
 		} catch (e) {
+			e;
 			return message.reply({
 				content: '<:no:838017092216946748> Please provide a valid dart package',
 			});
@@ -115,7 +116,7 @@ export default class dart extends Command {
 						'<:no:838017092216946748> Please provide a valid dart package',
 				});
 			const result = data.data;
-			const embed = interaction
+			const embed = this.handler
 				.embed()
 				.setColor('#FF0000')
 				.setDescription(
@@ -148,6 +149,7 @@ export default class dart extends Command {
 
 			interaction.reply({ content: '', embeds: [embed] });
 		} catch (e) {
+			e;
 			return interaction.reply({
 				content: '<:no:838017092216946748> Please provide a valid dart package',
 			});
