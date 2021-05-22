@@ -3,10 +3,19 @@ import {
 	CreateGlobalApplicationCommand,
 	DiscordenoMessage,
 	InteractionApplicationCommandCallbackData,
+	ApplicationCommandInteractionDataOptionSubCommand,
+	ApplicationCommandInteractionDataOption,
 } from '../deps.ts';
 
 export interface values {
 	value: string;
+}
+interface simpleOptions {
+	value?: string;
+	name?: string;
+}
+export interface naticoOptions {
+	[name: string]: ApplicationCommandInteractionDataOption;
 }
 
 /**

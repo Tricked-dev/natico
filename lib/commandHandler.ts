@@ -13,6 +13,9 @@ import {
 	Embed,
 	hasGuildPermissions,
 	upsertSlashCommands,
+	naticoOptions,
+	DiscordenoInteractionResponse,
+	InteractionApplicationCommandCallbackData,
 } from '../deps.ts';
 import naticoCommand from './Command.ts';
 export default class CommandHandler {
@@ -175,7 +178,9 @@ export default class CommandHandler {
 		 * @param data - Slash command data to be send in the reply
 		 * @returns Idk? message object
 		 */
-		const reply = async (data: any): Promise<void> => {
+		const reply = async (
+			data: InteractionApplicationCommandCallbackData
+		): Promise<void> => {
 			return await sendInteractionResponse(
 				interaction.id as unknown as bigint,
 				interaction.token,
@@ -185,7 +190,7 @@ export default class CommandHandler {
 				}
 			);
 		};
-		const edit = async (data: any): Promise<void> => {
+		const edit = async (data: DiscordenoInteractionResponse): Promise<void> => {
 			return await sendInteractionResponse(
 				interaction.id as unknown as bigint,
 				interaction.token,
@@ -204,7 +209,7 @@ export default class CommandHandler {
 				green(`user`),
 				blue(`${interaction?.user?.username} ${interaction?.user?.id}`)
 			);
-			const convertedOptions: any = {};
+			const convertedOptions: naticoOptions = {};
 			if (interaction.data.options)
 				for (const option of interaction.data.options) {
 					convertedOptions[option.name] = option;
@@ -300,7 +305,10 @@ export default class CommandHandler {
 	 * @param guildID - Specific guild to enable slash commands on
 	 * @returns - List of enabled commands
 	 */
-	public async enableSlash(guildID?: bigint) {
+	public enableSlash(guildID?: bigint) {
+		return upsertSlashCommands(this.slashed(), guildID);
+	}
+	slashed() {
 		const commands: EditGlobalApplicationCommand[] = [];
 		const data = this.commands.filter(
 			(command) => (command.enabled && command.slash) || false
@@ -312,8 +320,9 @@ export default class CommandHandler {
 			};
 			//@ts-ignore - types are a lie
 			if (command.options) slashdata['options'] = command.options;
+			commands.push(slashdata);
 		});
-		return await upsertSlashCommands(commands, guildID);
+		return commands;
 	}
 
 	/**
