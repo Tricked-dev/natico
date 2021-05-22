@@ -7,7 +7,7 @@ export default class test extends Command {
 			aliases: ['test'],
 			examples: ['test'],
 			description: 'test command used for official testing:tm:',
-			enabled: true,
+			enabled: false,
 			slash: false,
 			category: 'dev',
 		});

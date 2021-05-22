@@ -5,6 +5,10 @@ import {
 	InteractionApplicationCommandCallbackData,
 } from '../deps.ts';
 
+export interface values {
+	value: string;
+}
+
 /**
  * Extending the interaction so i can get types on the reply/handler
  */

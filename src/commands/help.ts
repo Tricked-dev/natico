@@ -15,14 +15,13 @@ export default class help extends Command {
 					type: 3,
 					name: 'command',
 					description: 'Command you want help for',
-					default: false,
 				},
 			],
 		});
 	}
 	async exec(message: naticoMessage, { args }: { args: string }) {
 		if (args) {
-			const found = this.handler.FindCommand(args);
+			const found = this.handler.findCommand(args);
 
 			if (found) {
 				const embed = this.handler
@@ -69,7 +68,7 @@ export default class help extends Command {
 		{ command }: { command: { value: string } }
 	) {
 		if (command) {
-			const found = this.handler.FindCommand(command.value);
+			const found = this.handler.findCommand(command.value);
 
 			if (found) {
 				const embed = this.handler

@@ -7,7 +7,7 @@ export default class repo extends Command {
 			aliases: ['repo'],
 			examples: ['repo skyblockdev/natico'],
 			description: 'Gets info about a github repository',
-			enabled: true,
+			enabled: false,
 			slash: false,
 			category: 'dev',
 		});

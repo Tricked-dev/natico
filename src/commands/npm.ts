@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction, values } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
 export default class npm extends Command {
@@ -15,7 +15,7 @@ export default class npm extends Command {
 			options: [
 				{
 					type: 3,
-					name: 'package',
+					name: 'module',
 					description: 'The package you want to search for',
 					required: true,
 				},
@@ -53,12 +53,14 @@ export default class npm extends Command {
 				.setTitle(`<:npm:838350149725061169> ${result.name}`, result.links.npm),
 		});
 	}
-	async execSlash(interaction: naticoInteraction) {
-		const query = interaction?.data?.options[0]?.value;
+	async execSlash(
+		interaction: naticoInteraction,
+		{ module }: { module: values }
+	) {
 		const pkg = await axiod(`https://api.npms.io/v2/search`, {
 			method: 'GET',
 			params: {
-				q: query,
+				q: module.value,
 				size: '1',
 			},
 			headers: {},

@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction, values } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
 export default class pip extends Command {
@@ -15,7 +15,7 @@ export default class pip extends Command {
 			options: [
 				{
 					type: 3,
-					name: 'package',
+					name: 'pip',
 					description: 'The package you want to search for',
 					required: true,
 				},
@@ -50,14 +50,13 @@ export default class pip extends Command {
 				),
 		});
 	}
-	async execSlash(interaction: naticoInteraction) {
-		const query = interaction?.data?.options[0]?.value;
+	async execSlash(interaction: naticoInteraction, { pip }: { pip: values }) {
 		interaction.reply({ content: 'searching' });
 		const pkg = await axiod(`https://api.anaconda.org/search`, {
 			method: 'GET',
 			params: {
 				limit: 1,
-				name: query,
+				name: pip.value,
 			},
 		});
 

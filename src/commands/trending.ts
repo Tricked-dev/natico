@@ -8,7 +8,7 @@ export default class trending extends Command {
 			aliases: ['trending'],
 			examples: ['trending'],
 			description: 'What to ping next?',
-			enabled: true,
+			enabled: false,
 			slash: false,
 			category: 'dev',
 		});
