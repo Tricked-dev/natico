@@ -7,12 +7,6 @@
 
 </div>
 
-## todo
-
-package searching to add: maven?(java)  
-docs to add: deno, discordeno, discordjs
-_no clue how to add discorddeno/deno docs there doesnt seem to be a api_
-
 ## Natico
 
 Discord deno bot from scratch has slash commands
