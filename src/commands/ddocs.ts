@@ -49,11 +49,11 @@ export default class ddoc extends Command {
 				)
 				.addField(
 					'❯ doc link',
-					`[doc.deno.land/https/deno.land/x/discordeno/mod.ts#${result.name}](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts#${result.name})`
+					`[doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name}](https://doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name})`
 				)
 				.setTitle(
 					`<:dd:838835648106201118> ${result.name}`,
-					`https://doc.deno.land/https/deno.land/x/discordeno/mod.ts#${result.name}`
+					`https://doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name}`
 				)
 				.setColor('#1F85DE'),
 		});
