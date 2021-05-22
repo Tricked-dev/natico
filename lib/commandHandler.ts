@@ -305,8 +305,10 @@ export default class CommandHandler {
 	 * @param guildID - Specific guild to enable slash commands on
 	 * @returns - List of enabled commands
 	 */
-	public enableSlash(guildID?: bigint) {
-		return upsertSlashCommands(this.slashed(), guildID);
+	async enableSlash(guildID?: bigint) {
+		const slashed = this.slashed();
+		await upsertSlashCommands(slashed, guildID);
+		return slashed;
 	}
 	slashed() {
 		const commands: EditGlobalApplicationCommand[] = [];
