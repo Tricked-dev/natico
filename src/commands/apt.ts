@@ -7,8 +7,7 @@ export default class apt extends Command {
 			name: 'apt',
 			aliases: ['apt', 'ubuntu', 'apt', 'mint', 'debian'],
 			examples: ['apt neofetch'],
-			description:
-				'Searches the apt repositorys for some juicy arch :thumbsup: packages',
+			description: 'Searches the apt repositorys for apt packages',
 			enabled: true,
 			slash: true,
 			required: true,
@@ -59,10 +58,11 @@ export default class apt extends Command {
 		interaction: naticoInteraction,
 		{ apt }: { apt: { value: string } }
 	) {
+		interaction.reply('Fetching');
 		const pkg = await data(apt.value);
 
 		if (!pkg.data.entries[0])
-			return interaction.reply({
+			return interaction.edit({
 				content: '<:no:838017092216946748> Please provide a valid APT package',
 			});
 
@@ -90,7 +90,7 @@ export default class apt extends Command {
 			.setDescription(result.Description || 'No description provided')
 			.setTitle(`${emoji} ${result.display_name}`, `${url}`);
 
-		interaction.edit({ content: 'python', embeds: [embed] });
+		interaction.edit({ content: '', embeds: [embed] });
 	}
 }
 function data(q: string) {

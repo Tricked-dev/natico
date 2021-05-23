@@ -7,8 +7,7 @@ export default class aur extends Command {
 			name: 'aur',
 			aliases: ['aur', 'arch', 'paru'],
 			examples: ['aur neofetch'],
-			description:
-				'Searches the aur repositorys for some juicy arch :thumbsup: packages',
+			description: 'Find aur packages for you',
 			enabled: true,
 			slash: true,
 			required: true,
@@ -76,7 +75,7 @@ export default class aur extends Command {
 			.setDescription(result.Description || 'No description provided')
 			.setTitle(`<:arch:844981756246622209> ${result.Name}`, `${result.URL}`);
 
-		interaction.edit({ content: 'python', embeds: [embed] });
+		interaction.edit({ content: 'aur', embeds: [embed] });
 	}
 }
 function data(q: string) {

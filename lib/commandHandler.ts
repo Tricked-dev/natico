@@ -163,7 +163,9 @@ export default class CommandHandler {
 			console.log(e);
 			if (e?.response?.status && e?.response?.status !== 200)
 				return message.reply(
-					`${no} Something went wrong with this api request theres most likely something wrong on their end`
+					`${no} response status: ${
+						e?.response?.status ?? 200
+					} Something went wrong with this api request theres most likely something wrong on their end`
 				);
 			if (message.channel)
 				message.channel.send(`${no} A error occurred, Try again`);

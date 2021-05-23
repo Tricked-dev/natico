@@ -1,5 +1,6 @@
 import { naticoMessage, naticoInteraction } from '../../deps.ts';
 import Command from '../../lib/Command.ts';
+import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default class github extends Command {
 	constructor() {
 		super('github', {
@@ -21,18 +22,14 @@ export default class github extends Command {
 			],
 		});
 	}
-	async exec(message: naticoMessage, { args }: { args: string }) {
-		const user = await fetch(`https://api.github.com/users/${args}`, {
-			method: 'GET',
-			// headers: {
-			// 	Authorization: `token ${message.api}`,
-			// },
-		}).then((response) => response.json());
-		if (user?.message) return message.reply('User not found');
-
+	async fetch(q: string) {
+		const user = await axiod(`https://api.github.com/users/${q}`);
+		return user.data;
+	}
+	makeEmbed(user: any) {
 		let info = '';
 		if (user.email) info += `**email:** ${user.email}\n`;
-		info += `**hireable:** ${user.hireable ? 'YES' : 'no'}\n`;
+		info += `**hireable:** ${user.hireable ? 'Yes' : 'No'}\n`;
 		if (user.blog) info += `**blog:** ${user.blog}\n`;
 		if (user.location) info += `**location:** ${user.location}\n`;
 		if (user.name) info += `**NickName:** ${user.name}\n`;
@@ -43,46 +40,28 @@ export default class github extends Command {
 		stats += `**Public gists** ${user.public_gists || 'none'}\n`;
 		stats += `**Followers** ${user.followers}\n`;
 		stats += `**Following** ${user.following}`;
-		const embed = this.handler
+		return this.handler
 			.embed()
 			.setTitle(user.login, user.html_url)
 			.addField('➥ Info', info)
 			.addField('➥ Stats', stats)
 			.setThumbnail(user.avatar_url);
+	}
+	async exec(message: naticoMessage, { args }: { args: string }) {
+		const user = await this.fetch(args);
+		if (user?.message) return message.reply('User not found');
+		const embed = this.makeEmbed(user);
+
 		message.channel?.send({ embed });
 	}
 	async execSlash(
 		interaction: naticoInteraction,
 		{ user }: { user: { value: string } }
 	) {
-		const req = await fetch(`https://api.github.com/users/${user}`).then(
-			(response) => response.json()
-		);
-		if (req?.message) return interaction.reply({ content: 'User not found' });
+		const res = await this.fetch(user.value);
+		if (res?.message) return interaction.reply('User not found');
+		const embed = this.makeEmbed(res);
 
-		let info = '';
-		if (req.email) info += `**email:** ${req.email}\n`;
-		info += `**hireable:** ${req.hireable ? 'YES' : 'no'}\n`;
-		if (req.blog) info += `**blog:** ${req.blog}\n`;
-		if (req.location) info += `**location:** ${req.location}\n`;
-		if (req.name) info += `**NickName:** ${req.name}\n`;
-		if (req.bio) info += `**bio:** ${req.bio}\n`;
-		let stats = '';
-		stats += `**Joined at** ${req.created_at}\n`; //need help trying to format this
-		stats += `**[Public repos](${req.repos_url})** ${
-			req.public_repos || 'none'
-		}\n`;
-		stats += `**[Public gists](${req.gists_url})** ${
-			req.public_gists || 'none'
-		}\n`;
-		stats += `**[Followers](${req.followers_url})** ${req.followers}\n`;
-		stats += `**[Following](${req.following_url})** ${req.following}`;
-		const embed = this.handler
-			.embed()
-			.setTitle(req.login, req.html_url)
-			.addField('➥ Info', info)
-			.addField('➥ Stats', stats)
-			.setThumbnail(req.avatar_url);
 		interaction.reply({ content: 'Github', embeds: [embed] });
 	}
 }
