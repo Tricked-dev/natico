@@ -16,6 +16,7 @@ import {
 	naticoOptions,
 	DiscordenoInteractionResponse,
 	InteractionApplicationCommandCallbackData,
+	ApplicationCommandInteractionDataOptionString,
 } from '../deps.ts';
 import naticoCommand from './Command.ts';
 export default class CommandHandler {
@@ -221,9 +222,10 @@ export default class CommandHandler {
 			const convertedOptions: naticoOptions = {};
 			if (interaction.data.options)
 				for (const option of interaction.data.options) {
-					convertedOptions[option.name] = option;
+					convertedOptions[option.name] =
+						option as ApplicationCommandInteractionDataOptionString;
 				}
-			/*@ts-ignore*/
+
 			await command.execSlash(interaction, convertedOptions);
 		} catch (e) {
 			console.log(e);

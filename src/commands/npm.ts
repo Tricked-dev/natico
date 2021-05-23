@@ -53,10 +53,7 @@ export default class npm extends Command {
 				.setTitle(`<:npm:838350149725061169> ${result.name}`, result.links.npm),
 		});
 	}
-	async execSlash(
-		interaction: naticoInteraction,
-		{ module }: { module: values }
-	) {
+	async execSlash(interaction: naticoInteraction, { module }: naticoOptions) {
 		const pkg = await axiod(`https://api.npms.io/v2/search`, {
 			method: 'GET',
 			params: {

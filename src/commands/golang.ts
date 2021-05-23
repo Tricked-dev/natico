@@ -1,4 +1,9 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import {
+	naticoMessage,
+	naticoInteraction,
+	naticoOptions,
+	execOptions,
+} from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
 export default class golang extends Command {
@@ -41,10 +46,9 @@ export default class golang extends Command {
 			.addField('❯ Imports', `${result.import_count || 0}`)
 			.addField('❯ synopsis', `${result.synopsis || '..'}`)
 			.addField('❯ score', `${result.score?.toFixed(3) || '..'}`)
-
 			.setTitle(`🦫 ${result.name}`, `https://pkg.go.dev/${result.path}`);
 	}
-	async exec(message: naticoMessage, { args }: { args: string }) {
+	async exec(message: naticoMessage, { args }: execOptions) {
 		const pkg = await this.fetch(args);
 
 		if (!pkg[0])
@@ -58,10 +62,7 @@ export default class golang extends Command {
 			embed,
 		});
 	}
-	async execSlash(
-		interaction: naticoInteraction,
-		{ module }: { module: { value: string } }
-	) {
+	async execSlash(interaction: naticoInteraction, { module }: naticoOptions) {
 		const pkg = await this.fetch(module.value);
 		if (!pkg[0])
 			return interaction.reply({

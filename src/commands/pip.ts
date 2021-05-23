@@ -50,7 +50,7 @@ export default class pip extends Command {
 				),
 		});
 	}
-	async execSlash(interaction: naticoInteraction, { pip }: { pip: values }) {
+	async execSlash(interaction: naticoInteraction, { pip }: naticoOptions) {
 		interaction.reply({ content: 'searching' });
 		const pkg = await axiod(`https://api.anaconda.org/search`, {
 			method: 'GET',

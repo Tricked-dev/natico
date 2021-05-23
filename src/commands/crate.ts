@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction, naticoOptions } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
 export default class crate extends Command {
@@ -60,10 +60,7 @@ export default class crate extends Command {
 				),
 		});
 	}
-	async execSlash(
-		interaction: naticoInteraction,
-		{ crate }: { crate: { value: string } }
-	) {
+	async execSlash(interaction: naticoInteraction, { crate }: naticoOptions) {
 		const pkg = await axiod(`https://crates.io/api/v1/crates`, {
 			method: 'GET',
 			params: {

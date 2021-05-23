@@ -1,4 +1,9 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import {
+	naticoMessage,
+	naticoInteraction,
+	naticoOptions,
+	DiscordenoMessage,
+} from '../../deps.ts';
 import Command from '../../lib/Command.ts';
 export default class help extends Command {
 	constructor() {
@@ -19,7 +24,10 @@ export default class help extends Command {
 			],
 		});
 	}
-	async exec(message: naticoMessage, { args }: { args: string }) {
+	async exec(
+		message: naticoMessage,
+		{ args }: naticoOptions
+	): Promise<DiscordenoMessage | undefined> {
 		if (args) {
 			const found = this.handler.findCommand(args);
 
@@ -63,10 +71,7 @@ export default class help extends Command {
 		embed.addField('commands', commands, false);
 		return await message.channel?.send({ embed });
 	}
-	async execSlash(
-		interaction: naticoInteraction,
-		{ command }: { command: { value: string } }
-	) {
+	async execSlash(interaction: naticoInteraction, { command }: naticoOptions) {
 		if (command) {
 			const found = this.handler.findCommand(command.value);
 

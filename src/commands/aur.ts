@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction, naticoOptions } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
 export default class aur extends Command {
@@ -62,10 +62,7 @@ export default class aur extends Command {
 		});
 	}
 
-	async execSlash(
-		interaction: naticoInteraction,
-		{ arch }: { arch: { value: string } }
-	) {
+	async execSlash(interaction: naticoInteraction, { arch }: naticoOptions) {
 		const pkg = await this.fetch(arch.value);
 
 		if (!pkg || !pkg.data.results[0])

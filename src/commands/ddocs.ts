@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction, naticoOptions } from '../../deps.ts';
 import Fuse from 'https://deno.land/x/fuse/dist/fuse.esm.min.js';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
@@ -62,10 +62,7 @@ export default class ddoc extends Command {
 			embed,
 		});
 	}
-	async execSlash(
-		interaction: naticoInteraction,
-		{ query }: { query: { value: string } }
-	) {
+	async execSlash(interaction: naticoInteraction, { query }: naticoOptions) {
 		const result = await this.fetch(query.value);
 
 		if (!result) return await interaction.reply({ content: 'Docs not found' });

@@ -4,6 +4,10 @@ import {
 	CreateGlobalApplicationCommand,
 	EditGlobalApplicationCommand,
 	ApplicationCommandOption,
+	naticoMessage,
+	naticoOptions,
+	execOptions,
+	naticoInteraction,
 } from '../deps.ts';
 //import { db } from './db.ts';
 export default class Command {
@@ -98,4 +102,9 @@ export default class Command {
 		 * @type {AkairoHandler}
 		 */
 	}
+	exec(_message: naticoMessage, _options: execOptions): any | Promise<any> {}
+	execSlash(
+		_interaction: naticoInteraction,
+		_options: naticoOptions
+	): any | Promise<any> {}
 }

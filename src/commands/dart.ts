@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction, naticoOptions } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
 export default class dart extends Command {
@@ -91,10 +91,7 @@ export default class dart extends Command {
 			});
 		}
 	}
-	async execSlash(
-		interaction: naticoInteraction,
-		{ dart }: { dart: { value: string } }
-	) {
+	async execSlash(interaction: naticoInteraction, { dart }: naticoOptions) {
 		try {
 			const pkg = await axiod(`https://pub.dev/api/search`, {
 				method: 'GET',

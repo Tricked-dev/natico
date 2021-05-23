@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction, naticoOptions } from '../../deps.ts';
 import Command from '../../lib/Command.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default class github extends Command {
@@ -54,10 +54,7 @@ export default class github extends Command {
 
 		message.channel?.send({ embed });
 	}
-	async execSlash(
-		interaction: naticoInteraction,
-		{ user }: { user: { value: string } }
-	) {
+	async execSlash(interaction: naticoInteraction, { user }: naticoOptions) {
 		const res = await this.fetch(user.value);
 		if (res?.message) return interaction.reply('User not found');
 		const embed = this.makeEmbed(res);

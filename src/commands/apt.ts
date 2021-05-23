@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import { naticoMessage, naticoInteraction, naticoOptions } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
 export default class apt extends Command {
@@ -54,10 +54,7 @@ export default class apt extends Command {
 				.setTitle(`${emoji} ${result.display_name}`, `${url}`),
 		});
 	}
-	async execSlash(
-		interaction: naticoInteraction,
-		{ apt }: { apt: { value: string } }
-	) {
+	async execSlash(interaction: naticoInteraction, { apt }: naticoOptions) {
 		interaction.reply('Fetching');
 		const pkg = await data(apt.value);
 

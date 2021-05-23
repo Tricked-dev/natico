@@ -1,4 +1,4 @@
-import { naticoMessage, token } from '../../deps.ts';
+import { naticoMessage, token, execOptions } from '../../deps.ts';
 import Command from '../../lib/Command.ts';
 export default class evalC extends Command {
 	constructor() {
@@ -14,7 +14,7 @@ export default class evalC extends Command {
 			ownerOnly: true,
 		});
 	}
-	async exec(message: naticoMessage, { args }: { args: string }) {
+	async exec(message: naticoMessage, { args }: execOptions) {
 		try {
 			let response = Deno.inspect(await eval(args), {
 				depth: 2,

@@ -1,4 +1,9 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import {
+	naticoMessage,
+	naticoInteraction,
+	naticoOptions,
+	execOptions,
+} from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
 export default class deno extends Command {
@@ -22,7 +27,7 @@ export default class deno extends Command {
 			],
 		});
 	}
-	async exec(message: naticoMessage, { args }: { args: string }) {
+	async exec(message: naticoMessage, { args }: execOptions) {
 		const pkg = await axiod(`https://api.deno.land/modules`, {
 			method: 'GET',
 			params: {
@@ -51,10 +56,7 @@ export default class deno extends Command {
 				.setTitle(`🦕 ${result.name}`, `https://deno.land/x/${result.name}`),
 		});
 	}
-	async execSlash(
-		interaction: naticoInteraction,
-		{ deno }: { deno: { value: string } }
-	) {
+	async execSlash(interaction: naticoInteraction, { deno }: naticoOptions) {
 		const pkg = await axiod(`https://api.deno.land/modules/`, {
 			method: 'GET',
 			params: {

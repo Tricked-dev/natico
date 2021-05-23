@@ -3,8 +3,7 @@ import {
 	CreateGlobalApplicationCommand,
 	DiscordenoMessage,
 	InteractionApplicationCommandCallbackData,
-	ApplicationCommandInteractionDataOptionSubCommand,
-	ApplicationCommandInteractionDataOption,
+	ApplicationCommandInteractionDataOptionString,
 } from '../deps.ts';
 
 export interface values {
@@ -15,9 +14,11 @@ interface simpleOptions {
 	name?: string;
 }
 export interface naticoOptions {
-	[name: string]: ApplicationCommandInteractionDataOption;
+	[name: string]: ApplicationCommandInteractionDataOptionString;
 }
-
+export interface execOptions {
+	[args: string]: string;
+}
 /**
  * Extending the interaction so i can get types on the reply/handler
  */
