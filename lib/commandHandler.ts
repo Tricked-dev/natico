@@ -208,7 +208,6 @@ export default class CommandHandler {
 		const command = this.findCommand(interaction.data.name);
 		if (!command) return;
 
-		if (this.commandChecks(command, interaction)) return;
 		try {
 			console.info(
 				yellow('[!]'),
