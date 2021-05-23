@@ -23,76 +23,53 @@ export default class ddoc extends Command {
 			],
 		});
 	}
-	async exec(message: naticoMessage, { args }: { args: string }) {
+	async fetch(q: string) {
 		const denodoc = await axiod(
 			'https://gist.githubusercontent.com/SkyBlockDev/aa24237591b296c528a322d4a352199f/raw/5d365841be7611f046315653bd5555eabade6d65/denodocs.json',
 			{ method: 'get' }
 		);
-
 		const fuse = new Fuse(denodoc.data, { keys: ['name'] });
 
-		const result = fuse.search(args)[0].item;
-
-		if (!result) return await message.reply('Docs not found');
-		const srcUrl = `${result.location.filename}#L${result.location.line}`;
-
-		message.channel?.send({
-			embed: this.handler
-				.embed()
-				.setColor('#FF0000')
-				.setDescription(
-					result.jsDoc || `This ${result.kind} doesnt seem to have any jsdoc`
-				)
-				.addField(
-					'❯ src',
-					`[${result.location.filename.replace('https://', '')}](${srcUrl})`
-				)
-				.addField(
-					'❯ doc link',
-					`[doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name}](https://doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name})`
-				)
-				.setTitle(
-					`<:dd:838835648106201118> ${result.name}`,
-					`https://doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name}`
-				)
-				.setColor('#1F85DE'),
-		});
+		return await fuse.search(q)[0].item;
 	}
-	async execSlash(
-		interaction: naticoInteraction,
-		{ query }: { query: { value: string } }
-	) {
-		const denodoc = await axiod(
-			'https://gist.githubusercontent.com/SkyBlockDev/aa24237591b296c528a322d4a352199f/raw/5d365841be7611f046315653bd5555eabade6d65/denodocs.json',
-			{ method: 'get' }
-		);
-
-		const fuse = new Fuse(denodoc.data, { keys: ['name'] });
-
-		const result = fuse.search(query)[0].item;
-
-		if (!result) return await interaction.reply({ content: 'Docs not found' });
+	makeEmbed(result: any) {
 		const srcUrl = `${result.location.filename}#L${result.location.line}`;
-
-		const embed = this.handler
+		return this.handler
 			.embed()
 			.setColor('#FF0000')
-			.setDescription(
-				result.jsDoc || `This ${result.kind} doesnt seem to have any jsdoc`
-			)
+			.setDescription(result.jsDoc || `No jsdoc`)
 			.addField(
 				'❯ src',
 				`[${result.location.filename.replace('https://', '')}](${srcUrl})`
 			)
 			.addField(
 				'❯ doc link',
-				`[doc.deno.land/https/deno.land/x/discordeno/mod.ts#${result.name}](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts#${result.name})`
+				`[doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name}](https://doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name})`
 			)
 			.setTitle(
 				`<:dd:838835648106201118> ${result.name}`,
-				`https://doc.deno.land/https/deno.land/x/discordeno/mod.ts#${result.name}`
+				`https://doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name}`
 			)
 			.setColor('#1F85DE');
+	}
+	async exec(message: naticoMessage, { args }: { args: string }) {
+		const result = await this.fetch(args);
+
+		if (!result) return await message.reply('Docs not found');
+
+		const embed = this.makeEmbed(result);
+		message.channel?.send({
+			embed,
+		});
+	}
+	async execSlash(
+		interaction: naticoInteraction,
+		{ query }: { query: { value: string } }
+	) {
+		const result = await this.fetch(query.value);
+
+		if (!result) return await interaction.reply({ content: 'Docs not found' });
+		const embed = this.makeEmbed(result);
 		interaction.reply({ content: '', embeds: [embed] });
 	}
 }
