@@ -46,7 +46,10 @@ export default class golang extends Command {
 			.addField('❯ Imports', `${result.import_count || 0}`)
 			.addField('❯ synopsis', `${result.synopsis || '..'}`)
 			.addField('❯ score', `${result.score?.toFixed(3) || '..'}`)
-			.setTitle(`🦫 ${result.name}`, `https://pkg.go.dev/${result.path}`);
+			.setTitle(
+				`🦫 ${result.name || 'nameless'}`,
+				`https://pkg.go.dev/${result.path}`
+			);
 	}
 	async exec(message: naticoMessage, { args }: execOptions) {
 		const pkg = await this.fetch(args);
