@@ -53,9 +53,9 @@ export default class aur extends Command {
 
 	async execSlash(
 		interaction: naticoInteraction,
-		{ arch }: { arch: { value: string } }
+		{ aur }: { aur: { value: string } }
 	) {
-		const pkg = await data(arch.value);
+		const pkg = await data(aur.value);
 
 		if (!pkg || !pkg.data.results[0])
 			return interaction.reply({

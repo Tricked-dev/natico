@@ -78,20 +78,7 @@ export default class CommandHandler {
 	embed() {
 		return new Embed();
 	}
-	/**
-	 *
-	 * @param command - Command that gets executed
-	 * @param message - Message object to be passed through
-	 * @param args - arguments to be passed though
-	 * @returns - What the ran command returned
-	 */
-	public async runCommand(
-		command: naticoCommand,
-		message: naticoMessage,
-		args: string
-	) {
-		if (!command) return;
-		/*"no" */
+	commandChecks(command: naticoCommand, message: naticoMessage, args: string) {
 		const no = '<:no:838017092216946748>';
 
 		if (!command.enabled)
@@ -129,6 +116,24 @@ export default class CommandHandler {
 					return message.reply(
 						`${no} You dont have enough permissions to run this command`
 					);
+		return false;
+	}
+	/**
+	 *
+	 * @param command - Command that gets executed
+	 * @param message - Message object to be passed through
+	 * @param args - arguments to be passed though
+	 * @returns - What the ran command returned
+	 */
+	public async runCommand(
+		command: naticoCommand,
+		message: naticoMessage,
+		args: string
+	) {
+		if (!command) return;
+		const no = '<:no:838017092216946748>';
+		/*"no" */
+		if (this.commandChecks(command, message, args)) return;
 
 		try {
 			/**
@@ -173,6 +178,7 @@ export default class CommandHandler {
 	async runSlash(interaction: naticoInteraction) {
 		if (!interaction.data) return console.log('Empty interaction');
 		else if (!interaction.data.name) return;
+
 		/**
 		 *
 		 * @param data - Slash command data to be send in the reply
@@ -201,6 +207,8 @@ export default class CommandHandler {
 		interaction['reply'] = reply;
 		const command = this.findCommand(interaction.data.name);
 		if (!command) return;
+
+		if (this.commandChecks(command, interaction)) return;
 		try {
 			console.info(
 				yellow('[!]'),
