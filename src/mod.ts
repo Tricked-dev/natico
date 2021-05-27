@@ -9,6 +9,8 @@ import {
 	DiscordActivityTypes,
 	white,
 	DiscordenoMessage,
+	DiscordInteractionTypes,
+	processButtonCollectors,
 } from '../deps.ts';
 import sweep from './tasks/sweep.ts';
 import { settings } from '../deps.ts';
@@ -20,8 +22,13 @@ startBot({
 	token,
 	intents: ['Guilds', 'GuildMessages', 'GuildVoiceStates'],
 	eventHandlers: {
-		interactionCreate(interaction: Interaction) {
-			commandHandler.runSlash(interaction as unknown as naticoInteraction);
+		interactionCreate(data: Interaction, member) {
+			if (data.type === DiscordInteractionTypes.ApplicationCommand) {
+				commandHandler.runSlash(data as unknown as naticoInteraction);
+			}
+			if (data.type === DiscordInteractionTypes.Button) {
+				processButtonCollectors(data, member);
+			}
 		},
 		async ready() {
 			if (settings.dev == true) {

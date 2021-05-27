@@ -1,4 +1,9 @@
-import { naticoMessage, naticoInteraction, naticoOptions } from '../../deps.ts';
+import {
+	naticoMessage,
+	naticoInteraction,
+	naticoOptions,
+	CreateEmbedsButtonsPagination,
+} from '../../deps.ts';
 import Fuse from 'https://deno.land/x/fuse/dist/fuse.esm.min.js';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
@@ -30,7 +35,7 @@ export default class ddoc extends Command {
 		);
 		const fuse = new Fuse(denodoc.data, { keys: ['name'] });
 
-		return await fuse.search(q)[0].item;
+		return await fuse.search(q);
 	}
 	makeEmbed(result: any) {
 		const srcUrl = `${result.location.filename}#L${result.location.line}`;
@@ -47,20 +52,34 @@ export default class ddoc extends Command {
 				`[doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name}](https://doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name})`
 			)
 			.setTitle(
-				`<:dd:838835648106201118> ${result.name}`,
+				`<:dd:847527964208005160>  ${result.name}`,
 				`https://doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name}`
 			)
 			.setColor('#1F85DE');
+	}
+	pages(results) {
+		const pages = [];
+		let i = 1;
+		for (const result of results) {
+			pages.push(
+				this.makeEmbed(result.item).setFooter(`${i}/${results.length}`)
+			);
+			i++;
+		}
+		return pages.slice(0, 50);
 	}
 	async exec(message: naticoMessage, { args }: { args: string }) {
 		const result = await this.fetch(args);
 
 		if (!result) return await message.reply('Docs not found');
 
-		const embed = this.makeEmbed(result);
-		message.channel?.send({
-			embed,
-		});
+		const pages = this.pages(result);
+		CreateEmbedsButtonsPagination(
+			message.id,
+			message.channelId,
+			message.authorId,
+			pages
+		);
 	}
 	async execSlash(interaction: naticoInteraction, { query }: naticoOptions) {
 		const result = await this.fetch(query.value);

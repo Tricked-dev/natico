@@ -1,4 +1,5 @@
 import { naticoMessage, naticoInteraction } from '../../deps.ts';
+
 import Command from '../../lib/Command.ts';
 export default class test extends Command {
 	constructor() {

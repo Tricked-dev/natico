@@ -1,4 +1,9 @@
-import { naticoMessage, naticoInteraction, naticoOptions } from '../../deps.ts';
+import {
+	naticoMessage,
+	naticoInteraction,
+	naticoOptions,
+	CreateEmbedsButtonsPagination,
+} from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
 export default class crate extends Command {
@@ -27,7 +32,6 @@ export default class crate extends Command {
 			method: 'GET',
 			params: {
 				q: args,
-				max: '1',
 			},
 			headers: {},
 		});
@@ -35,37 +39,54 @@ export default class crate extends Command {
 			return message.reply({
 				content: '<:no:838017092216946748> Please provide a message',
 			});
-		const result = pkg.data.crates[0];
-		message.channel?.send({
-			embed: this.handler
-				.embed()
-				.setColor('#3B6837')
-				.setDescription(result.description || 'No description provided')
-				.addField(
-					'❯ repository',
-					`[${result.repository.replace('https://', '')}](${
-						result.repository
-					})` || 'This crate doesnt seem to have a repository'
-				)
 
-				.addField('❯ Version', `${result.newest_version || 'Unspecified'}`)
-				.addField('❯ Install', `\`cargo install ${result.id}\``)
-				.addField(
-					'❯ Downloads',
-					`Total \`${result.downloads}\`\nRecent \`${result.recent_downloads}\``
-				)
-				.setTitle(
-					`<:cargo:838484116768292905> ${result.name}`,
-					`https://crates.io/crates/${result.id}`
-				),
-		});
+		const pages = this.pages(pkg.data.crates);
+		CreateEmbedsButtonsPagination(
+			message.id,
+			message.channelId,
+			message.authorId,
+			pages
+		);
 	}
+
+	makeEmbed(result: any) {
+		return this.handler
+			.embed()
+			.setColor('#3B6837')
+			.setDescription(result.description || 'No description provided')
+			.addField(
+				'❯ repository',
+				`[${result.repository.replace('https://', '')}](${
+					result.repository
+				})` || 'This crate doesnt seem to have a repository'
+			)
+
+			.addField('❯ Version', `${result.newest_version || 'Unspecified'}`)
+			.addField('❯ Install', `\`cargo install ${result.id}\``)
+			.addField(
+				'❯ Downloads',
+				`Total \`${result.downloads}\`\nRecent \`${result.recent_downloads}\``
+			)
+			.setTitle(
+				`<:cargo:838484116768292905> ${result.name}`,
+				`https://crates.io/crates/${result.id}`
+			);
+	}
+	pages(results) {
+		const pages = [];
+		let i = 1;
+		for (const result of results) {
+			pages.push(this.makeEmbed(result).setFooter(`${i}/${results.length}`));
+			i++;
+		}
+		return pages;
+	}
+
 	async execSlash(interaction: naticoInteraction, { crate }: naticoOptions) {
 		const pkg = await axiod(`https://crates.io/api/v1/crates`, {
 			method: 'GET',
 			params: {
 				q: crate.value,
-				max: '1',
 			},
 			headers: {},
 		});

@@ -23,7 +23,7 @@ export default class run extends Command {
 			});
 			const rawOutput = await out.output();
 			return message.reply(
-				'out\n```bash\n' + new TextDecoder().decode(rawOutput) || '\n' + '\n```'
+				'out\n```bash\n' + new TextDecoder().decode(rawOutput) + '\n```'
 			);
 		} catch (e) {
 			message.reply(`${e}`);
