@@ -30,10 +30,10 @@ startBot({
 				processButtonCollectors(data, member);
 			}
 		},
-		async ready() {
-			if (settings.dev == true) {
-				await commandHandler.enableSlash(settings.testserver);
-			}
+		ready() {
+			// if (settings.dev == true) {
+			// 	await commandHandler.enableSlash(settings.testserver);
+			// }
 
 			editBotStatus({
 				activities: [

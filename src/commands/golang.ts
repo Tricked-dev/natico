@@ -3,6 +3,7 @@ import {
 	naticoInteraction,
 	naticoOptions,
 	execOptions,
+	CreateEmbedsButtonsPagination,
 } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
@@ -38,6 +39,15 @@ export default class golang extends Command {
 		const filtered = res.data.results.filter((e: Result) => !e.fork);
 		return filtered as Result[];
 	}
+	pages(results) {
+		const pages = [];
+		let i = 1;
+		for (const result of results) {
+			pages.push(this.makeEmbed(result).setFooter(`${i}/${results.length}`));
+			i++;
+		}
+		return pages;
+	}
 	makeEmbed(result: Result) {
 		return this.handler
 			.embed()
@@ -60,10 +70,13 @@ export default class golang extends Command {
 					'<:no:838017092216946748> Please provide a valid golang package',
 			});
 
-		const embed = this.makeEmbed(pkg[0]);
-		message.channel?.send({
-			embed,
-		});
+		const pages = this.pages(pkg);
+		CreateEmbedsButtonsPagination(
+			message.id,
+			message.channelId,
+			message.authorId,
+			pages
+		);
 	}
 	async execSlash(interaction: naticoInteraction, { module }: naticoOptions) {
 		const pkg = await this.fetch(module.value);

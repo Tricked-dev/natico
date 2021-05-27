@@ -3,6 +3,7 @@ import {
 	naticoInteraction,
 	naticoOptions,
 	execOptions,
+	CreateEmbedsButtonsPagination,
 } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/Command.ts';
@@ -27,11 +28,27 @@ export default class deno extends Command {
 			],
 		});
 	}
+	makeEmbed(result: any) {
+		return this.handler
+			.embed()
+			.setColor('#FF0000')
+			.setDescription(result.description || 'No description provided')
+			.setTitle(`🦕 ${result.name}`, `https://deno.land/x/${result.name}`);
+	}
+	pages(results) {
+		const pages = [];
+		let i = 1;
+		for (const result of results) {
+			pages.push(this.makeEmbed(result).setFooter(`${i}/${results.length}`));
+			i++;
+		}
+		return pages;
+	}
 	async exec(message: naticoMessage, { args }: execOptions) {
 		const pkg = await axiod(`https://api.deno.land/modules`, {
 			method: 'GET',
 			params: {
-				limit: 1,
+				limit: 50,
 				query: args.replace('discordeno', 'discorddeno'), // its discorddeno not discord-eno
 			},
 		});
@@ -46,21 +63,19 @@ export default class deno extends Command {
 				content: '<:no:838017092216946748> Please provide a valid deno package',
 			});
 
-		const result = pkg.data.data.results[0];
-
-		message.channel?.send({
-			embed: this.handler
-				.embed()
-				.setColor('#FF0000')
-				.setDescription(result.description || 'No description provided')
-				.setTitle(`🦕 ${result.name}`, `https://deno.land/x/${result.name}`),
-		});
+		const pages = this.pages(pkg.data.data.results);
+		CreateEmbedsButtonsPagination(
+			message.id,
+			message.channelId,
+			message.authorId,
+			pages
+		);
 	}
 	async execSlash(interaction: naticoInteraction, { deno }: naticoOptions) {
 		const pkg = await axiod(`https://api.deno.land/modules/`, {
 			method: 'GET',
 			params: {
-				limit: 1,
+				limit: 50,
 				query: deno.value,
 			},
 		});
