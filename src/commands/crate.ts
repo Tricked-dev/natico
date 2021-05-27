@@ -56,7 +56,7 @@ export default class crate extends Command {
 			.setDescription(result.description || 'No description provided')
 			.addField(
 				'❯ repository',
-				`[${result.repository.replace('https://', '')}](${
+				`[${result?.repository?.replace('https://', '') || 'No repository'}](${
 					result.repository
 				})` || 'This crate doesnt seem to have a repository'
 			)
@@ -102,7 +102,7 @@ export default class crate extends Command {
 			.setDescription(result.description || 'No description provided')
 			.addField(
 				'❯ repository',
-				`[${result.repository.replace('https://', '')}](${
+				`[${result?.repository?.replace('https://', '') || 'No repository'}](${
 					result.repository
 				})` || 'This crate doesnt seem to have a repository'
 			)
