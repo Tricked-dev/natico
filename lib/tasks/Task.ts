@@ -1,7 +1,7 @@
 import { NaticoModule } from '../base/baseModule.ts';
 import TaskHandler from './taskHandler.ts';
 export default class Task extends NaticoModule {
-	declare handler: TaskHandler;
+	handler: TaskHandler;
 	delay: number;
 	runOnStart: boolean;
 	constructor(

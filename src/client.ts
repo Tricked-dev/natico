@@ -1,5 +1,7 @@
 import CommandHandler from '../lib/commands/commandHandler.ts';
 import TaskHandler from '../lib/tasks/taskHandler.ts';
+import ListenerHandler from '../lib/listeners/listenerHandler.ts';
+
 import { join, settings, startBot, token } from '../deps.ts';
 import {
 	Interaction,
@@ -18,12 +20,17 @@ import {
 export class NaticoClient {
 	cache: typeof cache;
 	id: bigint;
+	events: any;
 	constructor() {
 		this.cache = cache;
 		this.id = botId;
+		this.events = {};
 	}
 	taskHandler: TaskHandler = new TaskHandler(this, {
 		directory: join(Deno.cwd(), 'src', 'tasks'),
+	});
+	listenerHandler: ListenerHandler = new ListenerHandler(this, {
+		directory: join(Deno.cwd(), 'src', 'listeners'),
 	});
 	commandHandler: CommandHandler = new CommandHandler(this, {
 		directory: join(Deno.cwd(), 'src', 'commands'),
@@ -34,51 +41,60 @@ export class NaticoClient {
 		},
 		owners: settings.ids.owner,
 	});
-	start() {
-		this.commandHandler.loadALL();
-		this.taskHandler.loadALL();
-		this.login();
+	async start() {
+		//-----------------------
+		//------Loaders----------
+		//-----------------------
+		await this.commandHandler.loadALL();
+		await this.taskHandler.loadALL();
+		await this.listenerHandler.loadALL();
+		//-----------------------
+		//------Starters---------
+		//-----------------------
+		this.taskHandler.startAll();
+		this.listenerHandler.startAll();
+
+		await this.login();
 	}
-	login() {
-		const commandHandler = this.commandHandler;
-		const taskHandler = this.taskHandler;
-		startBot({
+	async login() {
+		await startBot({
 			token,
 			intents: ['Guilds', 'GuildMessages', 'GuildVoiceStates'],
-			eventHandlers: {
-				interactionCreate(data: Interaction, member) {
-					if (data.type === DiscordInteractionTypes.ApplicationCommand) {
-						commandHandler.runSlash(data as unknown as naticoInteraction);
-					}
-					if (data.type === DiscordInteractionTypes.Button) {
-						processButtonCollectors(data, member);
-					}
-				},
-				ready() {
-					taskHandler.startAll();
-					// if (settings.dev == true) {
-					// 	await commandHandler.enableSlash(settings.testserver);
-					// }
-
-					editBotStatus({
-						activities: [
-							{
-								name: 'deno packages',
-								type: DiscordActivityTypes.Competing,
-								createdAt: Date.now(),
-							},
-						],
-						status: 'online',
-					});
-					console.log(white('[i]'), yellow('Bot succesfully started'));
-				},
-				messageCreate(message: DiscordenoMessage) {
-					commandHandler.handleCommand(message as naticoMessage);
-				},
-				messageUpdate(message: DiscordenoMessage) {
-					commandHandler.handleCommand(message as naticoMessage);
-				},
-			},
+			eventHandlers: this.events,
 		});
 	}
 }
+//{
+// 	interactionCreate(data: Interaction, member) {
+// 		if (data.type === DiscordInteractionTypes.ApplicationCommand) {
+// 			commandHandler.runSlash(data as unknown as naticoInteraction);
+// 		}
+// 		if (data.type === DiscordInteractionTypes.Button) {
+// 			processButtonCollectors(data, member);
+// 		}
+// 	},
+// 	ready() {
+// 		taskHandler.startAll();
+// 		// if (settings.dev == true) {
+// 		// 	await commandHandler.enableSlash(settings.testserver);
+// 		// }
+
+// 		editBotStatus({
+// 			activities: [
+// 				{
+// 					name: 'deno packages',
+// 					type: DiscordActivityTypes.Competing,
+// 					createdAt: Date.now(),
+// 				},
+// 			],
+// 			status: 'online',
+// 		});
+// 		console.log(white('[i]'), yellow('Bot succesfully started'));
+// 	},
+// 	messageCreate(message: DiscordenoMessage) {
+// 		commandHandler.handleCommand(message as naticoMessage);
+// 	},
+// 	messageUpdate(message: DiscordenoMessage) {
+// 		commandHandler.handleCommand(message as naticoMessage);
+// 	},
+// },
