@@ -1,5 +1,8 @@
 import { NaticoHandler } from './baseHandler.ts';
+import { NaticoClient } from '../../src/client.ts';
+
 export class NaticoModule {
+	client!: NaticoClient;
 	handler!: NaticoHandler;
 	id: string;
 	filepath!: string;

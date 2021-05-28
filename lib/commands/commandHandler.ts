@@ -18,10 +18,11 @@ import {
 	InteractionApplicationCommandCallbackData,
 	ApplicationCommandInteractionDataOptionString,
 } from '../../deps.ts';
+import { NaticoClient } from '../../src/client.ts';
 import { NaticoHandler } from '../base/baseHandler.ts';
 import naticoCommand from './Command.ts';
 export default class CommandHandler extends NaticoHandler {
-	modules: Collection<string, naticoCommand>;
+	declare modules: Collection<string, naticoCommand>;
 	cooldowns: Set<string>;
 	IgnoreCD: string[];
 	owners: string[];
@@ -32,34 +33,37 @@ export default class CommandHandler extends NaticoHandler {
 	prefix: (
 		msg: naticoMessage
 	) => Promise<string[]> | string | string[] | Promise<string> | string;
-	constructor({
-		directory,
-		prefix,
-		IgnoreCD = [],
-		owners = [],
-		cooldown = 5000,
-		rateLimit = 3,
-		superusers = [],
-		guildonly = false,
-	}: {
-		directory: string;
-		prefix: (
-			msg: naticoMessage
-		) => Promise<string[]> | string | string[] | Promise<string> | string;
-		IgnoreCD?: string[];
-		owners?: string[];
-		/**
-		 * cooldown in millieseconds
-		 */
-		cooldown?: number;
-		rateLimit?: number;
-		superusers?: string[];
-		/**
-		 * Commands will only work in guild channels with this on
-		 */
-		guildonly: boolean;
-	}) {
-		super({
+	constructor(
+		client: NaticoClient,
+		{
+			directory,
+			prefix,
+			IgnoreCD = [],
+			owners = [],
+			cooldown = 5000,
+			rateLimit = 3,
+			superusers = [],
+			guildonly = false,
+		}: {
+			directory: string;
+			prefix: (
+				msg: naticoMessage
+			) => Promise<string[]> | string | string[] | Promise<string> | string;
+			IgnoreCD?: string[];
+			owners?: string[];
+			/**
+			 * cooldown in millieseconds
+			 */
+			cooldown?: number;
+			rateLimit?: number;
+			superusers?: string[];
+			/**
+			 * Commands will only work in guild channels with this on
+			 */
+			guildonly: boolean;
+		}
+	) {
+		super(client, {
 			directory,
 		});
 		this.prefix = prefix;

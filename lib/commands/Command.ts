@@ -1,5 +1,6 @@
 import commandHandler from './commandHandler.ts';
 import { NaticoModule } from '../base/baseModule.ts';
+import { NaticoClient } from '../../src/client.ts';
 import {
 	PermissionStrings,
 	CreateGlobalApplicationCommand,
@@ -13,6 +14,7 @@ import {
 //import { db } from './db.ts';
 export default class Command extends NaticoModule {
 	declare handler: commandHandler;
+	client!: NaticoClient;
 	id: string;
 	category: string | undefined;
 	aliases: string[] | undefined;

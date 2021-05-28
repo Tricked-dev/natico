@@ -62,7 +62,7 @@ export default class help extends Command {
 			.setDescription(
 				'[support](https://discord.com/invite/mY8zTARu4g) - [github](https://skyblockdev.github.io/natico) - [terms](https://skyblockdev.github.io/naticosite/terms.html) - [privacy](https://skyblockdev.github.io/naticosite/privacy.html)'
 			);
-		const commands = [...this.handler.commands.values()]
+		const commands = [...this.handler.modules.values()]
 			.map((c) => {
 				if (c.category == 'dev') return;
 				else return `\`${c.name}\``;
@@ -108,7 +108,7 @@ export default class help extends Command {
 			.setDescription(
 				'[support](https://discord.com/invite/mY8zTARu4g) - [website](https://skyblockdev.github.io/natico) - [terms](https://malilbot.github.io/tos) - [privacy](https://malilbot.github.io/privacy)'
 			);
-		const commands = [...this.handler.commands.values()]
+		const commands = [...this.handler.modules.values()]
 			.map((c) => {
 				if (c.category == 'dev') return;
 				else return `\`${c.name}\``;

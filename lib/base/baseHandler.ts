@@ -1,11 +1,13 @@
 import { Collection, join } from '../../deps.ts';
 import { NaticoModule } from './baseModule.ts';
+import { NaticoClient } from '../../src/client.ts';
 export class NaticoHandler {
+	client: NaticoClient;
 	directory: string;
-	modules: Collection<any, any>;
-	constructor({ directory }: { directory: string }) {
+	modules: Collection<string, NaticoModule>;
+	constructor(client: NaticoClient, { directory }: { directory: string }) {
+		this.client = client;
 		this.directory = directory;
-
 		this.modules = new Collection();
 	}
 
@@ -28,14 +30,14 @@ export class NaticoHandler {
 	}
 	remove(id: string) {
 		const mod = this.modules.get(id.toString());
-
+		if (!mod) return;
 		this.deregister(mod);
 
 		return mod;
 	}
 	reload(id: string) {
 		const mod = this.modules.get(id.toString());
-
+		if (!mod) return;
 		this.deregister(mod);
 
 		const filepath = mod.filepath;
@@ -73,6 +75,7 @@ export class NaticoHandler {
 	register(mod: NaticoModule, filepath: string) {
 		mod.filepath = filepath;
 		mod.handler = this;
+		mod.client = this.client;
 		this.modules.set(mod.id, mod);
 	}
 }
