@@ -75,7 +75,7 @@ export default class npm extends Command {
 			method: 'GET',
 			params: {
 				q: module.value,
-				size: '1',
+				size: '50',
 			},
 			headers: {},
 		});
@@ -92,11 +92,7 @@ export default class npm extends Command {
 			.addField('❯ Created', result.date)
 			.addField('❯ Scoped', `${result.scoped || 'No'}`)
 			.addField('❯ Version', `${result.version || 'Unspecified'}`)
-			.setFooter(
-				` Tags: ${result.keywords[0] || 'none'}, ${
-					result.keywords[1] || 'none'
-				}, ${result.keywords[3] || 'none'}`
-			)
+
 			.setTitle(`<:npm:838350149725061169> ${result.name}`, result.links.npm);
 		interaction.reply({ content: 'npm', embeds: [embed] });
 	}
