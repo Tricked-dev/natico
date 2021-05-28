@@ -21,3 +21,7 @@ feel free to make a pr fixing/adding stuff
 ```
 deno run -A --no-check src/mod.ts
 ```
+
+## Feel free to use this as a base for your discord bot
+
+if you do so id love to see what you make of it!
