@@ -1,4 +1,5 @@
 import commandHandler from './commandHandler.ts';
+import { NaticoModule } from '../base/baseModule.ts';
 import {
 	PermissionStrings,
 	CreateGlobalApplicationCommand,
@@ -8,10 +9,10 @@ import {
 	naticoOptions,
 	execOptions,
 	naticoInteraction,
-} from '../deps.ts';
+} from '../../deps.ts';
 //import { db } from './db.ts';
-export default class Command {
-	handler!: commandHandler;
+export default class Command extends NaticoModule {
+	declare handler: commandHandler;
 	id: string;
 	category: string | undefined;
 	aliases: string[] | undefined;
@@ -66,7 +67,7 @@ export default class Command {
 			permissions?: PermissionStrings[];
 		}
 	) {
-		//		this.db = db;
+		super(id);
 		this.options = options;
 		this.superUserOnly = superUserOnly;
 		this.enabled = enabled;

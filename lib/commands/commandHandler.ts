@@ -17,12 +17,12 @@ import {
 	DiscordenoInteractionResponse,
 	InteractionApplicationCommandCallbackData,
 	ApplicationCommandInteractionDataOptionString,
-} from '../deps.ts';
+} from '../../deps.ts';
+import { NaticoHandler } from '../base/baseHandler.ts';
 import naticoCommand from './Command.ts';
-export default class CommandHandler {
-	commands: Collection<string, naticoCommand>;
+export default class CommandHandler extends NaticoHandler {
+	modules: Collection<string, naticoCommand>;
 	cooldowns: Set<string>;
-	dir: string;
 	IgnoreCD: string[];
 	owners: string[];
 	cooldown: number;
@@ -33,7 +33,7 @@ export default class CommandHandler {
 		msg: naticoMessage
 	) => Promise<string[]> | string | string[] | Promise<string> | string;
 	constructor({
-		dir,
+		directory,
 		prefix,
 		IgnoreCD = [],
 		owners = [],
@@ -42,7 +42,7 @@ export default class CommandHandler {
 		superusers = [],
 		guildonly = false,
 	}: {
-		dir: string;
+		directory: string;
 		prefix: (
 			msg: naticoMessage
 		) => Promise<string[]> | string | string[] | Promise<string> | string;
@@ -59,7 +59,9 @@ export default class CommandHandler {
 		 */
 		guildonly: boolean;
 	}) {
-		this.dir = dir;
+		super({
+			directory,
+		});
 		this.prefix = prefix;
 		this.owners = owners;
 		this.cooldown = cooldown;
@@ -68,10 +70,11 @@ export default class CommandHandler {
 		this.IgnoreCD = [...IgnoreCD, ...this.superusers];
 		this.cooldowns = new Set();
 		this.guildonly = guildonly;
+		this.modules = new Collection();
+
 		/**
 		 * Commands are stored here!
 		 */
-		this.commands = new Collection();
 	}
 	/**
 	 * @returns a sneaky embed
@@ -296,7 +299,7 @@ export default class CommandHandler {
 	 * @returns Command object or undefined
 	 */
 	public findCommand(command: string) {
-		return this.commands.find((cmd) => {
+		return this.modules.find((cmd) => {
 			if (cmd.name == command) {
 				return true;
 			}
@@ -323,7 +326,7 @@ export default class CommandHandler {
 	}
 	slashed() {
 		const commands: EditGlobalApplicationCommand[] = [];
-		const data = this.commands.filter(
+		const data = this.modules.filter(
 			(command) => (command.enabled && command.slash) || false
 		);
 		data.forEach((command: naticoCommand) => {
@@ -348,7 +351,7 @@ export default class CommandHandler {
 	 * Used to load all commands
 	 */
 	public async loadALL() {
-		const filepaths = this.readdirRecursive(this.dir);
+		const filepaths = this.readdirRecursive(this.directory);
 		for (let filepath of filepaths) {
 			filepath = join(filepath);
 			if (filepath) await this.load(filepath);
@@ -356,12 +359,12 @@ export default class CommandHandler {
 		console.log(
 			blue('[:]'),
 			yellow(`Loaded`),
-			green(`${this.commands.size}`),
+			green(`${this.modules.size}`),
 			yellow('commands,'),
 			blue('slashed'),
 			green(
 				`${
-					this.commands.filter((command) => {
+					this.modules.filter((command) => {
 						if (command.slash) return true;
 						else return false;
 					}).size
@@ -370,7 +373,7 @@ export default class CommandHandler {
 			blue('disabled'),
 			green(
 				`${
-					this.commands.filter((command) => {
+					this.modules.filter((command) => {
 						if (!command.enabled) return true;
 						else return false;
 					}).size
@@ -378,38 +381,5 @@ export default class CommandHandler {
 			)
 		);
 		return this;
-	}
-
-	public async load(thing: string) {
-		let mod = await import('file://' + thing);
-		mod = new mod.default();
-
-		this.register(mod, thing);
-
-		return mod;
-	}
-	readdirRecursive(directory: string) {
-		const result = [];
-
-		(function read(dir) {
-			const files = Deno.readDirSync(dir);
-
-			for (const file of files) {
-				const filepath = join(dir, `${file.name}`);
-
-				if (file.isDirectory) {
-					read(filepath);
-				} else {
-					result.push(filepath);
-				}
-			}
-		})(directory);
-
-		return result;
-	}
-	register(mod, filepath: string) {
-		mod.filepath = filepath;
-		mod.handler = this;
-		this.commands.set(mod.id, mod);
 	}
 }

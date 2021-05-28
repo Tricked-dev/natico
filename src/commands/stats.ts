@@ -1,5 +1,5 @@
 import { naticoMessage, naticoInteraction, cache } from '../../deps.ts';
-import Command from '../../lib/Command.ts';
+import Command from '../../lib/commands/Command.ts';
 export default class stats extends Command {
 	constructor() {
 		super('stats', {

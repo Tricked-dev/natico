@@ -1,5 +1,5 @@
 import { naticoMessage, naticoInteraction, naticoOptions } from '../../deps.ts';
-import Command from '../../lib/Command.ts';
+import Command from '../../lib/commands/Command.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default class github extends Command {
 	constructor() {

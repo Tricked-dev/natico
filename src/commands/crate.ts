@@ -5,7 +5,7 @@ import {
 	CreateEmbedsButtonsPagination,
 } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
-import Command from '../../lib/Command.ts';
+import Command from '../../lib/commands/Command.ts';
 export default class crate extends Command {
 	constructor() {
 		super('crate', {

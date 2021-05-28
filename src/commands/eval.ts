@@ -1,5 +1,5 @@
 import { naticoMessage, token, execOptions } from '../../deps.ts';
-import Command from '../../lib/Command.ts';
+import Command from '../../lib/commands/Command.ts';
 export default class evalC extends Command {
 	constructor() {
 		super('eval', {

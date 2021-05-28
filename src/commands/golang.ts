@@ -6,7 +6,7 @@ import {
 	CreateEmbedsButtonsPagination,
 } from '../../deps.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
-import Command from '../../lib/Command.ts';
+import Command from '../../lib/commands/Command.ts';
 export default class golang extends Command {
 	constructor() {
 		super('golang', {

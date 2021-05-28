@@ -1,6 +1,6 @@
 import { naticoMessage, naticoInteraction } from '../../deps.ts';
 //import axiod from 'https://deno.land/x/axiod/mod.ts';
-import Command from '../../lib/Command.ts';
+import Command from '../../lib/commands/Command.ts';
 export default class trending extends Command {
 	constructor() {
 		super('trending', {

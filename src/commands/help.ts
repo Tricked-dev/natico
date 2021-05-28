@@ -4,7 +4,7 @@ import {
 	naticoOptions,
 	DiscordenoMessage,
 } from '../../deps.ts';
-import Command from '../../lib/Command.ts';
+import Command from '../../lib/commands/Command.ts';
 export default class help extends Command {
 	constructor() {
 		super('help', {

@@ -1,5 +1,5 @@
 import { naticoMessage, naticoInteraction, settings } from '../../deps.ts';
-import Command from '../../lib/Command.ts';
+import Command from '../../lib/commands/Command.ts';
 export default class prefix extends Command {
 	constructor() {
 		super('prefix', {
