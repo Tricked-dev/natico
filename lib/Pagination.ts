@@ -662,11 +662,7 @@ export function collectMessages(
 	options: CollectMessagesOptions
 ): Promise<DiscordenoMessage[]> {
 	return new Promise((resolve, reject) => {
-		bot.messageCollectors
-			.get(options.key)
-			?.reject(
-				'A new collector began before the user responded to the previous one.'
-			);
+		bot.messageCollectors.get(options.key);
 
 		bot.messageCollectors.set(options.key, {
 			...options,
@@ -712,11 +708,8 @@ export function collectReactions(
 	options: CollectReactionsOptions
 ): Promise<string[]> {
 	return new Promise((resolve, reject) => {
-		bot.reactionCollectors
-			.get(options.key)
-			?.reject(
-				'A new collector began before the user responded to the previous one.'
-			);
+		bot.reactionCollectors.get(options.key);
+
 		bot.reactionCollectors.set(options.key, {
 			...options,
 			reactions: [] as string[],
@@ -799,11 +792,8 @@ export function collectButtons(
 	options: CollectButtonOptions
 ): Promise<ButtonCollectorReturn[]> {
 	return new Promise((resolve, reject) => {
-		bot.buttonCollectors
-			.get(options.key)
-			?.reject(
-				'A new collector began before the user responded to the previous one.'
-			);
+		bot.buttonCollectors.get(options.key);
+
 		bot.buttonCollectors.set(options.key, {
 			...options,
 			buttons: [] as ButtonCollectorReturn[],
