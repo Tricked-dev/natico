@@ -66,14 +66,6 @@ export async function CreateEmbedsButtonsPagination(
 				},
 				{
 					type: DiscordMessageComponentTypes.Button,
-					label: 'Jump',
-					customId: `${messageId}-Jump`,
-					style: DiscordButtonStyles.Primary,
-					disabled: embeds.length <= 2,
-					emoji: { name: '↗️' },
-				},
-				{
-					type: DiscordMessageComponentTypes.Button,
 					label: 'Next',
 					customId: `${messageId}-Next`,
 					style: DiscordButtonStyles.Primary,
@@ -466,14 +458,6 @@ export async function createEmbedsButtonsPagination(
 					style: DiscordButtonStyles.Primary,
 					disabled: currentPage === 1,
 					emoji: { name: '⬅️' },
-				},
-				{
-					type: DiscordMessageComponentTypes.Button,
-					label: 'Jump',
-					customId: `${messageId}-Jump`,
-					style: DiscordButtonStyles.Primary,
-					disabled: embeds.length <= 2,
-					emoji: { name: '↗️' },
 				},
 				{
 					type: DiscordMessageComponentTypes.Button,
