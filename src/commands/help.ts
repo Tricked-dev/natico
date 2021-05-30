@@ -69,7 +69,7 @@ export default class help extends Command {
 			})
 			.join(' ');
 		embed.addField('commands', commands, false);
-		return await message.channel?.send({ embed });
+		return await message.reply({ embed });
 	}
 	async execSlash(interaction: naticoInteraction, { command }: naticoOptions) {
 		if (command) {

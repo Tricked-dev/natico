@@ -1,4 +1,5 @@
-import { naticoMessage, token, execOptions } from '../../deps.ts';
+import { token } from '../../deps.ts';
+import { NaticoMessage } from '../../lib/NaticoMessage.ts';
 import Command from '../../lib/commands/Command.ts';
 export default class evalC extends Command {
 	constructor() {
@@ -12,11 +13,19 @@ export default class evalC extends Command {
 			required: true,
 			category: 'dev',
 			ownerOnly: true,
+			options: [
+				{
+					name: 'code',
+					type: 6,
+					description: 'Code you want to eval',
+					required: true,
+				},
+			],
 		});
 	}
-	async exec(message: naticoMessage, { args }: execOptions) {
+	async exec(message: NaticoMessage, { code }: { code: string }) {
 		try {
-			let response = Deno.inspect(await eval(args), {
+			let response = Deno.inspect(await eval(code), {
 				depth: 2,
 			});
 			response = response.replace(new RegExp(token, 'gi'), '[BOTTOKEN]');

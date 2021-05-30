@@ -1,9 +1,9 @@
 import {
-	naticoMessage,
 	naticoInteraction,
 	naticoOptions,
 	CreateEmbedsButtonsPagination,
 } from '../../deps.ts';
+import { NaticoMessage } from '../../lib/NaticoMessage.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/commands/Command.ts';
 export default class apt extends Command {
@@ -27,8 +27,8 @@ export default class apt extends Command {
 			],
 		});
 	}
-	async exec(message: naticoMessage, { args }: { args: string }) {
-		const pkg = await data(args);
+	async exec(message: NaticoMessage, { apt }: { apt: string }) {
+		const pkg = await data(apt);
 
 		if (!pkg.data.entries[0])
 			return message.reply({
@@ -36,13 +36,8 @@ export default class apt extends Command {
 			});
 
 		const pages = this.pagination(pkg.data.entries);
-		//console.log(pages);
-		CreateEmbedsButtonsPagination(
-			message.id,
-			message.channelId,
-			message.authorId,
-			pages
-		);
+		if (this.slash) return message.reply(pages[0]);
+		return message.CreateEmbedsButtonsPagination(pages);
 	}
 	pagination(result) {
 		const pages = [];

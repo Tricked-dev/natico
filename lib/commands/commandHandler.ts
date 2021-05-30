@@ -20,6 +20,7 @@ import {
 } from '../../deps.ts';
 import { NaticoClient } from '../../src/client.ts';
 import { NaticoHandler } from '../base/baseHandler.ts';
+import { NaticoMessage } from '../NaticoMessage.ts';
 import naticoCommand from './Command.ts';
 export default class CommandHandler extends NaticoHandler {
 	declare modules: Collection<string, naticoCommand>;
@@ -86,38 +87,39 @@ export default class CommandHandler extends NaticoHandler {
 	embed() {
 		return new Embed();
 	}
-	commandChecks(command: naticoCommand, message: naticoMessage, args: string) {
+	commandChecks(command: naticoCommand, message: NaticoMessage, args: string) {
 		const no = '<:no:838017092216946748>';
 
 		if (!command.enabled)
-			if (!this.superusers.includes(message.authorId.toString()))
+			if (!this.superusers.includes(message.authorId!))
 				return message.reply(`${no} This command is currently disabled`);
 
-		if (this.cooldowns.has(message.authorId.toString()))
-			if (!this.IgnoreCD.includes(message.authorId.toString()))
-				return message.addReaction(`${no}`);
+		if (this.cooldowns.has(message.authorId!))
+			if (!this.IgnoreCD.includes(message.authorId!))
+				return message.reply(`${no}`);
 
 		if (this.guildonly)
-			if (!this.superusers.includes(message.authorId.toString()))
+			if (!this.superusers.includes(message.authorId!))
 				if (!message.guildId) return;
 
 		if (command.ownerOnly)
-			if (!this.owners.includes(message.authorId.toString()))
+			if (!this.owners.includes(message.authorId!))
 				return message.reply(`${no} This command is only for owners`);
 
 		if (command.superUserOnly)
-			if (!this.superusers.includes(message.authorId.toString()))
+			if (!this.superusers.includes(message.authorId!))
 				return message.reply(`${no} This command is only for superusers`);
 
 		if (command.required)
-			if (!args)
-				return message.reply(`${no} ${command.name} requires arguments`);
+			if (!message.isSlash)
+				if (!args)
+					return message.reply(`${no} ${command.name} requires arguments`);
 		if (command.permissions)
-			if (!this.superusers.includes(message.authorId.toString()))
+			if (!this.superusers.includes(message.authorId!))
 				if (
 					!hasGuildPermissions(
-						message!.guildId,
-						message.authorId,
+						BigInt(message!.guildId),
+						BigInt(message.authorId),
 						command.permissions
 					)
 				)
@@ -135,20 +137,27 @@ export default class CommandHandler extends NaticoHandler {
 	 */
 	public async runCommand(
 		command: naticoCommand,
-		message: naticoMessage,
-		args: string
+		message: NaticoMessage,
+		args?: string
 	) {
 		if (!command) return;
+		const convertedOptions = {};
+		if (message.isSlash && message?.data?.options) {
+			for (const option of message.data?.options) {
+				convertedOptions[option.name] = option.value;
+			}
+		}
+
 		const no = '<:no:838017092216946748>';
 		/*"no" */
-		if (this.commandChecks(command, message, args)) return;
+		if (this.commandChecks(command, message, args)) return console.log('HI(');
 
 		try {
-			/**
-			 * Executes the command
-			 */
-			/*@ts-ignore*/
-			await command.exec(message, { args });
+			const data = message.isSlash
+				? convertedOptions
+				: this.generateArgs(command, args!);
+			await command.exec(message, data);
+
 			/**
 			 * Log usage to prevent abuse
 			 */
@@ -157,16 +166,13 @@ export default class CommandHandler extends NaticoHandler {
 				green(`command ran`),
 				blue(command.name),
 				green(`user`),
-				blue(`${message.tag} ${message.authorId.toString()}`)
+				blue(`${message.tag} ${message.authorId}`)
 			);
 			/**
 			 * Adding the user to a set and deleting them later!
 			 */
-			this.cooldowns.add(message.authorId.toString());
-			setTimeout(
-				() => this.cooldowns.delete(message.authorId.toString()),
-				this.cooldown
-			);
+			this.cooldowns.add(message.authorId);
+			setTimeout(() => this.cooldowns.delete(message.authorId), this.cooldown);
 		} catch (e) {
 			console.log(e);
 			if (e?.response?.status && e?.response?.status !== 200)
@@ -180,32 +186,39 @@ export default class CommandHandler extends NaticoHandler {
 			else message.reply(`${no} A error occurred, Try again`);
 		}
 	}
+	generateArgs(
+		command: naticoCommand,
+		//message: NaticoMessage,
+		content: string
+	) {
+		let args = {};
+		if (command.options) {
+			for (const option of command.options) {
+				option.type == 3;
+				args[option.name] = content;
+			}
+		}
+		return args;
+	}
+
 	/**
 	 *
 	 * @param interaction - Needed for data
 	 * @returns - What the ran command returned
 	 */
-	async runSlash(interaction: naticoInteraction) {
-		if (!interaction.data) return console.log('Empty interaction');
-		else if (!interaction.data.name) return;
+	async runSlash(i: naticoInteraction) {
+		if (!i.data) return console.log('Empty interaction');
+		const interaction = new NaticoMessage({
+			client: this.client,
+			interaction: i,
+		});
+		//else if (!interaction.data.name) return;
 
 		/**
 		 *
 		 * @param data - Slash command data to be send in the reply
 		 * @returns Idk? message object
 		 */
-		const reply = async (
-			data: InteractionApplicationCommandCallbackData
-		): Promise<void> => {
-			return await sendInteractionResponse(
-				interaction.id as unknown as bigint,
-				interaction.token,
-				{
-					type: 4,
-					data,
-				}
-			);
-		};
 		const edit = async (data: DiscordenoInteractionResponse): Promise<void> => {
 			return await sendInteractionResponse(
 				interaction.id as unknown as bigint,
@@ -214,8 +227,7 @@ export default class CommandHandler extends NaticoHandler {
 			);
 		};
 		interaction['edit'] = edit;
-		interaction['reply'] = reply;
-		const command = this.findCommand(interaction.data.name);
+		const command = this.findCommand(interaction.name);
 		if (!command) return;
 
 		try {
@@ -245,7 +257,19 @@ export default class CommandHandler extends NaticoHandler {
 	 * @param message - Message needed to find the command to run
 	 * @returns - What Run Command returns
 	 */
-	public async handleCommand(message: naticoMessage) {
+	public async handleCommand(m) {
+		if (m.token) {
+			const message = new NaticoMessage({
+				client: this.client,
+				interaction: m,
+			});
+			const command = this.findCommand(message!.name);
+			if (command) return this.runCommand(command, message);
+		}
+		const message = new NaticoMessage({
+			client: this.client,
+			message: m,
+		});
 		if (!message?.content) return;
 		if (message.isBot) return;
 		if (message.content == `<@!${botId}>`) {
@@ -302,13 +326,13 @@ export default class CommandHandler extends NaticoHandler {
 	 * @param command - Command you want to search for
 	 * @returns Command object or undefined
 	 */
-	public findCommand(command: string) {
+	public findCommand(command: string | undefined): naticoCommand | undefined {
 		return this.modules.find((cmd) => {
 			if (cmd.name == command) {
 				return true;
 			}
 			if (cmd.aliases) {
-				if (cmd.aliases.includes(command)) {
+				if (cmd.aliases.includes(<string>command)) {
 					return true;
 				}
 			}

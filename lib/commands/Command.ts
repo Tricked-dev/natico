@@ -6,11 +6,11 @@ import {
 	CreateGlobalApplicationCommand,
 	EditGlobalApplicationCommand,
 	ApplicationCommandOption,
-	naticoMessage,
 	naticoOptions,
 	execOptions,
 	naticoInteraction,
 } from '../../deps.ts';
+import { NaticoMessage } from '../NaticoMessage.ts';
 //import { db } from './db.ts';
 export default class Command extends NaticoModule {
 	declare handler: commandHandler;
@@ -105,7 +105,7 @@ export default class Command extends NaticoModule {
 		 * @type {AkairoHandler}
 		 */
 	}
-	exec(_message: naticoMessage, _options: execOptions): any | Promise<any> {}
+	exec(_message: NaticoMessage, _options: execOptions): any | Promise<any> {}
 	execSlash(
 		_interaction: naticoInteraction,
 		_options: naticoOptions

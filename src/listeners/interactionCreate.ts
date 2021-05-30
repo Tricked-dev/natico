@@ -15,7 +15,9 @@ export default class interactionCreate extends Listener {
 
 	exec(data: Interaction, member: DiscordenoMember) {
 		if (data.type === DiscordInteractionTypes.ApplicationCommand) {
-			this.client.commandHandler.runSlash(data as unknown as naticoInteraction);
+			this.client.commandHandler.handleCommand(
+				data as unknown as naticoInteraction
+			);
 		}
 		if (data.type === DiscordInteractionTypes.Button) {
 			processButtonCollectors(data, member);
