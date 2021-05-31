@@ -54,8 +54,8 @@ export class NaticoMessage {
 		this.member = message?.member || interaction?.member;
 		this.data = interaction?.data;
 		this.authorId = message?.authorId?.toString() || interaction?.user?.id;
-		this.tag = `${this.member.username || 'natico'}#${
-			this.member.discriminator || '7789'
+		this.tag = `${this?.member?.username || 'natico'}#${
+			this?.member?.discriminator || '7789'
 		}`;
 		this.isBot = message?.isBot || false;
 		this.timestamp = message?.timestamp || undefined;
