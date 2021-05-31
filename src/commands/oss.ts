@@ -1,4 +1,5 @@
-import { naticoMessage, naticoInteraction, settings } from '../../deps.ts';
+import { settings } from '../../deps.ts';
+import { NaticoMessage } from '../../lib/NaticoMessage.ts';
 import Command from '../../lib/commands/Command.ts';
 export default class oss extends Command {
 	constructor() {
@@ -12,15 +13,8 @@ export default class oss extends Command {
 			category: 'general',
 		});
 	}
-	async exec(message: naticoMessage) {
+	async exec(message: NaticoMessage) {
 		await message.channel?.send({
-			content:
-				'Yes im opensource you can find my source code at ' + settings.repo,
-		});
-	}
-
-	async execSlash(interaction: naticoInteraction) {
-		return await interaction.reply({
 			content:
 				'Yes im opensource you can find my source code at ' + settings.repo,
 		});

@@ -1,10 +1,4 @@
-import {
-	naticoMessage,
-	naticoInteraction,
-	naticoOptions,
-	execOptions,
-	CreateEmbedsButtonsPagination,
-} from '../../deps.ts';
+import { NaticoMessage } from '../../lib/NaticoMessage.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/commands/Command.ts';
 export default class deno extends Command {
@@ -35,7 +29,7 @@ export default class deno extends Command {
 			.setDescription(result.description || 'No description provided')
 			.setTitle(`🦕 ${result.name}`, `https://deno.land/x/${result.name}`);
 	}
-	pages(results) {
+	pages(results: any) {
 		const pages = [];
 		let i = 1;
 		for (const result of results) {
@@ -44,12 +38,12 @@ export default class deno extends Command {
 		}
 		return pages;
 	}
-	async exec(message: naticoMessage, { args }: execOptions) {
+	async exec(message: NaticoMessage, { deno }: { deno: string }) {
 		const pkg = await axiod(`https://api.deno.land/modules`, {
 			method: 'GET',
 			params: {
 				limit: 50,
-				query: args.replace('discordeno', 'discorddeno'), // its discorddeno not discord-eno
+				query: deno.replace('discordeno', 'discorddeno'), // its discorddeno not discord-eno
 			},
 		});
 
@@ -64,38 +58,7 @@ export default class deno extends Command {
 			});
 
 		const pages = this.pages(pkg.data.data.results);
-		CreateEmbedsButtonsPagination(
-			message.id,
-			message.channelId,
-			message.authorId,
-			pages
-		);
-	}
-	async execSlash(interaction: naticoInteraction, { deno }: naticoOptions) {
-		const pkg = await axiod(`https://api.deno.land/modules/`, {
-			method: 'GET',
-			params: {
-				limit: 50,
-				query: deno.value,
-			},
-		});
-
-		if (!pkg.data.success)
-			return interaction.reply({
-				content: '<:no:838017092216946748> Please provide a valid deno package',
-			});
-		if (!pkg.data?.data?.results[0])
-			return interaction.reply({
-				content: '<:no:838017092216946748> Please provide a valid deno package',
-			});
-
-		const result = pkg.data.data.results[0];
-
-		const embed = this.handler
-			.embed()
-			.setColor('#FF0000')
-			.setDescription(result.description || 'No description provided')
-			.setTitle(`🦕 ${result.name}`, `https://deno.land/x/${result.name}`);
-		interaction.reply({ content: 'deno', embeds: [embed] });
+		if (message.isSlash) return message.reply(pages[0]);
+		return message.CreateEmbedsButtonsPagination(pages);
 	}
 }

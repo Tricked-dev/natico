@@ -1,9 +1,4 @@
-import {
-	naticoMessage,
-	naticoInteraction,
-	naticoOptions,
-	CreateEmbedsButtonsPagination,
-} from '../../deps.ts';
+import { NaticoMessage } from '../../lib/NaticoMessage.ts';
 import Fuse from 'https://deno.land/x/fuse/dist/fuse.esm.min.js';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/commands/Command.ts';
@@ -58,6 +53,7 @@ export default class ddoc extends Command {
 			.setColor('#1F85DE');
 	}
 	pages(results) {
+		results = results.slice(0, 20);
 		const pages = [];
 		let i = 1;
 		for (const result of results) {
@@ -66,26 +62,15 @@ export default class ddoc extends Command {
 			);
 			i++;
 		}
-		return pages.slice(0, 50);
+		return pages;
 	}
-	async exec(message: naticoMessage, { args }: { args: string }) {
-		const result = await this.fetch(args);
+	async exec(message: NaticoMessage, { query }: { query: string }) {
+		const result = await this.fetch(query);
 
 		if (!result) return await message.reply('Docs not found');
 
 		const pages = this.pages(result);
-		CreateEmbedsButtonsPagination(
-			message.id,
-			message.channelId,
-			message.authorId,
-			pages
-		);
-	}
-	async execSlash(interaction: naticoInteraction, { query }: naticoOptions) {
-		const result = await this.fetch(query.value);
-
-		if (!result) return await interaction.reply({ content: 'Docs not found' });
-		const embed = this.makeEmbed(result);
-		interaction.reply({ content: '', embeds: [embed] });
+		if (message.isSlash) return message.reply(pages[0]);
+		return message.CreateEmbedsButtonsPagination(pages);
 	}
 }

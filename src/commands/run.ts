@@ -1,4 +1,4 @@
-import { naticoMessage } from '../../deps.ts';
+import { NaticoMessage } from '../../lib/NaticoMessage.ts';
 import Command from '../../lib/commands/Command.ts';
 export default class run extends Command {
 	constructor() {
@@ -14,7 +14,7 @@ export default class run extends Command {
 			ownerOnly: true,
 		});
 	}
-	async exec(message: naticoMessage, { args }: { args: string }) {
+	async exec(message: NaticoMessage, { args }: { args: string }) {
 		try {
 			const out = Deno.run({
 				cmd: args.split(' '),

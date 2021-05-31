@@ -1,9 +1,5 @@
-import {
-	naticoMessage,
-	naticoInteraction,
-	naticoOptions,
-	CreateEmbedsButtonsPagination,
-} from '../../deps.ts';
+import { naticoInteraction, naticoOptions } from '../../deps.ts';
+import { NaticoMessage } from '../../lib/NaticoMessage.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/commands/Command.ts';
 export default class aur extends Command {
@@ -62,18 +58,15 @@ export default class aur extends Command {
 		}
 		return pages;
 	}
-	async exec(message: naticoMessage, { args }: { args: string }) {
-		const pkg = await this.fetch(args);
+	async exec(message: NaticoMessage, { arch }: { arch: string }) {
+		const pkg = await this.fetch(arch);
 		if (!pkg || !pkg?.data?.results[0])
 			return message.reply(
 				'<:no:838017092216946748> Please provide a valid AUR package'
 			);
-		CreateEmbedsButtonsPagination(
-			message.id,
-			message.channelId,
-			message.authorId,
-			this.pages(pkg.data.results)
-		);
+		const pages = this.pages(pkg.data.results);
+		if (message.isSlash) return message.reply(pages[0]);
+		message.CreateEmbedsButtonsPagination(pages);
 	}
 
 	async execSlash(interaction: naticoInteraction, { arch }: naticoOptions) {

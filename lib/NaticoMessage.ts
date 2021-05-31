@@ -54,7 +54,9 @@ export class NaticoMessage {
 		this.member = message?.member || interaction?.member;
 		this.data = interaction?.data;
 		this.authorId = message?.authorId?.toString() || interaction?.user?.id;
-		this.tag = `${this!.member!.username}#${this!.member!.discriminator}`;
+		this.tag = `${this.member.username || 'natico'}#${
+			this.member.discriminator || '7789'
+		}`;
 		this.isBot = message?.isBot || false;
 		this.timestamp = message?.timestamp || undefined;
 		this.embeds = message?.embeds || undefined;
@@ -72,13 +74,14 @@ export class NaticoMessage {
 			);
 	}
 	reply(...args) {
+		console.log(...args);
 		if (this.message) return this.message.reply(...args);
 		if (this.interaction) {
 			if (args[0].embed) {
 				args[0].embeds = [args[0].embed];
 				delete args[0].embed;
 			}
-
+			if (args[0] instanceof Embed) args[0] = { embeds: [args[0]] };
 			return this.replyInteraction(...args);
 		}
 	}

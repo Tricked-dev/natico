@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction, naticoOptions } from '../../deps.ts';
+import { NaticoMessage } from '../../lib/NaticoMessage.ts';
 import Command from '../../lib/commands/Command.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 export default class github extends Command {
@@ -45,20 +45,16 @@ export default class github extends Command {
 			.setTitle(user.login, user.html_url)
 			.addField('➥ Info', info)
 			.addField('➥ Stats', stats)
-			.setThumbnail(user.avatar_url);
+			.setThumbnail(
+				user.avatar_url ||
+					'https://cdn.discordapp.com/avatars/838065056096059463/e404cfbe142fc10026e0914530532e55.webp?size=4096'
+			);
 	}
-	async exec(message: naticoMessage, { args }: { args: string }) {
-		const user = await this.fetch(args);
-		if (user?.message) return message.reply('User not found');
-		const embed = this.makeEmbed(user);
-
-		message.channel?.send({ embed });
-	}
-	async execSlash(interaction: naticoInteraction, { user }: naticoOptions) {
-		const res = await this.fetch(user.value);
-		if (res?.message) return interaction.reply('User not found');
-		const embed = this.makeEmbed(res);
-
-		interaction.reply({ content: 'Github', embeds: [embed] });
+	async exec(message: NaticoMessage, { user }: { user: string }) {
+		const us = await this.fetch(user);
+		console.log(us);
+		if (us?.message) return message.reply('User not found');
+		const embed = this.makeEmbed(us);
+		message.reply({ embed: embed });
 	}
 }

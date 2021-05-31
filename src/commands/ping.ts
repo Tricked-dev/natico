@@ -1,4 +1,4 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
+import { NaticoMessage } from '../../lib/NaticoMessage.ts';
 import Command from '../../lib/commands/Command.ts';
 export default class ping extends Command {
 	constructor() {
@@ -12,10 +12,7 @@ export default class ping extends Command {
 			category: 'general',
 		});
 	}
-	exec(message: naticoMessage) {
+	exec(message: NaticoMessage) {
 		message.reply('ping🏓');
-	}
-	async execSlash(interaction: naticoInteraction) {
-		await interaction.reply({ content: 'Pong🏓' });
 	}
 }

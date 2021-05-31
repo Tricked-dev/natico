@@ -3,6 +3,7 @@ import {
 	editBotStatus,
 	DiscordActivityTypes,
 	white,
+	botId,
 } from '../../deps.ts';
 import Listener from '../../lib/listeners/Listener.ts';
 export default class invite extends Listener {
@@ -26,6 +27,7 @@ export default class invite extends Listener {
 			],
 			status: 'online',
 		});
+		this.client.id = botId;
 		console.log(white('[i]'), yellow('Bot succesfully started'));
 	}
 }

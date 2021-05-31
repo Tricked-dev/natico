@@ -1,5 +1,4 @@
-import { naticoMessage, naticoInteraction } from '../../deps.ts';
-
+import { NaticoMessage } from '../../lib/NaticoMessage.ts';
 import Command from '../../lib/commands/Command.ts';
 export default class test extends Command {
 	constructor() {
@@ -13,7 +12,7 @@ export default class test extends Command {
 			category: 'dev',
 		});
 	}
-	async exec(message: naticoMessage) {
+	async exec(message: NaticoMessage) {
 		if (!message.guild)
 			return message.reply('NO YOU CANT CHANGE THE PREFIX IN DMS STOP TRYING');
 		await message.reply(`Anyone knows a good deno database?`);

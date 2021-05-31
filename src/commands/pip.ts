@@ -1,8 +1,4 @@
-import {
-	naticoMessage,
-	naticoInteraction,
-	CreateEmbedsButtonsPagination,
-} from '../../deps.ts';
+import { NaticoMessage } from '../../lib/NaticoMessage.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/commands/Command.ts';
 export default class pip extends Command {
@@ -46,12 +42,12 @@ export default class pip extends Command {
 		}
 		return pages;
 	}
-	async exec(message: naticoMessage, { args }: { args: string }) {
+	async exec(message: NaticoMessage, { pip }: { pip: string }) {
 		const pkg = await axiod(`https://api.anaconda.org/search`, {
 			method: 'GET',
 			params: {
 				limit: 1,
-				name: args,
+				name: pip,
 			},
 		});
 
@@ -60,37 +56,7 @@ export default class pip extends Command {
 				content: '<:no:838017092216946748> Please provide a valid pip package',
 			});
 		const pages = this.pages(pkg.data);
-		CreateEmbedsButtonsPagination(
-			message.id,
-			message.channelId,
-			message.authorId,
-			pages
-		);
-	}
-	async execSlash(interaction: naticoInteraction, { pip }: naticoOptions) {
-		interaction.reply({ content: 'searching' });
-		const pkg = await axiod(`https://api.anaconda.org/search`, {
-			method: 'GET',
-			params: {
-				limit: 50,
-				name: pip.value,
-			},
-		});
-
-		if (!pkg.data[0])
-			return interaction.reply({
-				content: '<:no:838017092216946748> Please provide a valid pip package',
-			});
-
-		const result = pkg.data[0];
-
-		const embed = this.handler
-			.embed()
-			.setColor('#0080ff')
-			.addField('❯ Version', result.versions[0])
-			.setDescription(result.summary || 'No description provided')
-			.setTitle(`🐍 ${result.name}`, `https://pypi.org/project/${result.name}`);
-
-		interaction.edit({ content: 'python', embeds: [embed] });
+		if (message.isSlash) return message.reply(pages[0]);
+		return message.CreateEmbedsButtonsPagination(pages);
 	}
 }

@@ -155,7 +155,7 @@ export default class CommandHandler extends NaticoHandler {
 		try {
 			const data = message.isSlash
 				? convertedOptions
-				: this.generateArgs(command, args!);
+				: this.generateArgs(command, args);
 			await command.exec(message, data);
 
 			/**

@@ -1,10 +1,4 @@
-import {
-	naticoMessage,
-	naticoInteraction,
-	naticoOptions,
-	execOptions,
-	CreateEmbedsButtonsPagination,
-} from '../../deps.ts';
+import { NaticoMessage } from '../../lib/NaticoMessage.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/commands/Command.ts';
 export default class golang extends Command {
@@ -32,7 +26,6 @@ export default class golang extends Command {
 		const res = await axiod(`https://api.godoc.org/search`, {
 			method: 'GET',
 			params: {
-				limit: 1,
 				q,
 			},
 		});
@@ -40,6 +33,7 @@ export default class golang extends Command {
 		return filtered as Result[];
 	}
 	pages(results) {
+		results = results.slice(0, 20);
 		const pages = [];
 		let i = 1;
 		for (const result of results) {
@@ -61,8 +55,8 @@ export default class golang extends Command {
 				`https://pkg.go.dev/${result.path}`
 			);
 	}
-	async exec(message: naticoMessage, { args }: execOptions) {
-		const pkg = await this.fetch(args);
+	async exec(message: NaticoMessage, { module }: { module: string }) {
+		const pkg = await this.fetch(module);
 
 		if (!pkg[0])
 			return message.reply({
@@ -71,23 +65,8 @@ export default class golang extends Command {
 			});
 
 		const pages = this.pages(pkg);
-		CreateEmbedsButtonsPagination(
-			message.id,
-			message.channelId,
-			message.authorId,
-			pages
-		);
-	}
-	async execSlash(interaction: naticoInteraction, { module }: naticoOptions) {
-		const pkg = await this.fetch(module.value);
-		if (!pkg[0])
-			return interaction.reply({
-				content:
-					'<:no:838017092216946748> Please provide a valid golang package',
-			});
-
-		const embed = this.makeEmbed(pkg[0]);
-		interaction.reply({ content: '', embeds: [embed] });
+		if (message.isSlash) return message.reply(pages[0]);
+		return message.CreateEmbedsButtonsPagination(pages);
 	}
 }
 export interface GoDoc {
