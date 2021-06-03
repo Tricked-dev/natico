@@ -12,12 +12,20 @@ export default class run extends Command {
 			required: true,
 			category: 'dev',
 			ownerOnly: true,
+			options: [
+				{
+					name: 'code',
+					type: 6,
+					description: 'Code you want to eval',
+					required: true,
+				},
+			],
 		});
 	}
-	async exec(message: NaticoMessage, { args }: { args: string }) {
+	async exec(message: NaticoMessage, { code }: { code: string }) {
 		try {
 			const out = Deno.run({
-				cmd: args.split(' '),
+				cmd: code.split(' '),
 				stdout: 'piped',
 				stderr: 'piped',
 			});
