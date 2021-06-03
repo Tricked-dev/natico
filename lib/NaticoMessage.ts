@@ -14,27 +14,27 @@ import {
 } from '../deps.ts';
 import { NaticoClient } from '../src/client.ts';
 export class NaticoMessage {
-	isSlash: boolean;
-	data: ApplicationCommandInteractionData | undefined;
-	client: NaticoClient;
-	type: number | undefined;
-	id: string | undefined;
-	guildId: string | undefined;
-	channelId: string | undefined;
-	member: DiscordenoMember | undefined;
-	authorId: string | undefined;
-	tag: string;
-	isBot: boolean;
-	timestamp: string | number | undefined;
-	embeds: string | Embed | undefined | string | Embed[] | any;
-	attachments: Attachment | undefined | any;
-	content: string | undefined;
-	flags: number | undefined;
-	message: DiscordenoMessage | undefined;
-	interaction: Interaction | undefined;
-	token: string | undefined;
-	name: string | undefined;
-	channel: DiscordenoChannel | undefined;
+	isSlash!: boolean;
+	data!: ApplicationCommandInteractionData;
+	client!: NaticoClient;
+	type!: number;
+	id!: string;
+	guildId!: string;
+	channelId!: string;
+	member!: DiscordenoMember;
+	authorId!: string;
+	tag!: string;
+	isBot!: boolean;
+	timestamp!: string | number;
+	embeds!: string | Embed | undefined | string | Embed[] | any;
+	attachments!: Attachment | undefined | any;
+	content!: string;
+	flags!: number;
+	message!: DiscordenoMessage;
+	interaction!: Interaction;
+	token!: string;
+	name!: string;
+	channel!: DiscordenoChannel;
 	constructor({
 		client,
 		message,
@@ -45,36 +45,35 @@ export class NaticoMessage {
 		interaction?: naticoInteraction;
 	}) {
 		this.isSlash = interaction ? true : false;
-		this.data = interaction?.data || undefined;
-		this.client = client;
-		this.type = message?.type || interaction?.type;
-		this.id = message?.id.toString() || interaction?.id;
-		this.guildId = message?.guildId!.toString() || interaction?.guildId;
-		this.channelId = message?.channelId!.toString() || interaction?.channelId;
-		this.member = message?.member || interaction?.member;
-		this.data = interaction?.data;
-		this.authorId = message?.authorId?.toString() || interaction?.user?.id;
+		this.data = interaction?.data || undefined!;
+		this.client = client!;
+		this.type = message?.type || interaction?.type!;
+		this.id = message?.id.toString() || interaction?.id!;
+		this.guildId = message?.guildId!.toString() || interaction?.guildId!;
+		this.channelId = message?.channelId!.toString() || interaction?.channelId!;
+		this.member = message?.member! || interaction?.member!;
+		this.data = interaction?.data!;
+		this.authorId = message?.authorId?.toString() || interaction?.user?.id!;
 		this.tag = `${this?.member?.username || 'natico'}#${
 			this?.member?.discriminator || '7789'
 		}`;
 		this.isBot = message?.isBot || false;
-		this.timestamp = message?.timestamp || undefined;
-		this.embeds = message?.embeds || undefined;
-		this.attachments = message?.attachments || undefined;
-		this.content = message?.content || undefined;
-		this.flags = message?.flags || undefined;
-		this.message = message || undefined;
-		this.interaction = interaction || undefined;
-		this.token = interaction?.token || undefined;
-		this.name = interaction?.data?.name || undefined;
+		this.timestamp = message?.timestamp || undefined!;
+		this.embeds = message?.embeds || undefined!;
+		this.attachments = message?.attachments || undefined!;
+		this.content = message?.content || undefined!;
+		this.flags = message?.flags || undefined!;
+		this.message = message || undefined!;
+		this.interaction = interaction || undefined!;
+		this.token = interaction?.token || undefined!;
+		this.name = interaction?.data?.name || undefined!;
 		this.channel =
 			message?.channel ||
 			client.cache.channels.get(
 				BigInt(interaction?.channelId || '815328569051971595')
-			);
+			)!;
 	}
-	reply(...args) {
-		console.log(...args);
+	reply(...args: any[]) {
 		if (this.message) return this.message.reply(...args);
 		if (this.interaction) {
 			if (args[0].embed) {

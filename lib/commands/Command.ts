@@ -13,7 +13,7 @@ import {
 import { NaticoMessage } from '../NaticoMessage.ts';
 //import { db } from './db.ts';
 export default class Command extends NaticoModule {
-	declare handler: commandHandler;
+	handler: commandHandler;
 	client!: NaticoClient;
 	id: string;
 	category: string | undefined;
@@ -27,11 +27,10 @@ export default class Command extends NaticoModule {
 	enabled: boolean | undefined;
 	superUserOnly: boolean | undefined;
 	options:
-		| CreateGlobalApplicationCommand
-		| EditGlobalApplicationCommand
+		| CreateGlobalApplicationCommand[]
+		| EditGlobalApplicationCommand[]
 		| ApplicationCommandOption[]
-		| ApplicationCommandOption
-		| undefined;
+		| undefined[];
 	permissions: PermissionStrings[] | undefined;
 	//	db: typeof db;
 	constructor(
@@ -51,11 +50,10 @@ export default class Command extends NaticoModule {
 			permissions,
 		}: {
 			options?:
-				| CreateGlobalApplicationCommand
-				| EditGlobalApplicationCommand
+				| CreateGlobalApplicationCommand[]
+				| EditGlobalApplicationCommand[]
 				| ApplicationCommandOption[]
-				| ApplicationCommandOption
-				| undefined;
+				| undefined[];
 			name?: string;
 			aliases?: string[];
 			examples?: string[];
@@ -106,8 +104,4 @@ export default class Command extends NaticoModule {
 		 */
 	}
 	exec(_message: NaticoMessage, _options: execOptions): any | Promise<any> {}
-	execSlash(
-		_interaction: naticoInteraction,
-		_options: naticoOptions
-	): any | Promise<any> {}
 }

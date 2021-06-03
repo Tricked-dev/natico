@@ -1,15 +1,14 @@
-import { naticoInteraction, naticoOptions } from '../../deps.ts';
 import { NaticoMessage } from '../../lib/NaticoMessage.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 import Command from '../../lib/commands/Command.ts';
 export default class aur extends Command {
 	constructor() {
-		super('aur', {
-			name: 'aur',
-			aliases: ['aur', 'arch', 'paru'],
+		super('hackage', {
+			name: 'hackage',
+			aliases: ['hackage', 'haskell'],
 			examples: ['aur neofetch'],
 			description: 'Find aur packages for you',
-			enabled: true,
+			enabled: false,
 			slash: true,
 			required: true,
 			category: 'general',
@@ -23,13 +22,14 @@ export default class aur extends Command {
 			],
 		});
 	}
-	async fetch(q: string) {
-		return await axiod(`https://aur.archlinux.org/rpc/`, {
+	async fetch(terms: string) {
+		return await axiod(`https://hackage.haskell.org/packages/search`, {
 			method: 'GET',
+			headers: {
+				'content-type': 'application/json',
+			},
 			params: {
-				v: 5,
-				type: 'search',
-				arg: q,
+				terms,
 			},
 		});
 	}
@@ -60,6 +60,7 @@ export default class aur extends Command {
 	}
 	async exec(message: NaticoMessage, { arch }: { arch: string }) {
 		const pkg = await this.fetch(arch);
+		return console.log(pkg);
 		if (!pkg || !pkg?.data?.results[0])
 			return message.reply(
 				'<:no:838017092216946748> Please provide a valid AUR package'

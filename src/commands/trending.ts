@@ -54,9 +54,4 @@ export default class trending extends Command {
 		return message.channel.send('HI');
 		*/
 	}
-	async execSlash(interaction: naticoInteraction) {
-		await interaction.reply({
-			content: 'Currently no clue how to find trending github pages',
-		});
-	}
 }

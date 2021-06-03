@@ -194,62 +194,13 @@ export default class CommandHandler extends NaticoHandler {
 		let args = {};
 		if (command.options) {
 			for (const option of command.options) {
-				option.type == 3;
-				args[option.name] = content;
+				if (option && option.type && option.name) {
+					option.type == 3;
+					args[option.name] = content;
+				}
 			}
 		}
 		return args;
-	}
-
-	/**
-	 *
-	 * @param interaction - Needed for data
-	 * @returns - What the ran command returned
-	 */
-	async runSlash(i: naticoInteraction) {
-		if (!i.data) return console.log('Empty interaction');
-		const interaction = new NaticoMessage({
-			client: this.client,
-			interaction: i,
-		});
-		//else if (!interaction.data.name) return;
-
-		/**
-		 *
-		 * @param data - Slash command data to be send in the reply
-		 * @returns Idk? message object
-		 */
-		const edit = async (data: DiscordenoInteractionResponse): Promise<void> => {
-			return await sendInteractionResponse(
-				interaction.id as unknown as bigint,
-				interaction.token,
-				data
-			);
-		};
-		interaction['edit'] = edit;
-		const command = this.findCommand(interaction.name);
-		if (!command) return;
-
-		try {
-			console.info(
-				yellow('[!]'),
-				green(`slash ran`),
-				blue(command.name),
-				green(`user`),
-				blue(`${interaction?.user?.username} ${interaction?.user?.id}`)
-			);
-			const convertedOptions: naticoOptions = {};
-			if (interaction.data.options)
-				for (const option of interaction.data.options) {
-					convertedOptions[option.name] =
-						option as ApplicationCommandInteractionDataOptionString;
-				}
-
-			await command.execSlash(interaction, convertedOptions);
-		} catch (e) {
-			console.log(e);
-			interaction.reply({ content: `<:no:838017092216946748> Try again` });
-		}
 	}
 
 	/**

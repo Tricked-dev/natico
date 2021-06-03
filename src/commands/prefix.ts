@@ -47,7 +47,4 @@ export default class prefix extends Command {
 
 		//! is a fancy way
 	}
-	async execSlash(interaction: naticoInteraction) {
-		await interaction.reply({ content: 'I need help finding a database' });
-	}
 }

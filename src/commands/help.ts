@@ -1,4 +1,5 @@
 import { NaticoMessage } from '../../lib/NaticoMessage.ts';
+import { ApplicationCommandOption, DiscordenoMessage } from '../../deps.ts';
 import Command from '../../lib/commands/Command.ts';
 export default class help extends Command {
 	constructor() {
@@ -22,7 +23,7 @@ export default class help extends Command {
 	async exec(
 		message: NaticoMessage,
 		{ command }: { command: string }
-	): Promise<DiscordenoMessage | undefined> {
+	): Promise<DiscordenoMessage | undefined | void> {
 		if (command) {
 			const found = this.handler.findCommand(command);
 
@@ -37,7 +38,18 @@ export default class help extends Command {
 						found.aliases.map((x) => `\`${x}\``).join(' | ')
 					);
 				}
-
+				if (found.options) {
+					embed.addField(
+						'args »',
+						(found.options as ApplicationCommandOption[])
+							.map((x) => {
+								if (x.name && x.description)
+									return `**${x.name}**: ${x.description}`;
+								else return null;
+							})
+							.join('\n')
+					);
+				}
 				if (found.examples) {
 					embed.addField(
 						'examples »',
@@ -60,6 +72,7 @@ export default class help extends Command {
 		const commands = [...this.handler.modules.values()]
 			.map((c) => {
 				if (c.category == 'dev') return;
+				if (!c.enabled) return;
 				else return `\`${c.name}\``;
 			})
 			.join(' ');

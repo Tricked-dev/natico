@@ -2,9 +2,9 @@ import { Collection, join } from '../../deps.ts';
 import { NaticoModule } from './baseModule.ts';
 import { NaticoClient } from '../../src/client.ts';
 export class NaticoHandler {
-	client: NaticoClient;
+	private client: NaticoClient;
 	directory: string;
-	modules: Collection<string, NaticoModule>;
+	private modules: Collection<string, NaticoModule>;
 	constructor(client: NaticoClient, { directory }: { directory: string }) {
 		this.client = client;
 		this.directory = directory;

@@ -23,9 +23,4 @@ export default class repo extends Command {
 		// 	},
 		// }).then((response) => response.json());
 	}
-	async execSlash(interaction: naticoInteraction) {
-		return await interaction.reply({
-			content: 'Currently no clue how to find a repo by name',
-		});
-	}
 }

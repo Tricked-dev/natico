@@ -17,7 +17,4 @@ export default class test extends Command {
 			return message.reply('NO YOU CANT CHANGE THE PREFIX IN DMS STOP TRYING');
 		await message.reply(`Anyone knows a good deno database?`);
 	}
-	async execSlash(interaction: naticoInteraction) {
-		await interaction.reply({ content: 'I need help finding a database' });
-	}
 }
