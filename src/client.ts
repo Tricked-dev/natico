@@ -1,27 +1,15 @@
 import CommandHandler from '../lib/commands/commandHandler.ts';
 import TaskHandler from '../lib/tasks/taskHandler.ts';
 import ListenerHandler from '../lib/listeners/listenerHandler.ts';
-
 import { join, settings, startBot, token } from '../deps.ts';
-import {
-	Interaction,
-	naticoInteraction,
-	naticoMessage,
-	yellow,
-	editBotStatus,
-	DiscordActivityTypes,
-	white,
-	DiscordenoMessage,
-	DiscordInteractionTypes,
-	processButtonCollectors,
-	cache,
-	botId,
-} from '../deps.ts';
+import { cache, botId } from '../deps.ts';
 export class NaticoClient {
 	cache: typeof cache;
 	id: bigint;
 	events: any;
+	librariesio: string;
 	constructor() {
+		this.librariesio = settings.librariesio;
 		this.cache = cache;
 		this.id = botId;
 		this.events = {};

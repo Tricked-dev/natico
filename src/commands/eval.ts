@@ -29,6 +29,10 @@ export default class evalC extends Command {
 				depth: 2,
 			});
 			response = response.replace(new RegExp(token, 'gi'), '[BOTTOKEN]');
+			response = response.replace(
+				new RegExp(this.client.librariesio, 'gi'),
+				'[TOKEN]'
+			);
 			message.reply('```js\n' + response.slice(0, 1900) + '```');
 		} catch (e) {
 			message.reply(`${e}`);
