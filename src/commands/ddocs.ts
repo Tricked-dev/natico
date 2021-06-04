@@ -33,6 +33,7 @@ export default class ddoc extends Command {
 		return await fuse.search(q);
 	}
 	makeEmbed(result: any) {
+		const baseUrl = 'https/deno.land/x/discordeno@11.0.0-rc.5/mod.ts';
 		const srcUrl = `${result.location.filename}#L${result.location.line}`;
 		return this.handler
 			.embed()
@@ -44,11 +45,11 @@ export default class ddoc extends Command {
 			)
 			.addField(
 				'❯ doc link',
-				`[doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name}](https://doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name})`
+				`[doc.deno.land/${baseUrl}#${result.name}](https://doc.deno.land/${baseUrl}#${result.name})`
 			)
 			.setTitle(
 				`<:dd:847527964208005160>  ${result.name}`,
-				`https://doc.deno.land/https/raw.githubusercontent.com%2Fdiscordeno%2Fdiscordeno%2Fmain%2Fmod.ts#${result.name}`
+				`https://doc.deno.land/https${baseUrl}#${result.name}`
 			)
 			.setColor('#1F85DE');
 	}

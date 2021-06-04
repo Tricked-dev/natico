@@ -1,6 +1,6 @@
 import axiod from 'https://deno.land/x/axiod/mod.ts';
 const denodoc = await axiod(
-	'https://doc.deno.land/api/docs?entrypoint=https://raw.githubusercontent.com/discordeno/discordeno/main/mod.ts',
+	'https://doc.deno.land/api/docs?entrypoint=https://deno.land/x/discordeno@11.0.0-rc.5/mod.ts',
 	{
 		method: 'get',
 	}
@@ -32,9 +32,7 @@ iss.forEach((i: fn) => {
 	}
 });
 const array = Array.from(data);
-const encoder = new TextEncoder();
-for (const i in array) {
-	const str = encoder.encode(`${Deno.inspect(array[i], { depth: 3 })},`);
-
-	await Deno.writeFile('docs/ddocs.json', str, { append: true });
-}
+let str = JSON.stringify(array);
+await Deno.writeFile('docs/ddocs.json', new TextEncoder().encode(str), {
+	append: false,
+});
