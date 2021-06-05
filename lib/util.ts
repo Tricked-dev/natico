@@ -122,7 +122,7 @@ export class NaticoUtil {
 					);
 					const answer = await this.needMessage(authorId, channelId);
 					await deleteMessages(channelId, [question.id, answer.id]).catch(
-						this.bot.log.error
+						console.error
 					);
 
 					const newPageNumber = Math.ceil(Number(answer.content));
@@ -175,7 +175,7 @@ export class NaticoUtil {
 						components: createComponents(),
 					},
 				}
-			).catch(this.bot.log.error);
+			).catch(console.error);
 		}
 	}
 	async needButton(
