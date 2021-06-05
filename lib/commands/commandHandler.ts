@@ -23,7 +23,8 @@ import { NaticoHandler } from '../base/baseHandler.ts';
 import { NaticoMessage } from '../NaticoMessage.ts';
 import naticoCommand from './Command.ts';
 export default class CommandHandler extends NaticoHandler {
-	declare modules: Collection<string, naticoCommand>;
+	public declare modules: Collection<string, naticoCommand>;
+	public declare client: NaticoClient;
 	cooldowns: Set<string>;
 	IgnoreCD: string[];
 	owners: string[];
@@ -150,7 +151,7 @@ export default class CommandHandler extends NaticoHandler {
 
 		const no = '<:no:838017092216946748>';
 		/*"no" */
-		if (this.commandChecks(command, message, args)) return console.log('HI(');
+		if (this.commandChecks(command, message, args)) return;
 
 		try {
 			const data = message.isSlash
@@ -174,7 +175,7 @@ export default class CommandHandler extends NaticoHandler {
 			this.cooldowns.add(message.authorId);
 			setTimeout(() => this.cooldowns.delete(message.authorId), this.cooldown);
 		} catch (e) {
-			console.log(e);
+			this.client.log.critical(e);
 			if (e?.response?.status && e?.response?.status !== 200)
 				return message.reply(
 					`${no} response status: ${

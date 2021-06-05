@@ -1,18 +1,26 @@
 import CommandHandler from '../lib/commands/commandHandler.ts';
 import TaskHandler from '../lib/tasks/taskHandler.ts';
 import ListenerHandler from '../lib/listeners/listenerHandler.ts';
-import { join, settings, startBot, token } from '../deps.ts';
+import { join, settings, startBot, token, Collection } from '../deps.ts';
+import { MessageCollector, ButtonCollector } from '../lib/interfaces.ts';
+import { NaticoUtil } from '../lib/util.ts';
 import { cache, botId } from '../deps.ts';
 export class NaticoClient {
 	cache: typeof cache;
 	id: bigint;
 	events: any;
 	librariesio: string;
+	buttonCollectors: Collection<bigint, ButtonCollector>;
+	messageCollectors: Collection<bigint, MessageCollector>;
+	util: NaticoUtil;
 	constructor() {
 		this.librariesio = settings.librariesio;
 		this.cache = cache;
 		this.id = botId;
 		this.events = {};
+		this.buttonCollectors = new Collection<bigint, ButtonCollector>();
+		this.messageCollectors = new Collection<bigint, MessageCollector>();
+		this.util = new NaticoUtil(this);
 	}
 	taskHandler: TaskHandler = new TaskHandler(this, {
 		directory: join(Deno.cwd(), 'src', 'tasks'),

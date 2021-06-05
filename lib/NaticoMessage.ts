@@ -3,14 +3,12 @@ import {
 	naticoInteraction,
 	InteractionApplicationCommandCallbackData,
 	sendInteractionResponse,
-	GuildMember,
 	DiscordenoMember,
 	Embed,
 	Attachment,
 	Interaction,
 	DiscordenoChannel,
 	ApplicationCommandInteractionData,
-	CreateEmbedsButtonsPagination,
 } from '../deps.ts';
 import { NaticoClient } from '../src/client.ts';
 export class NaticoMessage {
@@ -93,7 +91,7 @@ export class NaticoMessage {
 		});
 	}
 	CreateEmbedsButtonsPagination(pages: any, ...args: any): Promise<void> {
-		return CreateEmbedsButtonsPagination(
+		return this.client.util.CreateEmbedsButtonsPagination(
 			BigInt(this.id),
 			BigInt(this.channelId),
 			BigInt(this.authorId),
