@@ -68,6 +68,7 @@ export default class CommandHandler extends NaticoHandler {
 		super(client, {
 			directory,
 		});
+		this.client = client;
 		this.prefix = prefix;
 		this.owners = owners;
 		this.cooldown = cooldown;

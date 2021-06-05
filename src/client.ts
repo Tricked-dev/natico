@@ -6,13 +6,13 @@ import { MessageCollector, ButtonCollector } from '../lib/interfaces.ts';
 import { NaticoUtil } from '../lib/util.ts';
 import { cache, botId } from '../deps.ts';
 export class NaticoClient {
-	cache: typeof cache;
-	id: bigint;
-	events: any;
-	librariesio: string;
-	buttonCollectors: Collection<bigint, ButtonCollector>;
-	messageCollectors: Collection<bigint, MessageCollector>;
-	util: NaticoUtil;
+	public cache: typeof cache;
+	public id: bigint;
+	public events: any;
+	public librariesio: string;
+	public buttonCollectors: Collection<bigint, ButtonCollector>;
+	public messageCollectors: Collection<bigint, MessageCollector>;
+	public util: NaticoUtil;
 	constructor() {
 		this.librariesio = settings.librariesio;
 		this.cache = cache;
