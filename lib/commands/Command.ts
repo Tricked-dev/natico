@@ -3,18 +3,14 @@ import { NaticoModule } from '../base/baseModule.ts';
 import { NaticoClient } from '../../src/client.ts';
 import {
 	PermissionStrings,
-	CreateGlobalApplicationCommand,
 	EditGlobalApplicationCommand,
 	ApplicationCommandOption,
-	naticoOptions,
 	execOptions,
-	naticoInteraction,
 } from '../../deps.ts';
 import { NaticoMessage } from '../NaticoMessage.ts';
-//import { db } from './db.ts';
 export default class Command extends NaticoModule {
-	handler: commandHandler;
-	client!: NaticoClient;
+	declare handler: commandHandler;
+	declare client: NaticoClient;
 	id: string;
 	category: string | undefined;
 	aliases: string[] | undefined;
@@ -26,11 +22,8 @@ export default class Command extends NaticoModule {
 	slash: boolean | undefined;
 	enabled: boolean | undefined;
 	superUserOnly: boolean | undefined;
-	options:
-		| CreateGlobalApplicationCommand[]
-		| EditGlobalApplicationCommand[]
-		| ApplicationCommandOption[]
-		| undefined[];
+	options?: ApplicationCommandOption[];
+
 	permissions: PermissionStrings[] | undefined;
 	//	db: typeof db;
 	constructor(
@@ -49,11 +42,8 @@ export default class Command extends NaticoModule {
 			options,
 			permissions,
 		}: {
-			options?:
-				| CreateGlobalApplicationCommand[]
-				| EditGlobalApplicationCommand[]
-				| ApplicationCommandOption[]
-				| undefined[];
+			options?: ApplicationCommandOption[];
+
 			name?: string;
 			aliases?: string[];
 			examples?: string[];
@@ -103,5 +93,10 @@ export default class Command extends NaticoModule {
 		 * @type {AkairoHandler}
 		 */
 	}
-	exec(_message: NaticoMessage, _options: execOptions): any | Promise<any> {}
+	exec(
+		_message: NaticoMessage,
+		_options: execOptions
+	): unknown | Promise<unknown> {
+		return [_message, _options];
+	}
 }

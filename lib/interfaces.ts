@@ -99,3 +99,6 @@ export interface BaseCollectorCreateOptions {
 	/** The duration in milliseconds how long this collector should last. */
 	duration: number;
 }
+export interface ConvertedOptions {
+	[name: string]: string;
+}

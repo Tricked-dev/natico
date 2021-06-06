@@ -1,8 +1,7 @@
 import {
 	Collection,
 	settings,
-	sendInteractionResponse,
-	naticoInteraction,
+	ConvertedOptions,
 	naticoMessage,
 	yellow,
 	EditGlobalApplicationCommand,
@@ -13,18 +12,17 @@ import {
 	Embed,
 	hasGuildPermissions,
 	upsertSlashCommands,
-	naticoOptions,
-	DiscordenoInteractionResponse,
-	InteractionApplicationCommandCallbackData,
-	ApplicationCommandInteractionDataOptionString,
+	DiscordApplicationCommandOptionTypes,
+	Interaction,
+	Message,
 } from '../../deps.ts';
 import { NaticoClient } from '../../src/client.ts';
 import { NaticoHandler } from '../base/baseHandler.ts';
 import { NaticoMessage } from '../NaticoMessage.ts';
 import naticoCommand from './Command.ts';
 export default class CommandHandler extends NaticoHandler {
-	public declare modules: Collection<string, naticoCommand>;
-	public declare client: NaticoClient;
+	declare modules: Collection<string, naticoCommand>;
+	declare client: NaticoClient;
 	cooldowns: Set<string>;
 	IgnoreCD: string[];
 	owners: string[];
@@ -89,7 +87,11 @@ export default class CommandHandler extends NaticoHandler {
 	embed() {
 		return new Embed();
 	}
-	commandChecks(command: naticoCommand, message: NaticoMessage, args: string) {
+	commandChecks(
+		command: naticoCommand,
+		message: NaticoMessage,
+		args: string | undefined
+	) {
 		const no = '<:no:838017092216946748>';
 
 		if (!command.enabled)
@@ -143,10 +145,15 @@ export default class CommandHandler extends NaticoHandler {
 		args?: string
 	) {
 		if (!command) return;
-		const convertedOptions = {};
+		const convertedOptions: ConvertedOptions = {};
 		if (message.isSlash && message?.data?.options) {
 			for (const option of message.data?.options) {
-				convertedOptions[option.name] = option.value;
+				if (
+					option?.type == DiscordApplicationCommandOptionTypes.String &&
+					option?.value
+				) {
+					convertedOptions[option.name] = option.value;
+				}
 			}
 		}
 
@@ -176,7 +183,7 @@ export default class CommandHandler extends NaticoHandler {
 			this.cooldowns.add(message.authorId);
 			setTimeout(() => this.cooldowns.delete(message.authorId), this.cooldown);
 		} catch (e) {
-			this.client.log.critical(e);
+			console.log(e);
 			if (e?.response?.status && e?.response?.status !== 200)
 				return message.reply(
 					`${no} response status: ${
@@ -191,13 +198,13 @@ export default class CommandHandler extends NaticoHandler {
 	generateArgs(
 		command: naticoCommand,
 		//message: NaticoMessage,
-		content: string
+		content: string | undefined
 	) {
-		let args = {};
+		const args: ConvertedOptions = {};
 		if (command.options) {
 			for (const option of command.options) {
-				if (option && option.type && option.name) {
-					option.type == 3;
+				if (option?.name !== undefined) {
+					//@ts-ignoreansjkdfankjjksdf
 					args[option.name] = content;
 				}
 			}
@@ -205,22 +212,20 @@ export default class CommandHandler extends NaticoHandler {
 		return args;
 	}
 
-	/**
-	 *
-	 * @param message - Message needed to find the command to run
-	 * @returns - What Run Command returns
-	 */
-	public async handleCommand(m) {
-		if (m.token) {
+	public async handleCommand(m: Message | Interaction) {
+		//@ts-ignoreadssad
+		if (m?.token) {
 			const message = new NaticoMessage({
 				client: this.client,
+				//@ts-ignoreadssad
 				interaction: m,
 			});
-			const command = this.findCommand(message!.name);
+			const command = this.findCommand(message.name);
 			if (command) return this.runCommand(command, message);
 		}
 		const message = new NaticoMessage({
 			client: this.client,
+			//@ts-ignoreadssad
 			message: m,
 		});
 		if (!message?.content) return;
@@ -251,7 +256,7 @@ export default class CommandHandler extends NaticoHandler {
 				return this.runCommand(Command, message, args);
 			}
 		}
-
+		//@ts-ignoreadssad
 		const prefixes = await this.prefix(message);
 
 		for await (const prefix of prefixes) {

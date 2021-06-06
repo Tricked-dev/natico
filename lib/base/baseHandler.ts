@@ -1,10 +1,11 @@
 import { Collection, join } from '../../deps.ts';
 import { NaticoModule } from './baseModule.ts';
 import { NaticoClient } from '../../src/client.ts';
-export class NaticoHandler {
-	private client: NaticoClient;
+
+export abstract class NaticoHandler {
+	client: NaticoClient;
 	directory: string;
-	private modules: Collection<string, NaticoModule>;
+	modules: Collection<string, any>;
 	constructor(client: NaticoClient, { directory }: { directory: string }) {
 		this.client = client;
 		this.directory = directory;
@@ -32,7 +33,6 @@ export class NaticoHandler {
 		const mod = this.modules.get(id.toString());
 		if (!mod) return;
 		this.deregister(mod);
-
 		return mod;
 	}
 	reload(id: string) {
