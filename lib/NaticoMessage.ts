@@ -9,6 +9,9 @@ import {
 	Interaction,
 	DiscordenoChannel,
 	ApplicationCommandInteractionData,
+	DiscordenoGuild,
+	InteractionGuildMember,
+	structures,
 } from '../deps.ts';
 import { NaticoClient } from '../src/client.ts';
 export class NaticoMessage {
@@ -33,6 +36,7 @@ export class NaticoMessage {
 	token!: string;
 	name!: string;
 	channel!: DiscordenoChannel;
+	guild!: DiscordenoGuild;
 	constructor({
 		client,
 		message,
@@ -40,36 +44,44 @@ export class NaticoMessage {
 	}: {
 		client: NaticoClient;
 		message?: DiscordenoMessage;
-		interaction?: naticoInteraction;
+		interaction?: Interaction;
 	}) {
 		this.isSlash = interaction ? true : false;
-		this.data = interaction?.data || undefined!;
-		this.client = client!;
 		this.type = message?.type || interaction?.type!;
-		this.id = message?.id.toString() || interaction?.id!;
-		this.guildId = message?.guildId!.toString() || interaction?.guildId!;
-		this.channelId = message?.channelId!.toString() || interaction?.channelId!;
-		this.member = message?.member! || interaction?.member!;
-		this.data = interaction?.data!;
-		this.authorId = message?.authorId?.toString() || interaction?.user?.id!;
-		this.tag = `${this?.member?.username || 'natico'}#${
-			this?.member?.discriminator || '7789'
-		}`;
-		this.isBot = message?.isBot || false;
-		this.timestamp = message?.timestamp || undefined!;
-		this.embeds = message?.embeds || undefined!;
-		this.attachments = message?.attachments || undefined!;
-		this.content = message?.content || undefined!;
-		this.flags = message?.flags || undefined!;
-		this.message = message || undefined!;
-		this.interaction = interaction || undefined!;
-		this.token = interaction?.token || undefined!;
-		this.name = interaction?.data?.name || undefined!;
-		this.channel =
-			message?.channel ||
-			client.cache.channels.get(
-				BigInt(interaction?.channelId || '815328569051971595')
-			)!;
+		this.client = client;
+		if (interaction) {
+			this.data = interaction?.data!;
+			this.id = interaction?.id;
+			this.guild = this.client.cache.guilds.get(BigInt(interaction?.guildId!))!;
+			this.guildId = interaction?.guildId!;
+			this.channelId = interaction?.channelId!;
+			/* Note to get member use the initialize function */
+			this.authorId = interaction?.user?.id!;
+			this.tag = `${interaction?.member!.user.username}#${
+				interaction?.member!.user.discriminator
+			}`;
+			this.interaction = interaction;
+			this.token = interaction?.token || undefined!;
+			this.name = interaction?.data?.name || undefined!;
+		}
+		if (message) {
+			this.isBot = message.isBot;
+			this.id = message?.id.toString();
+			this.guild = message.guild!;
+			this.guildId = message?.guildId!.toString();
+			this.channelId = message?.channelId!.toString();
+			this.member = message.member!;
+			this.authorId = message?.authorId?.toString();
+			this.timestamp = message?.timestamp;
+			this.tag = message.tag;
+			this.embeds = message.embeds;
+			this.attachments = message?.attachments;
+			this.content = message?.content;
+			this.flags = message?.flags!;
+			this.message = message;
+			this.message = message;
+			this.channel = message?.channel!;
+		}
 	}
 	reply(...args: any[]) {
 		if (this.message) return this.message.reply(...args);
@@ -97,6 +109,12 @@ export class NaticoMessage {
 			BigInt(this.authorId),
 			pages,
 			...args
+		);
+	}
+	async initialize() {
+		this.member = await structures.createDiscordenoMember(
+			this.interaction.member!,
+			BigInt(this.interaction.guildId)
 		);
 	}
 }

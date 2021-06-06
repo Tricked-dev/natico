@@ -220,6 +220,7 @@ export default class CommandHandler extends NaticoHandler {
 				//@ts-ignoreadssad
 				interaction: m,
 			});
+			await message.initialize();
 			const command = this.findCommand(message.name);
 			if (command) return this.runCommand(command, message);
 		}
