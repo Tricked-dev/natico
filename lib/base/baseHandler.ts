@@ -12,15 +12,6 @@ export abstract class NaticoHandler {
 		this.modules = new Collection();
 	}
 
-	async loadALL() {
-		const filepaths = this.readdirRecursive(this.directory);
-		for (let filepath of filepaths) {
-			filepath = join(filepath);
-			if (filepath) await this.load(filepath);
-		}
-
-		return this;
-	}
 	async load(thing: string) {
 		let mod = await import('file://' + thing);
 		mod = new mod.default();
@@ -54,23 +45,17 @@ export abstract class NaticoHandler {
 
 		return this;
 	}
-	readdirRecursive(directory: string) {
-		const result = [];
-		(function read(directory) {
-			const files = Deno.readDirSync(directory);
-
-			for (const file of files) {
-				const filepath = join(directory, `${file.name}`);
-
-				if (file.isDirectory) {
-					read(filepath);
-				} else {
-					result.push(filepath);
-				}
+	async loadALL(directory?: string) {
+		directory = directory ? directory : this.directory;
+		const entries = Deno.readDir(this.directory);
+		for await (const entry of entries) {
+			if (entry.isFile) {
+				await this.load(`${directory}/${entry.name}`);
+				continue;
 			}
-		})(directory);
 
-		return result;
+			await this.loadALL(`${directory}/${entry.name}`);
+		}
 	}
 	register(mod: any, filepath: string) {
 		mod.filepath = filepath;

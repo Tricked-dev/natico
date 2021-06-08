@@ -337,36 +337,4 @@ export default class CommandHandler extends NaticoHandler {
 	/**
 	 * Used to load all commands
 	 */
-	public async loadALL() {
-		const filepaths = this.readdirRecursive(this.directory);
-		for (let filepath of filepaths) {
-			filepath = join(filepath);
-			if (filepath) await this.load(filepath);
-		}
-		console.log(
-			blue('[:]'),
-			yellow(`Loaded`),
-			green(`${this.modules.size}`),
-			yellow('commands,'),
-			blue('slashed'),
-			green(
-				`${
-					this.modules.filter((command) => {
-						if (command.slash) return true;
-						else return false;
-					}).size
-				},`
-			),
-			blue('disabled'),
-			green(
-				`${
-					this.modules.filter((command) => {
-						if (!command.enabled) return true;
-						else return false;
-					}).size
-				}`
-			)
-		);
-		return this;
-	}
 }

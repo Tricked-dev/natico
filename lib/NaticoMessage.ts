@@ -50,6 +50,7 @@ export class NaticoMessage {
 		this.type = message?.type || interaction?.type!;
 		this.client = client;
 		if (interaction) {
+			this.interaction = interaction;
 			this.data = interaction?.data!;
 			this.id = interaction?.id;
 			this.guild = this.client.cache.guilds.get(BigInt(interaction?.guildId!))!;
@@ -64,6 +65,7 @@ export class NaticoMessage {
 			this.name = interaction?.data?.name || undefined!;
 		}
 		if (message) {
+			this.message = message;
 			this.isBot = message.isBot;
 			this.id = message?.id.toString();
 			this.guild = message.guild!;
@@ -81,8 +83,8 @@ export class NaticoMessage {
 		}
 	}
 	reply(...args: any[]) {
-		if (this.message) return this.message.reply(...args);
-		if (this.interaction) {
+		if (!this.isSlash) return this.message.reply(...args);
+		if (this.isSlash) {
 			if (args[0].embed) {
 				args[0].embeds = [args[0].embed];
 				delete args[0].embed;
