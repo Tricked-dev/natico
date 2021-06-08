@@ -45,16 +45,16 @@ export abstract class NaticoHandler {
 
 		return this;
 	}
-	async loadALL(directory?: string) {
-		directory = directory ? directory : this.directory;
-		const entries = Deno.readDir(this.directory);
+	async loadALL(dirPath?: string) {
+		dirPath = await Deno.realPath(dirPath || this.directory);
+		const entries = Deno.readDir(dirPath);
 		for await (const entry of entries) {
 			if (entry.isFile) {
-				await this.load(`${directory}/${entry.name}`);
+				await this.load(`${dirPath}/${entry.name}`);
 				continue;
 			}
 
-			await this.loadALL(`${directory}/${entry.name}`);
+			await this.loadALL(`${dirPath}/${entry.name}`);
 		}
 	}
 	register(mod: any, filepath: string) {

@@ -4,8 +4,8 @@ import {
 	DiscordActivityTypes,
 	white,
 	botId,
-} from '../../deps.ts';
-import Listener from '../../lib/listeners/Listener.ts';
+} from '../../../deps.ts';
+import Listener from '../../../lib/listeners/Listener.ts';
 export default class invite extends Listener {
 	constructor() {
 		super('ready', {
