@@ -102,3 +102,6 @@ export interface BaseCollectorCreateOptions {
 export interface ConvertedOptions {
 	[name: string]: string;
 }
+export interface Events {
+	[name: string]: (...args: any[]) => Promise<any> | any;
+}

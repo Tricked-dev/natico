@@ -8,6 +8,7 @@ import Listener from '../../lib/listeners/Listener.ts';
 export default class interactionCreate extends Listener {
 	constructor() {
 		super('interactionCreate', {
+			emitter: 'client',
 			event: 'interactionCreate',
 		});
 	}

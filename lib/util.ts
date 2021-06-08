@@ -321,4 +321,10 @@ export class NaticoUtil {
 			member,
 		});
 	}
+	/**
+	 * @returns a sneaky embed
+	 */
+	embed() {
+		return new Embed().setColor('#934a19').setTimestamp();
+	}
 }

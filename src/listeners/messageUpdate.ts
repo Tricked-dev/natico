@@ -3,6 +3,7 @@ import Listener from '../../lib/listeners/Listener.ts';
 export default class messageUpdate extends Listener {
 	constructor() {
 		super('messageUpdate', {
+			emitter: 'client',
 			event: 'messageUpdate',
 		});
 	}

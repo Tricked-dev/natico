@@ -60,7 +60,6 @@ export class NaticoMessage {
 			this.tag = `${interaction?.member!.user.username}#${
 				interaction?.member!.user.discriminator
 			}`;
-			this.interaction = interaction;
 			this.token = interaction?.token || undefined!;
 			this.name = interaction?.data?.name || undefined!;
 		}
@@ -78,8 +77,6 @@ export class NaticoMessage {
 			this.attachments = message?.attachments;
 			this.content = message?.content;
 			this.flags = message?.flags!;
-			this.message = message;
-			this.message = message;
 			this.channel = message?.channel!;
 		}
 	}
@@ -116,6 +113,7 @@ export class NaticoMessage {
 			this.interaction.member!,
 			BigInt(this.interaction.guildId)
 		);
+		this.tag = this.member.tag;
 	}
 }
 

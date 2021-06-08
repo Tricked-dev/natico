@@ -3,6 +3,7 @@ import Listener from '../../lib/listeners/Listener.ts';
 export default class messageCreate extends Listener {
 	constructor() {
 		super('messageCreate', {
+			emitter: 'client',
 			event: 'messageCreate',
 		});
 	}

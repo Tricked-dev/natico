@@ -9,6 +9,7 @@ import Listener from '../../lib/listeners/Listener.ts';
 export default class invite extends Listener {
 	constructor() {
 		super('ready', {
+			emitter: 'client',
 			event: 'ready',
 		});
 	}
