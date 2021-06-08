@@ -1,7 +1,6 @@
-import { naticoInteraction, naticoOptions } from '../../deps.ts';
-import { NaticoMessage } from '../../lib/NaticoMessage.ts';
+import { NaticoMessage } from '../../../lib/NaticoMessage.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
-import Command from '../../lib/commands/Command.ts';
+import Command from '../../../lib/commands/Command.ts';
 export default class aur extends Command {
 	constructor() {
 		super('aur', {

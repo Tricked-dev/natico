@@ -1,6 +1,6 @@
-import { NaticoMessage } from '../../lib/NaticoMessage.ts';
+import { NaticoMessage } from '../../../lib/NaticoMessage.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
-import Command from '../../lib/commands/Command.ts';
+import Command from '../../../lib/commands/Command.ts';
 export default class apt extends Command {
 	constructor() {
 		super('apt', {

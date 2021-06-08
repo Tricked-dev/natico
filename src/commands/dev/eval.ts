@@ -1,6 +1,6 @@
-import { token } from '../../deps.ts';
-import { NaticoMessage } from '../../lib/NaticoMessage.ts';
-import Command from '../../lib/commands/Command.ts';
+import { token } from '../../../deps.ts';
+import { NaticoMessage } from '../../../lib/NaticoMessage.ts';
+import Command from '../../../lib/commands/Command.ts';
 export default class evalC extends Command {
 	constructor() {
 		super('eval', {

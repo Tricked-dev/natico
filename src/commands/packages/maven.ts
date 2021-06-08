@@ -1,13 +1,13 @@
-import { NaticoMessage } from '../../lib/NaticoMessage.ts';
+import { NaticoMessage } from '../../../lib/NaticoMessage.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
-import Command from '../../lib/commands/Command.ts';
-export default class hackage extends Command {
+import Command from '../../../lib/commands/Command.ts';
+export default class maven extends Command {
 	constructor() {
-		super('hackage', {
-			name: 'hackage',
-			aliases: ['hackage', 'haskell'],
-			examples: ['hackage http'],
-			description: 'Search for haskell packages to use in your projects',
+		super('maven', {
+			name: 'maven',
+			aliases: ['maven', 'java', 'kotlin'],
+			examples: ['maven http'],
+			description: 'Search for maven packages to use in your projects',
 			enabled: false,
 			slash: true,
 			required: true,
@@ -15,8 +15,8 @@ export default class hackage extends Command {
 			options: [
 				{
 					type: 3,
-					name: 'hackage',
-					description: 'The hackage you want to search for',
+					name: 'maven',
+					description: 'The maven you want to search for',
 					required: true,
 				},
 			],
@@ -30,7 +30,7 @@ export default class hackage extends Command {
 				'content-type': 'application/json',
 			},
 			params: {
-				languages: 'haskell',
+				languages: 'java',
 				q: terms,
 				api_key: apiKey,
 			},
@@ -39,7 +39,7 @@ export default class hackage extends Command {
 	makeEmbed(result: any) {
 		return this.handler
 			.embed()
-			.setColor('#e07f18')
+			.setColor('#3c7abd')
 			.addField('❯ Version', result.latest_release_number || 'no Version')
 			.addField('❯ Homepage', result.homepage || 'no Homepage')
 			.addField('❯ Stars', `${result.stars}` || 'no Stars')
@@ -47,7 +47,7 @@ export default class hackage extends Command {
 			.addField('❯ license', `${result.licenses}` || 'no licenses')
 			.setDescription(result.description || 'No description provided')
 			.setTitle(
-				`<:haskell:850367977412755460> ${result.name}`,
+				`<:java:850370699440947240> ${result.name}`,
 				result.package_manager_url ?? 'https://duckduckgo.com'
 			);
 	}
@@ -60,11 +60,11 @@ export default class hackage extends Command {
 		}
 		return pages;
 	}
-	async exec(message: NaticoMessage, { hackage }: { hackage: string }) {
-		const pkg = await this.fetch(hackage);
+	async exec(message: NaticoMessage, { maven }: { maven: string }) {
+		const pkg = await this.fetch(maven);
 		if (!pkg || !pkg?.data)
 			return message.reply(
-				'<:no:838017092216946748> Please provide a valid Hackage package'
+				'<:no:838017092216946748> Please provide a valid maven package'
 			);
 		const pages = this.pages(pkg.data);
 		if (message.isSlash) return message.reply(pages[0]);

@@ -1,5 +1,5 @@
-import { NaticoMessage } from '../../lib/NaticoMessage.ts';
-import Command from '../../lib/commands/Command.ts';
+import { NaticoMessage } from '../../../lib/NaticoMessage.ts';
+import Command from '../../../lib/commands/Command.ts';
 export default class run extends Command {
 	constructor() {
 		super('run', {

@@ -1,6 +1,6 @@
-import { NaticoMessage } from '../../lib/NaticoMessage.ts';
+import { NaticoMessage } from '../../../lib/NaticoMessage.ts';
 import axiod from 'https://deno.land/x/axiod/mod.ts';
-import Command from '../../lib/commands/Command.ts';
+import Command from '../../../lib/commands/Command.ts';
 export default class dart extends Command {
 	constructor() {
 		super('dart', {
@@ -22,7 +22,7 @@ export default class dart extends Command {
 			],
 		});
 	}
-	async exec(message: naticoMessage, { dart }: { dart: string }) {
+	async exec(message: NaticoMessage, { dart }: { dart: string }) {
 		try {
 			const pkg = await axiod(`https://pub.dev/api/search`, {
 				method: 'GET',
