@@ -15,14 +15,13 @@ export default class TaskHandler extends NaticoHandler {
 		this.directory = directory;
 		this.modules = new Collection();
 	}
-	startAll() {
-		this.modules.forEach((task) => {
-			if (task.runOnStart) task.exec();
-			if (task.delay) {
-				setInterval(() => {
-					task.exec();
-				}, Number(task.delay));
-			}
-		});
+	register(task: Task, filepath: string) {
+		if (task.runOnStart) task.exec();
+		if (task.delay) {
+			setInterval(() => {
+				task.exec();
+			}, Number(task.delay));
+		}
+		return super.register(task, filepath);
 	}
 }

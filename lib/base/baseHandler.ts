@@ -72,7 +72,7 @@ export abstract class NaticoHandler {
 
 		return result;
 	}
-	register(mod: NaticoModule, filepath: string) {
+	register(mod: any, filepath: string) {
 		mod.filepath = filepath;
 		mod.handler = this;
 		mod.client = this.client;

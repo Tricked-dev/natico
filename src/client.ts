@@ -62,49 +62,13 @@ export class NaticoClient extends EventEmitter {
 		//-----------------------
 		//------Starters---------
 		//-----------------------
-		this.taskHandler.startAll();
-
-		await this.login();
+		return this.login();
 	}
-	async login() {
-		await startBot({
+	login() {
+		return startBot({
 			token,
 			intents: ['Guilds', 'GuildMessages', 'GuildVoiceStates'],
 			eventHandlers: this.events,
 		});
 	}
 }
-//{
-// 	interactionCreate(data: Interaction, member) {
-// 		if (data.type === DiscordInteractionTypes.ApplicationCommand) {
-// 			commandHandler.runSlash(data as unknown as naticoInteraction);
-// 		}
-// 		if (data.type === DiscordInteractionTypes.Button) {
-// 			processButtonCollectors(data, member);
-// 		}
-// 	},
-// 	ready() {
-// 		taskHandler.startAll();
-// 		// if (settings.dev == true) {
-// 		// 	await commandHandler.enableSlash(settings.testserver);
-// 		// }
-
-// 		editBotStatus({
-// 			activities: [
-// 				{
-// 					name: 'deno packages',
-// 					type: DiscordActivityTypes.Competing,
-// 					createdAt: Date.now(),
-// 				},
-// 			],
-// 			status: 'online',
-// 		});
-// 		console.log(white('[i]'), yellow('Bot succesfully started'));
-// 	},
-// 	messageCreate(message: DiscordenoMessage) {
-// 		commandHandler.handleCommand(message as naticoMessage);
-// 	},
-// 	messageUpdate(message: DiscordenoMessage) {
-// 		commandHandler.handleCommand(message as naticoMessage);
-// 	},
-// },
